@@ -1,0 +1,19 @@
+{
+    "name": "jota/api_php",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Buildings\\": "src/Buildings"
+        }
+    },
+    "authors": [
+        {
+            "name": "redlintles",
+            "email": "treelands54@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {
+        "propel/propel": "^2.0@beta"
+    }
+}

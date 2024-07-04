@@ -1,0 +1,8 @@
+<database name="default" defaultPhpNamingMethod="noChange" defaultIdMethod="native" namespace="Buildings">
+  <table name="message" phpName="Message" >
+    <column name="id" primaryKey="true" autoIncrement="true" type="INTEGER" required="true"/>
+    <column name="msg" type="VARCHAR" size="255" required="true" />
+  </table>
+
+
+</database>

@@ -1,0 +1,16 @@
+propel:
+  database:
+    connections:
+      default:
+        adapter: mysql
+        dsn: mysql:host=localhost;dbname=api_php;port=3307
+        user: root
+        password: Itsumade@1997
+  runtime:
+    defaultConnection: default
+    connections:
+      - default
+  generator:
+    defaultConnection: default
+    connections:
+      - default
