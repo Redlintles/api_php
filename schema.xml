@@ -1,8 +1,165 @@
-<database name="default" defaultPhpNamingMethod="noChange" defaultIdMethod="native" namespace="Buildings">
-  <table name="message" phpName="Message" >
-    <column name="id" primaryKey="true" autoIncrement="true" type="INTEGER" required="true"/>
-    <column name="msg" type="VARCHAR" size="255" required="true" />
+<database name="default" defaultPhpNamingMethod="noChange" defaultIdMethod="native"
+  namespace="Buildings">
+  <table name="admin" phpName="Admin">
+    <column name="id" primaryKey="true" autoIncrement="true" type="INTEGER" required="true" />
+    <column name="password" type="VARCHAR" size="30" required="true" />
+    <column name="username" type="VARCHAR" size="50" required="true" />
+    <column name="api_key" type="VARCHAR" size="36" required="true" />
+    <unique name="admin_username_unique">
+      <unique-column name="username" />
+    </unique>
+    <unique name="admin_api_key_unique">
+      <unique-column name="api_key" />
+    </unique>
   </table>
-
-
+  <table name="permission" phpName="Permission">
+    <column name="admin_id" type="INTEGER" required="true" primaryKey="true" />
+    <column name="create" type="BINARY" required="true" />
+    <column name="read" type="BINARY" required="true" />
+    <column name="update" type="BINARY" required="true" />
+    <column name="delete" type="BINARY" required="true" />
+    <foreign-key foreignTable="admin" name="permission_admin_id" onDelete="cascade"
+      phpName="Permission" refPhpName="Admin">
+      <reference local="admin_id" foreign="id" />
+    </foreign-key>
+  </table>
+  <table name="client" phpName="Client">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="username" type="VARCHAR" size="50" required="true" />
+    <column name="password" type="VARCHAR" size="30" required="true" />
+    <column name="email" type="VARCHAR" size="30" required="true" />
+    <column name="phone_number" type="VARCHAR" size="15" required="true" />
+  </table>
+  <table name="seller" phpName="Seller">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="username" type="VARCHAR" size="50" required="true" />
+    <column name="password" type="VARCHAR" size="30" required="true" />
+    <column name="email" type="VARCHAR" size="30" required="true" />
+    <column name="phone_number" type="VARCHAR" size="15" required="true" />
+  </table>
+  <table name="order" phpName="Order">
+    <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
+    <column name="id_client" type="INTEGER" />
+    <column name="id_seller" type="INTEGER" />
+    <column name="expires_at" type="DATE" required="true" />
+    <column name="type" type="STRING" required="true" />
+    <foreign-key foreignTable="client" phpName="Order" refPhpName="Client" onDelete="cascade" name="order_id_client">
+      <reference local="id_client" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="seller" phpName="Order" refPhpName="Seller" onDelete="cascade" name="order_id_seller">
+      <reference local="id_seller" foreign="id"/>
+    </foreign-key>
+    <behavior name="timestampable">
+      <parameter name="create_column" value="updated_at" />
+    </behavior>
+  </table>
+  <table name="category" phpName="Category">
+    <column name="id" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="name" type="VARCHAR" size="20" required="true" />
+    <unique name="category_name_unique">
+      <unique-column name="name" />
+    </unique>
+  </table>
+  <table name="cart" phpName="Cart">
+    <column name="id" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="client_id" type="INTEGER" required="true" />
+    <foreign-key foreignTable="client" name="cart_client_id" phpName="Cart" refPhpName="Client"
+      onDelete="cascade">
+      <reference local="id_client" foreign="id" />
+    </foreign-key>
+    <behavior name="timestampable">
+      <parameter name="update_column" value="updated_at" />
+    </behavior>
+  </table>
+  <table name="cart_products" phpName="CartProduct">
+    <column name="id_cart" type="INTEGER" required="true"/>
+    <column name="id_product" type="INTEGER" required="true"/>
+    <column name="quantity" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="cart" phpName="CartProduct" refPhpName="Cart" onDelete="cascade" name="cart_product_cart">
+      <reference local="id_cart" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="product" phpName="CartProduct" refPhpName="Product" onDelete="cascade" name="cart_product_product">
+      <reference local="id_product" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="seller_products" phpName="SellerProduct">
+    <column name="id_seller" type="INTEGER" required="true"/>
+    <column name="id_product" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="seller" phpName="SellerProduct" refPhpName="Seller" onDelete="cascade" name="seller_product_seller">
+      <reference local="id_seller" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="product" phpName="SellerProduct" refPhpName="Product" onDelete="cascade" name="seller_product_product">
+      <reference local="id_product" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="order_products" phpName="OrderProduct">
+    <column name="id_order" type="INTEGER" required="true"/>
+    <column name="id_product" type="INTEGER" required="true"/>
+    <column name="quantity" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="order" phpName="OrderProduct" refPhpName="Order" onDelete="cascade" name="order_product_cart">
+      <reference local="id_order" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="product" phpName="OrderProduct" refPhpName="Product" onDelete="cascade" name="order_product_product">
+      <reference local="id_product" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="address" phpName="Address">
+    <column name="id" type="INTEGER" required="true"/>
+    <column name="country" type="VARCHAR" size="30" required="true"/>
+    <column name="state" type="VARCHAR" size="2" required="true"/>
+    <column name="city" type="VARCHAR" size="20" required="true"/>
+    <column name="neighborhood" type="VARCHAR" size="20" required="true"/>
+    <column name="street" type="VARCHAR" size="30" required="true"/>
+    <column name="number" type="INTEGER" required="true"/>
+  </table>
+  <table name="address_owner" phpName="AddressOwner">
+    <column type="INTEGER" name="id_address" required="true"/>
+    <column type="INTEGER" name="id_client" />
+    <column type="INTEGER" name="id_seller" />
+    <column type="VARCHAR" name="type" size="10" required="true"/>
+    <foreign-key phpName="AddressOwner" refPhpName="Address" onDelete="cascade" name="address_owner_address" foreignTable="address">
+      <reference foreign="id" local="id_address"/>
+    </foreign-key>
+    <foreign-key phpName="AddressOwner" refPhpName="Client" onDelete="cascade" name="address_owner_client" foreignTable="client">
+      <reference foreign="id" local="id_client"/>
+    </foreign-key>
+    <foreign-key phpName="AddressOwner" refPhpName="Seller" onDelete="cascade" name="address_owner_seller" foreignTable="seller">
+      <reference foreign="id" local="id_seller"/>
+    </foreign-key>
+  </table>
+  <table name="product" phpName="Product">
+    <column name="id" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="title" type="VARCHAR" size="50" required="true" />
+    <column name="desc" type="VARCHAR" size="200" />
+    <column name="unity_price" type="FLOAT" required="true" />
+    <column name="in_stock" type="INTEGER" required="true" />
+    <unique name="product_title_unique">
+      <unique-column name="title" />
+    </unique>
+  </table>
+  <table name="discount" phpName="Discount">
+    <column name="id" autoIncrement="true" primaryKey="true" required="true" />
+    <column name="type" type="VARCHAR" size="1" required="true"/>
+    <column name="id_product" type="INTEGER"/>
+    <column name="id_category" type="INTEGER"/>
+    <column name="percent" type="INTEGER" required="true"/>
+    <column name="start_at" type="TIMESTAMP" required="true"/>
+    <column name="expires_at" type="TIMESTAMP" required="true"/>
+    <foreign-key foreignTable="product" phpName="Discount" refPhpName="Product" onDelete="cascade" name="discount_product_id">
+      <reference local="id_product" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="category" phpName="Discount" refPhpName="Category" onDelete="cascade" name="discount_category_id">
+      <reference local="id_category" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="product_category" phpName="ProductCategory">
+    <column type="INTEGER" required="true" name="id_product"/>
+    <column type="INTEGER" required="true" name="id_category"/>
+    <foreign-key foreignTable="product" phpName="ProductCategory" refPhpName="Product" name="product_category_product" onDelete="cascade">
+      <reference local="id_product" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="category" phpName="ProductCategory" refPhpName="Category" name="product_category_category" onDelete="cascade">
+      <reference local="id_category" foreign="id"/>
+    </foreign-key>
+  </table>
 </database>
