@@ -2,10 +2,10 @@
 
 namespace Buildings;
 
-use Buildings\Base\MessageQuery as BaseMessageQuery;
+use Buildings\Base\SellerProduct as BaseSellerProduct;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'message' table.
+ * Skeleton subclass for representing a row from the 'seller_products' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use Buildings\Base\MessageQuery as BaseMessageQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class MessageQuery extends BaseMessageQuery
+class SellerProduct extends BaseSellerProduct
 {
 
 }

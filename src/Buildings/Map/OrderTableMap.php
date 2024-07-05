@@ -2,8 +2,8 @@
 
 namespace Buildings\Map;
 
-use Buildings\Message;
-use Buildings\MessageQuery;
+use Buildings\Order;
+use Buildings\OrderQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'message' table.
+ * This class defines the structure of the 'order' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class MessageTableMap extends TableMap
+class OrderTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class MessageTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Buildings.Map.MessageTableMap';
+    public const CLASS_NAME = 'Buildings.Map.OrderTableMap';
 
     /**
      * The default database name for this class
@@ -43,27 +43,27 @@ class MessageTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'message';
+    public const TABLE_NAME = 'order';
 
     /**
      * The PHP name of this class (PascalCase)
      */
-    public const TABLE_PHP_NAME = 'Message';
+    public const TABLE_PHP_NAME = 'Order';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Buildings\\Message';
+    public const OM_CLASS = '\\Buildings\\Order';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Buildings.Message';
+    public const CLASS_DEFAULT = 'Buildings.Order';
 
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 2;
+    public const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -73,17 +73,37 @@ class MessageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 2;
+    public const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'message.id';
+    public const COL_ID = 'order.id';
 
     /**
-     * the column name for the msg field
+     * the column name for the id_client field
      */
-    public const COL_MSG = 'message.msg';
+    public const COL_ID_CLIENT = 'order.id_client';
+
+    /**
+     * the column name for the id_seller field
+     */
+    public const COL_ID_SELLER = 'order.id_seller';
+
+    /**
+     * the column name for the expires_at field
+     */
+    public const COL_EXPIRES_AT = 'order.expires_at';
+
+    /**
+     * the column name for the type field
+     */
+    public const COL_TYPE = 'order.type';
+
+    /**
+     * the column name for the updated_at field
+     */
+    public const COL_UPDATED_AT = 'order.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -99,11 +119,11 @@ class MessageTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Msg', ],
-        self::TYPE_CAMELNAME     => ['id', 'msg', ],
-        self::TYPE_COLNAME       => [MessageTableMap::COL_ID, MessageTableMap::COL_MSG, ],
-        self::TYPE_FIELDNAME     => ['id', 'msg', ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id', 'IdClient', 'IdSeller', 'ExpiresAt', 'Type', 'UpdatedAt', ],
+        self::TYPE_CAMELNAME     => ['id', 'idClient', 'idSeller', 'expiresAt', 'type', 'updatedAt', ],
+        self::TYPE_COLNAME       => [OrderTableMap::COL_ID, OrderTableMap::COL_ID_CLIENT, OrderTableMap::COL_ID_SELLER, OrderTableMap::COL_EXPIRES_AT, OrderTableMap::COL_TYPE, OrderTableMap::COL_UPDATED_AT, ],
+        self::TYPE_FIELDNAME     => ['id', 'id_client', 'id_seller', 'expires_at', 'type', 'updated_at', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -115,11 +135,11 @@ class MessageTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Msg' => 1, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'msg' => 1, ],
-        self::TYPE_COLNAME       => [MessageTableMap::COL_ID => 0, MessageTableMap::COL_MSG => 1, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'msg' => 1, ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'IdClient' => 1, 'IdSeller' => 2, 'ExpiresAt' => 3, 'Type' => 4, 'UpdatedAt' => 5, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'idClient' => 1, 'idSeller' => 2, 'expiresAt' => 3, 'type' => 4, 'updatedAt' => 5, ],
+        self::TYPE_COLNAME       => [OrderTableMap::COL_ID => 0, OrderTableMap::COL_ID_CLIENT => 1, OrderTableMap::COL_ID_SELLER => 2, OrderTableMap::COL_EXPIRES_AT => 3, OrderTableMap::COL_TYPE => 4, OrderTableMap::COL_UPDATED_AT => 5, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'id_client' => 1, 'id_seller' => 2, 'expires_at' => 3, 'type' => 4, 'updated_at' => 5, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
     ];
 
     /**
@@ -129,17 +149,49 @@ class MessageTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Message.Id' => 'ID',
+        'Order.Id' => 'ID',
         'id' => 'ID',
-        'message.id' => 'ID',
-        'MessageTableMap::COL_ID' => 'ID',
+        'order.id' => 'ID',
+        'OrderTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Msg' => 'MSG',
-        'Message.Msg' => 'MSG',
-        'msg' => 'MSG',
-        'message.msg' => 'MSG',
-        'MessageTableMap::COL_MSG' => 'MSG',
-        'COL_MSG' => 'MSG',
+        'IdClient' => 'ID_CLIENT',
+        'Order.IdClient' => 'ID_CLIENT',
+        'idClient' => 'ID_CLIENT',
+        'order.idClient' => 'ID_CLIENT',
+        'OrderTableMap::COL_ID_CLIENT' => 'ID_CLIENT',
+        'COL_ID_CLIENT' => 'ID_CLIENT',
+        'id_client' => 'ID_CLIENT',
+        'order.id_client' => 'ID_CLIENT',
+        'IdSeller' => 'ID_SELLER',
+        'Order.IdSeller' => 'ID_SELLER',
+        'idSeller' => 'ID_SELLER',
+        'order.idSeller' => 'ID_SELLER',
+        'OrderTableMap::COL_ID_SELLER' => 'ID_SELLER',
+        'COL_ID_SELLER' => 'ID_SELLER',
+        'id_seller' => 'ID_SELLER',
+        'order.id_seller' => 'ID_SELLER',
+        'ExpiresAt' => 'EXPIRES_AT',
+        'Order.ExpiresAt' => 'EXPIRES_AT',
+        'expiresAt' => 'EXPIRES_AT',
+        'order.expiresAt' => 'EXPIRES_AT',
+        'OrderTableMap::COL_EXPIRES_AT' => 'EXPIRES_AT',
+        'COL_EXPIRES_AT' => 'EXPIRES_AT',
+        'expires_at' => 'EXPIRES_AT',
+        'order.expires_at' => 'EXPIRES_AT',
+        'Type' => 'TYPE',
+        'Order.Type' => 'TYPE',
+        'type' => 'TYPE',
+        'order.type' => 'TYPE',
+        'OrderTableMap::COL_TYPE' => 'TYPE',
+        'COL_TYPE' => 'TYPE',
+        'UpdatedAt' => 'UPDATED_AT',
+        'Order.UpdatedAt' => 'UPDATED_AT',
+        'updatedAt' => 'UPDATED_AT',
+        'order.updatedAt' => 'UPDATED_AT',
+        'OrderTableMap::COL_UPDATED_AT' => 'UPDATED_AT',
+        'COL_UPDATED_AT' => 'UPDATED_AT',
+        'updated_at' => 'UPDATED_AT',
+        'order.updated_at' => 'UPDATED_AT',
     ];
 
     /**
@@ -152,15 +204,19 @@ class MessageTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('message');
-        $this->setPhpName('Message');
+        $this->setName('order');
+        $this->setPhpName('Order');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Buildings\\Message');
+        $this->setClassName('\\Buildings\\Order');
         $this->setPackage('Buildings');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('msg', 'Msg', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('id_client', 'IdClient', 'INTEGER', 'client', 'id', false, null, null);
+        $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', false, null, null);
+        $this->addColumn('expires_at', 'ExpiresAt', 'DATE', true, null, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', true, 10, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     }
 
     /**
@@ -170,6 +226,50 @@ class MessageTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('OrderIdClient', '\\Buildings\\Client', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_client',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
+        $this->addRelation('OrderIdSeller', '\\Buildings\\Seller', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_seller',
+    1 => ':id',
+  ),
+), 'CASCADE', null, null, false);
+        $this->addRelation('Order', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_order',
+    1 => ':id',
+  ),
+), 'CASCADE', null, 'Orders', false);
+    }
+
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors(): array
+    {
+        return [
+            'timestampable' => ['create_column' => 'updated_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false'],
+        ];
+    }
+
+    /**
+     * Method to invalidate the instance pool of all tables related to order     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool(): void
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        OrderProductTableMap::clearInstancePool();
     }
 
     /**
@@ -229,7 +329,7 @@ class MessageTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? MessageTableMap::CLASS_DEFAULT : MessageTableMap::OM_CLASS;
+        return $withPrefix ? OrderTableMap::CLASS_DEFAULT : OrderTableMap::OM_CLASS;
     }
 
     /**
@@ -243,22 +343,22 @@ class MessageTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Message object, last column rank)
+     * @return array (Order object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = MessageTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = MessageTableMap::getInstanceFromPool($key))) {
+        $key = OrderTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = OrderTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + MessageTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + OrderTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = MessageTableMap::OM_CLASS;
-            /** @var Message $obj */
+            $cls = OrderTableMap::OM_CLASS;
+            /** @var Order $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            MessageTableMap::addInstanceToPool($obj, $key);
+            OrderTableMap::addInstanceToPool($obj, $key);
         }
 
         return [$obj, $col];
@@ -281,18 +381,18 @@ class MessageTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = MessageTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = MessageTableMap::getInstanceFromPool($key))) {
+            $key = OrderTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = OrderTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Message $obj */
+                /** @var Order $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                MessageTableMap::addInstanceToPool($obj, $key);
+                OrderTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -314,11 +414,19 @@ class MessageTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(MessageTableMap::COL_ID);
-            $criteria->addSelectColumn(MessageTableMap::COL_MSG);
+            $criteria->addSelectColumn(OrderTableMap::COL_ID);
+            $criteria->addSelectColumn(OrderTableMap::COL_ID_CLIENT);
+            $criteria->addSelectColumn(OrderTableMap::COL_ID_SELLER);
+            $criteria->addSelectColumn(OrderTableMap::COL_EXPIRES_AT);
+            $criteria->addSelectColumn(OrderTableMap::COL_TYPE);
+            $criteria->addSelectColumn(OrderTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.msg');
+            $criteria->addSelectColumn($alias . '.id_client');
+            $criteria->addSelectColumn($alias . '.id_seller');
+            $criteria->addSelectColumn($alias . '.expires_at');
+            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 
@@ -337,11 +445,19 @@ class MessageTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(MessageTableMap::COL_ID);
-            $criteria->removeSelectColumn(MessageTableMap::COL_MSG);
+            $criteria->removeSelectColumn(OrderTableMap::COL_ID);
+            $criteria->removeSelectColumn(OrderTableMap::COL_ID_CLIENT);
+            $criteria->removeSelectColumn(OrderTableMap::COL_ID_SELLER);
+            $criteria->removeSelectColumn(OrderTableMap::COL_EXPIRES_AT);
+            $criteria->removeSelectColumn(OrderTableMap::COL_TYPE);
+            $criteria->removeSelectColumn(OrderTableMap::COL_UPDATED_AT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.msg');
+            $criteria->removeSelectColumn($alias . '.id_client');
+            $criteria->removeSelectColumn($alias . '.id_seller');
+            $criteria->removeSelectColumn($alias . '.expires_at');
+            $criteria->removeSelectColumn($alias . '.type');
+            $criteria->removeSelectColumn($alias . '.updated_at');
         }
     }
 
@@ -354,13 +470,13 @@ class MessageTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(MessageTableMap::DATABASE_NAME)->getTable(MessageTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(OrderTableMap::DATABASE_NAME)->getTable(OrderTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Message or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Order or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Message object or primary key or array of primary keys
+     * @param mixed $values Criteria or Order object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -371,27 +487,27 @@ class MessageTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MessageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(OrderTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Buildings\Message) { // it's a model object
+        } elseif ($values instanceof \Buildings\Order) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(MessageTableMap::DATABASE_NAME);
-            $criteria->add(MessageTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(OrderTableMap::DATABASE_NAME);
+            $criteria->add(OrderTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = MessageQuery::create()->mergeWith($criteria);
+        $query = OrderQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            MessageTableMap::clearInstancePool();
+            OrderTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                MessageTableMap::removeInstanceFromPool($singleval);
+                OrderTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -399,20 +515,20 @@ class MessageTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the message table.
+     * Deletes all rows from the order table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return MessageQuery::create()->doDeleteAll($con);
+        return OrderQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Message or Criteria object.
+     * Performs an INSERT on the database, given a Order or Criteria object.
      *
-     * @param mixed $criteria Criteria or Message object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Order object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -421,22 +537,22 @@ class MessageTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MessageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(OrderTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Message object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Order object
         }
 
-        if ($criteria->containsKey(MessageTableMap::COL_ID) && $criteria->keyContainsValue(MessageTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.MessageTableMap::COL_ID.')');
+        if ($criteria->containsKey(OrderTableMap::COL_ID) && $criteria->keyContainsValue(OrderTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.OrderTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = MessageQuery::create()->mergeWith($criteria);
+        $query = OrderQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

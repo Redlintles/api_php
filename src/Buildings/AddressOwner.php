@@ -2,10 +2,10 @@
 
 namespace Buildings;
 
-use Buildings\Base\Message as BaseMessage;
+use Buildings\Base\AddressOwner as BaseAddressOwner;
 
 /**
- * Skeleton subclass for representing a row from the 'message' table.
+ * Skeleton subclass for representing a row from the 'address_owner' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use Buildings\Base\Message as BaseMessage;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class Message extends BaseMessage
+class AddressOwner extends BaseAddressOwner
 {
 
 }
