@@ -32,7 +32,7 @@ switch ($request) {
         echo "<h1>Hello World!</h1>";
         break;
     case "/api/admin":
-        require __DIR__ . "/api/admin.php";
+        require __DIR__ . "/api/Admin/router.php";
         break;
     default:
         // Rota padrão para tratamento de 404
