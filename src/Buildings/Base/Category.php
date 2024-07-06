@@ -79,6 +79,7 @@ abstract class Category implements ActiveRecordInterface
     /**
      * The value for the name field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $name;
@@ -120,10 +121,23 @@ abstract class Category implements ActiveRecordInterface
     protected $categoriesScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->name = '';
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Category object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -415,6 +429,10 @@ abstract class Category implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->name !== '') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1678,6 +1696,7 @@ abstract class Category implements ActiveRecordInterface
         $this->name = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

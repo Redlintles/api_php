@@ -223,7 +223,7 @@ class DiscountTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('type', 'Type', 'VARCHAR', true, 1, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', true, 1, '');
         $this->addForeignKey('id_product', 'IdProduct', 'INTEGER', 'product', 'id', false, null, null);
         $this->addForeignKey('id_category', 'IdCategory', 'INTEGER', 'category', 'id', false, null, null);
         $this->addColumn('percent', 'Percent', 'INTEGER', true, null, 1);

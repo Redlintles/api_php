@@ -76,6 +76,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the country field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $country;
@@ -83,6 +84,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the state field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $state;
@@ -90,6 +92,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the city field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $city;
@@ -97,6 +100,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the neighborhood field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $neighborhood;
@@ -104,6 +108,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the street field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $street;
@@ -146,6 +151,11 @@ abstract class Address implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
+        $this->country = '';
+        $this->state = '';
+        $this->city = '';
+        $this->neighborhood = '';
+        $this->street = '';
         $this->number = 1;
     }
 
@@ -597,6 +607,26 @@ abstract class Address implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->country !== '') {
+                return false;
+            }
+
+            if ($this->state !== '') {
+                return false;
+            }
+
+            if ($this->city !== '') {
+                return false;
+            }
+
+            if ($this->neighborhood !== '') {
+                return false;
+            }
+
+            if ($this->street !== '') {
+                return false;
+            }
+
             if ($this->number !== 1) {
                 return false;
             }

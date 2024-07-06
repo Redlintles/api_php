@@ -82,6 +82,7 @@ abstract class Client implements ActiveRecordInterface
     /**
      * The value for the username field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $username;
@@ -89,6 +90,7 @@ abstract class Client implements ActiveRecordInterface
     /**
      * The value for the password field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $password;
@@ -96,6 +98,7 @@ abstract class Client implements ActiveRecordInterface
     /**
      * The value for the email field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $email;
@@ -103,6 +106,7 @@ abstract class Client implements ActiveRecordInterface
     /**
      * The value for the phone_number field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $phone_number;
@@ -158,10 +162,26 @@ abstract class Client implements ActiveRecordInterface
     protected $clientsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->username = '';
+        $this->password = '';
+        $this->email = '';
+        $this->phone_number = '';
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Client object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -543,6 +563,22 @@ abstract class Client implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->username !== '') {
+                return false;
+            }
+
+            if ($this->password !== '') {
+                return false;
+            }
+
+            if ($this->email !== '') {
+                return false;
+            }
+
+            if ($this->phone_number !== '') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -2190,6 +2226,7 @@ abstract class Client implements ActiveRecordInterface
         $this->phone_number = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

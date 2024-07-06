@@ -192,7 +192,7 @@ class AddressOwnerTableMap extends TableMap
         $this->addForeignKey('id_address', 'IdAddress', 'INTEGER', 'address', 'id', true, null, 1);
         $this->addForeignKey('id_client', 'IdClient', 'INTEGER', 'client', 'id', false, null, null);
         $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', false, null, null);
-        $this->addColumn('type', 'Type', 'VARCHAR', true, 10, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', true, 10, '');
     }
 
     /**

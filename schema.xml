@@ -2,9 +2,9 @@
   namespace="Buildings">
   <table name="admin" phpName="Admin">
     <column name="id" primaryKey="true" autoIncrement="true" type="INTEGER" required="true" />
-    <column name="password" type="VARCHAR" size="30" required="true" />
-    <column name="username" type="VARCHAR" size="50" required="true" />
-    <column name="api_key" type="VARCHAR" size="36" required="true" />
+    <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="api_key" type="VARCHAR" defaultValue="" size="36" required="true" />
     <unique name="admin_username_unique">
       <unique-column name="username" />
     </unique>
@@ -25,24 +25,24 @@
   </table>
   <table name="client" phpName="Client">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="username" type="VARCHAR" size="50" required="true" />
-    <column name="password" type="VARCHAR" size="30" required="true" />
-    <column name="email" type="VARCHAR" size="30" required="true" />
-    <column name="phone_number" type="VARCHAR" size="15" required="true" />
+    <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
   </table>
   <table name="seller" phpName="Seller">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="username" type="VARCHAR" size="50" required="true" />
-    <column name="password" type="VARCHAR" size="30" required="true" />
-    <column name="email" type="VARCHAR" size="30" required="true" />
-    <column name="phone_number" type="VARCHAR" size="15" required="true" />
+    <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
   </table>
   <table name="order" phpName="Order">
     <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
     <column name="id_client" type="INTEGER" />
     <column name="id_seller" type="INTEGER" />
     <column name="expires_at" type="DATE" required="true" defaultValue="2025-01-01" />
-    <column name="type" type="VARCHAR" size="10" required="true" />
+    <column name="type" type="VARCHAR" defaultValue="" size="10" required="true" />
     <foreign-key foreignTable="client" phpName="OrderIdClient" refPhpName="Client" onDelete="cascade" name="order_id_client">
       <reference local="id_client" foreign="id"/>
     </foreign-key>
@@ -55,7 +55,7 @@
   </table>
   <table name="category" phpName="Category">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="name" type="VARCHAR" size="20" required="true" />
+    <column name="name" type="VARCHAR" defaultValue="" size="20" required="true" />
     <unique name="category_name_unique">
       <unique-column name="name" />
     </unique>
@@ -105,18 +105,18 @@
   </table>
   <table name="address" phpName="Address">
     <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true" />
-    <column name="country" type="VARCHAR" size="30" required="true"/>
-    <column name="state" type="VARCHAR" size="2" required="true"/>
-    <column name="city" type="VARCHAR" size="20" required="true"/>
-    <column name="neighborhood" type="VARCHAR" size="20" required="true"/>
-    <column name="street" type="VARCHAR" size="30" required="true"/>
+    <column name="country" type="VARCHAR" defaultValue="" size="30" required="true"/>
+    <column name="state" type="VARCHAR" defaultValue="" size="2" required="true"/>
+    <column name="city" type="VARCHAR" defaultValue="" size="20" required="true"/>
+    <column name="neighborhood" type="VARCHAR" defaultValue="" size="20" required="true"/>
+    <column name="street" type="VARCHAR" defaultValue="" size="30" required="true"/>
     <column name="number" type="INTEGER" required="true" defaultValue="1"/>
   </table>
   <table name="address_owner" phpName="AddressOwner">
     <column type="INTEGER" name="id_address" required="true" defaultValue="1"/>
     <column type="INTEGER" name="id_client" />
     <column type="INTEGER" name="id_seller" />
-    <column type="VARCHAR" name="type" size="10" required="true"/>
+    <column type="VARCHAR" defaultValue="" name="type" size="10" required="true"/>
     <foreign-key phpName="AddressOwnerId" refPhpName="Address" onDelete="cascade" name="address_owner_address" foreignTable="address">
       <reference foreign="id" local="id_address"/>
     </foreign-key>
@@ -129,8 +129,8 @@
   </table>
   <table name="product" phpName="Product">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="title" type="VARCHAR" size="50" required="true" />
-    <column name="desc" type="VARCHAR" size="200" />
+    <column name="title" type="VARCHAR" defaultValue="" size="50" required="true" />
+    <column name="desc" type="VARCHAR" defaultValue="" size="200" />
     <column name="unity_price" type="FLOAT" required="true" defaultValue="1" />
     <column name="in_stock" type="INTEGER" required="true" defaultValue="1" />
     <unique name="product_title_unique">
@@ -139,7 +139,7 @@
   </table>
   <table name="discount" phpName="Discount">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="type" type="VARCHAR" size="1" required="true"/>
+    <column name="type" type="VARCHAR" defaultValue="" size="1" required="true"/>
     <column name="id_product" type="INTEGER"/>
     <column name="id_category" type="INTEGER"/>
     <column name="percent" type="INTEGER" required="true" defaultValue="1"/>

@@ -77,6 +77,7 @@ abstract class Discount implements ActiveRecordInterface
     /**
      * The value for the type field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $type;
@@ -145,6 +146,7 @@ abstract class Discount implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
+        $this->type = '';
         $this->percent = 1;
         $this->start_at = PropelDateTime::newInstance('2024-01-01 00:00:00.000000', null, 'DateTime');
         $this->expires_at = PropelDateTime::newInstance('2024-01-01 00:00:00.000000', null, 'DateTime');
@@ -634,6 +636,10 @@ abstract class Discount implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->type !== '') {
+                return false;
+            }
+
             if ($this->percent !== 1) {
                 return false;
             }

@@ -74,22 +74,25 @@ abstract class Admin implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the password field.
-     *
-     * @var        string
-     */
-    protected $password;
-
-    /**
      * The value for the username field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $username;
 
     /**
+     * The value for the password field.
+     *
+     * Note: this column has a database default value of: ''
+     * @var        string
+     */
+    protected $password;
+
+    /**
      * The value for the api_key field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $api_key;
@@ -117,10 +120,25 @@ abstract class Admin implements ActiveRecordInterface
     protected $adminsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->username = '';
+        $this->password = '';
+        $this->api_key = '';
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Admin object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -353,16 +371,6 @@ abstract class Admin implements ActiveRecordInterface
     }
 
     /**
-     * Get the [password] column value.
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * Get the [username] column value.
      *
      * @return string
@@ -370,6 +378,16 @@ abstract class Admin implements ActiveRecordInterface
     public function getUsername()
     {
         return $this->username;
+    }
+
+    /**
+     * Get the [password] column value.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     /**
@@ -403,26 +421,6 @@ abstract class Admin implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [password] column.
-     *
-     * @param string $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setPassword($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->password !== $v) {
-            $this->password = $v;
-            $this->modifiedColumns[AdminTableMap::COL_PASSWORD] = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the value of [username] column.
      *
      * @param string $v New value
@@ -437,6 +435,26 @@ abstract class Admin implements ActiveRecordInterface
         if ($this->username !== $v) {
             $this->username = $v;
             $this->modifiedColumns[AdminTableMap::COL_USERNAME] = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the value of [password] column.
+     *
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setPassword($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->password !== $v) {
+            $this->password = $v;
+            $this->modifiedColumns[AdminTableMap::COL_PASSWORD] = true;
         }
 
         return $this;
@@ -472,6 +490,18 @@ abstract class Admin implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->username !== '') {
+                return false;
+            }
+
+            if ($this->password !== '') {
+                return false;
+            }
+
+            if ($this->api_key !== '') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -501,11 +531,11 @@ abstract class Admin implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : AdminTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AdminTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->password = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AdminTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AdminTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
             $this->username = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AdminTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->password = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AdminTableMap::translateFieldName('ApiKey', TableMap::TYPE_PHPNAME, $indexType)];
             $this->api_key = (null !== $col) ? (string) $col : null;
@@ -741,11 +771,11 @@ abstract class Admin implements ActiveRecordInterface
         if ($this->isColumnModified(AdminTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(AdminTableMap::COL_PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = 'password';
-        }
         if ($this->isColumnModified(AdminTableMap::COL_USERNAME)) {
             $modifiedColumns[':p' . $index++]  = 'username';
+        }
+        if ($this->isColumnModified(AdminTableMap::COL_PASSWORD)) {
+            $modifiedColumns[':p' . $index++]  = 'password';
         }
         if ($this->isColumnModified(AdminTableMap::COL_API_KEY)) {
             $modifiedColumns[':p' . $index++]  = 'api_key';
@@ -765,12 +795,12 @@ abstract class Admin implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
 
                         break;
-                    case 'password':
-                        $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
-
-                        break;
                     case 'username':
                         $stmt->bindValue($identifier, $this->username, PDO::PARAM_STR);
+
+                        break;
+                    case 'password':
+                        $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
 
                         break;
                     case 'api_key':
@@ -843,10 +873,10 @@ abstract class Admin implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getPassword();
+                return $this->getUsername();
 
             case 2:
-                return $this->getUsername();
+                return $this->getPassword();
 
             case 3:
                 return $this->getApiKey();
@@ -880,8 +910,8 @@ abstract class Admin implements ActiveRecordInterface
         $keys = AdminTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getPassword(),
-            $keys[2] => $this->getUsername(),
+            $keys[1] => $this->getUsername(),
+            $keys[2] => $this->getPassword(),
             $keys[3] => $this->getApiKey(),
         ];
         $virtualColumns = $this->virtualColumns;
@@ -945,10 +975,10 @@ abstract class Admin implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setPassword($value);
+                $this->setUsername($value);
                 break;
             case 2:
-                $this->setUsername($value);
+                $this->setPassword($value);
                 break;
             case 3:
                 $this->setApiKey($value);
@@ -983,10 +1013,10 @@ abstract class Admin implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setPassword($arr[$keys[1]]);
+            $this->setUsername($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setUsername($arr[$keys[2]]);
+            $this->setPassword($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setApiKey($arr[$keys[3]]);
@@ -1037,11 +1067,11 @@ abstract class Admin implements ActiveRecordInterface
         if ($this->isColumnModified(AdminTableMap::COL_ID)) {
             $criteria->add(AdminTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(AdminTableMap::COL_PASSWORD)) {
-            $criteria->add(AdminTableMap::COL_PASSWORD, $this->password);
-        }
         if ($this->isColumnModified(AdminTableMap::COL_USERNAME)) {
             $criteria->add(AdminTableMap::COL_USERNAME, $this->username);
+        }
+        if ($this->isColumnModified(AdminTableMap::COL_PASSWORD)) {
+            $criteria->add(AdminTableMap::COL_PASSWORD, $this->password);
         }
         if ($this->isColumnModified(AdminTableMap::COL_API_KEY)) {
             $criteria->add(AdminTableMap::COL_API_KEY, $this->api_key);
@@ -1134,8 +1164,8 @@ abstract class Admin implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setPassword($this->getPassword());
         $copyObj->setUsername($this->getUsername());
+        $copyObj->setPassword($this->getPassword());
         $copyObj->setApiKey($this->getApiKey());
 
         if ($deepCopy) {
@@ -1445,11 +1475,12 @@ abstract class Admin implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->password = null;
         $this->username = null;
+        $this->password = null;
         $this->api_key = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

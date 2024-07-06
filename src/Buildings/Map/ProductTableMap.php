@@ -197,8 +197,8 @@ class ProductTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('title', 'Title', 'VARCHAR', true, 50, null);
-        $this->addColumn('desc', 'Desc', 'VARCHAR', false, 200, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 50, '');
+        $this->addColumn('desc', 'Desc', 'VARCHAR', false, 200, '');
         $this->addColumn('unity_price', 'UnityPrice', 'FLOAT', true, null, 1);
         $this->addColumn('in_stock', 'InStock', 'INTEGER', true, null, 1);
     }

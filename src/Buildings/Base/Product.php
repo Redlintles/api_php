@@ -88,6 +88,7 @@ abstract class Product implements ActiveRecordInterface
     /**
      * The value for the title field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $title;
@@ -95,6 +96,7 @@ abstract class Product implements ActiveRecordInterface
     /**
      * The value for the desc field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string|null
      */
     protected $desc;
@@ -201,6 +203,8 @@ abstract class Product implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
+        $this->title = '';
+        $this->desc = '';
         $this->unity_price = 1.0;
         $this->in_stock = 1;
     }
@@ -593,6 +597,14 @@ abstract class Product implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->title !== '') {
+                return false;
+            }
+
+            if ($this->desc !== '') {
+                return false;
+            }
+
             if ($this->unity_price !== 1.0) {
                 return false;
             }

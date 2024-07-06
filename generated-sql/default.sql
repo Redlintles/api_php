@@ -12,9 +12,9 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `password` VARCHAR(30) NOT NULL,
-    `username` VARCHAR(50) NOT NULL,
-    `api_key` VARCHAR(36) NOT NULL,
+    `username` VARCHAR(50) DEFAULT '' NOT NULL,
+    `password` VARCHAR(30) DEFAULT '' NOT NULL,
+    `api_key` VARCHAR(36) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `admin_username_unique` (`username`),
     UNIQUE INDEX `admin_api_key_unique` (`api_key`)
@@ -49,10 +49,10 @@ DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(50) NOT NULL,
-    `password` VARCHAR(30) NOT NULL,
-    `email` VARCHAR(30) NOT NULL,
-    `phone_number` VARCHAR(15) NOT NULL,
+    `username` VARCHAR(50) DEFAULT '' NOT NULL,
+    `password` VARCHAR(30) DEFAULT '' NOT NULL,
+    `email` VARCHAR(30) DEFAULT '' NOT NULL,
+    `phone_number` VARCHAR(15) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -65,10 +65,10 @@ DROP TABLE IF EXISTS `seller`;
 CREATE TABLE `seller`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(50) NOT NULL,
-    `password` VARCHAR(30) NOT NULL,
-    `email` VARCHAR(30) NOT NULL,
-    `phone_number` VARCHAR(15) NOT NULL,
+    `username` VARCHAR(50) DEFAULT '' NOT NULL,
+    `password` VARCHAR(30) DEFAULT '' NOT NULL,
+    `email` VARCHAR(30) DEFAULT '' NOT NULL,
+    `phone_number` VARCHAR(15) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -84,7 +84,7 @@ CREATE TABLE `order`
     `id_client` INTEGER,
     `id_seller` INTEGER,
     `expires_at` DATE DEFAULT '2025-01-01' NOT NULL,
-    `type` VARCHAR(10) NOT NULL,
+    `type` VARCHAR(10) DEFAULT '' NOT NULL,
     `updated_at` TIMESTAMP NULL,
     PRIMARY KEY (`id`),
     INDEX `fi_er_id_client` (`id_client`),
@@ -108,7 +108,7 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(20) NOT NULL,
+    `name` VARCHAR(20) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `category_name_unique` (`name`)
 ) ENGINE=InnoDB;
@@ -210,11 +210,11 @@ DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `country` VARCHAR(30) NOT NULL,
-    `state` VARCHAR(2) NOT NULL,
-    `city` VARCHAR(20) NOT NULL,
-    `neighborhood` VARCHAR(20) NOT NULL,
-    `street` VARCHAR(30) NOT NULL,
+    `country` VARCHAR(30) DEFAULT '' NOT NULL,
+    `state` VARCHAR(2) DEFAULT '' NOT NULL,
+    `city` VARCHAR(20) DEFAULT '' NOT NULL,
+    `neighborhood` VARCHAR(20) DEFAULT '' NOT NULL,
+    `street` VARCHAR(30) DEFAULT '' NOT NULL,
     `number` INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
@@ -230,7 +230,7 @@ CREATE TABLE `address_owner`
     `id_address` INTEGER DEFAULT 1 NOT NULL,
     `id_client` INTEGER,
     `id_seller` INTEGER,
-    `type` VARCHAR(10) NOT NULL,
+    `type` VARCHAR(10) DEFAULT '' NOT NULL,
     INDEX `fi_ress_owner_address` (`id_address`),
     INDEX `fi_ress_owner_client` (`id_client`),
     INDEX `fi_ress_owner_seller` (`id_seller`),
@@ -257,8 +257,8 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(50) NOT NULL,
-    `desc` VARCHAR(200),
+    `title` VARCHAR(50) DEFAULT '' NOT NULL,
+    `desc` VARCHAR(200) DEFAULT '',
     `unity_price` FLOAT DEFAULT 1 NOT NULL,
     `in_stock` INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (`id`),
@@ -274,7 +274,7 @@ DROP TABLE IF EXISTS `discount`;
 CREATE TABLE `discount`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` VARCHAR(1) NOT NULL,
+    `type` VARCHAR(1) DEFAULT '' NOT NULL,
     `id_product` INTEGER,
     `id_category` INTEGER,
     `percent` INTEGER DEFAULT 1 NOT NULL,

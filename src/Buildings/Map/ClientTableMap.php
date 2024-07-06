@@ -195,10 +195,10 @@ class ClientTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('username', 'Username', 'VARCHAR', true, 50, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, null);
-        $this->addColumn('email', 'Email', 'VARCHAR', true, 30, null);
-        $this->addColumn('phone_number', 'PhoneNumber', 'VARCHAR', true, 15, null);
+        $this->addColumn('username', 'Username', 'VARCHAR', true, 50, '');
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, '');
+        $this->addColumn('email', 'Email', 'VARCHAR', true, 30, '');
+        $this->addColumn('phone_number', 'PhoneNumber', 'VARCHAR', true, 15, '');
     }
 
     /**

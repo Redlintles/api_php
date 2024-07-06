@@ -81,14 +81,14 @@ class AdminTableMap extends TableMap
     public const COL_ID = 'admin.id';
 
     /**
-     * the column name for the password field
-     */
-    public const COL_PASSWORD = 'admin.password';
-
-    /**
      * the column name for the username field
      */
     public const COL_USERNAME = 'admin.username';
+
+    /**
+     * the column name for the password field
+     */
+    public const COL_PASSWORD = 'admin.password';
 
     /**
      * the column name for the api_key field
@@ -109,10 +109,10 @@ class AdminTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Password', 'Username', 'ApiKey', ],
-        self::TYPE_CAMELNAME     => ['id', 'password', 'username', 'apiKey', ],
-        self::TYPE_COLNAME       => [AdminTableMap::COL_ID, AdminTableMap::COL_PASSWORD, AdminTableMap::COL_USERNAME, AdminTableMap::COL_API_KEY, ],
-        self::TYPE_FIELDNAME     => ['id', 'password', 'username', 'api_key', ],
+        self::TYPE_PHPNAME       => ['Id', 'Username', 'Password', 'ApiKey', ],
+        self::TYPE_CAMELNAME     => ['id', 'username', 'password', 'apiKey', ],
+        self::TYPE_COLNAME       => [AdminTableMap::COL_ID, AdminTableMap::COL_USERNAME, AdminTableMap::COL_PASSWORD, AdminTableMap::COL_API_KEY, ],
+        self::TYPE_FIELDNAME     => ['id', 'username', 'password', 'api_key', ],
         self::TYPE_NUM           => [0, 1, 2, 3, ]
     ];
 
@@ -125,10 +125,10 @@ class AdminTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Password' => 1, 'Username' => 2, 'ApiKey' => 3, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'password' => 1, 'username' => 2, 'apiKey' => 3, ],
-        self::TYPE_COLNAME       => [AdminTableMap::COL_ID => 0, AdminTableMap::COL_PASSWORD => 1, AdminTableMap::COL_USERNAME => 2, AdminTableMap::COL_API_KEY => 3, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'password' => 1, 'username' => 2, 'api_key' => 3, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Username' => 1, 'Password' => 2, 'ApiKey' => 3, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'username' => 1, 'password' => 2, 'apiKey' => 3, ],
+        self::TYPE_COLNAME       => [AdminTableMap::COL_ID => 0, AdminTableMap::COL_USERNAME => 1, AdminTableMap::COL_PASSWORD => 2, AdminTableMap::COL_API_KEY => 3, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'username' => 1, 'password' => 2, 'api_key' => 3, ],
         self::TYPE_NUM           => [0, 1, 2, 3, ]
     ];
 
@@ -144,18 +144,18 @@ class AdminTableMap extends TableMap
         'admin.id' => 'ID',
         'AdminTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Password' => 'PASSWORD',
-        'Admin.Password' => 'PASSWORD',
-        'password' => 'PASSWORD',
-        'admin.password' => 'PASSWORD',
-        'AdminTableMap::COL_PASSWORD' => 'PASSWORD',
-        'COL_PASSWORD' => 'PASSWORD',
         'Username' => 'USERNAME',
         'Admin.Username' => 'USERNAME',
         'username' => 'USERNAME',
         'admin.username' => 'USERNAME',
         'AdminTableMap::COL_USERNAME' => 'USERNAME',
         'COL_USERNAME' => 'USERNAME',
+        'Password' => 'PASSWORD',
+        'Admin.Password' => 'PASSWORD',
+        'password' => 'PASSWORD',
+        'admin.password' => 'PASSWORD',
+        'AdminTableMap::COL_PASSWORD' => 'PASSWORD',
+        'COL_PASSWORD' => 'PASSWORD',
         'ApiKey' => 'API_KEY',
         'Admin.ApiKey' => 'API_KEY',
         'apiKey' => 'API_KEY',
@@ -184,9 +184,9 @@ class AdminTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, null);
-        $this->addColumn('username', 'Username', 'VARCHAR', true, 50, null);
-        $this->addColumn('api_key', 'ApiKey', 'VARCHAR', true, 36, null);
+        $this->addColumn('username', 'Username', 'VARCHAR', true, 50, '');
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, '');
+        $this->addColumn('api_key', 'ApiKey', 'VARCHAR', true, 36, '');
     }
 
     /**
@@ -358,13 +358,13 @@ class AdminTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(AdminTableMap::COL_ID);
-            $criteria->addSelectColumn(AdminTableMap::COL_PASSWORD);
             $criteria->addSelectColumn(AdminTableMap::COL_USERNAME);
+            $criteria->addSelectColumn(AdminTableMap::COL_PASSWORD);
             $criteria->addSelectColumn(AdminTableMap::COL_API_KEY);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.password');
             $criteria->addSelectColumn($alias . '.username');
+            $criteria->addSelectColumn($alias . '.password');
             $criteria->addSelectColumn($alias . '.api_key');
         }
     }
@@ -385,13 +385,13 @@ class AdminTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->removeSelectColumn(AdminTableMap::COL_ID);
-            $criteria->removeSelectColumn(AdminTableMap::COL_PASSWORD);
             $criteria->removeSelectColumn(AdminTableMap::COL_USERNAME);
+            $criteria->removeSelectColumn(AdminTableMap::COL_PASSWORD);
             $criteria->removeSelectColumn(AdminTableMap::COL_API_KEY);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.password');
             $criteria->removeSelectColumn($alias . '.username');
+            $criteria->removeSelectColumn($alias . '.password');
             $criteria->removeSelectColumn($alias . '.api_key');
         }
     }

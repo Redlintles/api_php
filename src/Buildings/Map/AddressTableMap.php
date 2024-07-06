@@ -215,11 +215,11 @@ class AddressTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('country', 'Country', 'VARCHAR', true, 30, null);
-        $this->addColumn('state', 'State', 'VARCHAR', true, 2, null);
-        $this->addColumn('city', 'City', 'VARCHAR', true, 20, null);
-        $this->addColumn('neighborhood', 'Neighborhood', 'VARCHAR', true, 20, null);
-        $this->addColumn('street', 'Street', 'VARCHAR', true, 30, null);
+        $this->addColumn('country', 'Country', 'VARCHAR', true, 30, '');
+        $this->addColumn('state', 'State', 'VARCHAR', true, 2, '');
+        $this->addColumn('city', 'City', 'VARCHAR', true, 20, '');
+        $this->addColumn('neighborhood', 'Neighborhood', 'VARCHAR', true, 20, '');
+        $this->addColumn('street', 'Street', 'VARCHAR', true, 30, '');
         $this->addColumn('number', 'Number', 'INTEGER', true, null, 1);
     }
 

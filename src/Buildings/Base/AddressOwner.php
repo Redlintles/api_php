@@ -92,6 +92,7 @@ abstract class AddressOwner implements ActiveRecordInterface
     /**
      * The value for the type field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $type;
@@ -128,6 +129,7 @@ abstract class AddressOwner implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->id_address = 1;
+        $this->type = '';
     }
 
     /**
@@ -501,6 +503,10 @@ abstract class AddressOwner implements ActiveRecordInterface
     public function hasOnlyDefaultValues(): bool
     {
             if ($this->id_address !== 1) {
+                return false;
+            }
+
+            if ($this->type !== '') {
                 return false;
             }
 

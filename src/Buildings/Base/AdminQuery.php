@@ -20,13 +20,13 @@ use Propel\Runtime\Exception\PropelException;
  * Base class that represents a query for the `admin` table.
  *
  * @method     ChildAdminQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildAdminQuery orderByPassword($order = Criteria::ASC) Order by the password column
  * @method     ChildAdminQuery orderByUsername($order = Criteria::ASC) Order by the username column
+ * @method     ChildAdminQuery orderByPassword($order = Criteria::ASC) Order by the password column
  * @method     ChildAdminQuery orderByApiKey($order = Criteria::ASC) Order by the api_key column
  *
  * @method     ChildAdminQuery groupById() Group by the id column
- * @method     ChildAdminQuery groupByPassword() Group by the password column
  * @method     ChildAdminQuery groupByUsername() Group by the username column
+ * @method     ChildAdminQuery groupByPassword() Group by the password column
  * @method     ChildAdminQuery groupByApiKey() Group by the api_key column
  *
  * @method     ChildAdminQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -53,16 +53,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAdmin findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildAdmin matching the query, or a new ChildAdmin object populated from the query conditions when no match is found
  *
  * @method     ChildAdmin|null findOneById(int $id) Return the first ChildAdmin filtered by the id column
- * @method     ChildAdmin|null findOneByPassword(string $password) Return the first ChildAdmin filtered by the password column
  * @method     ChildAdmin|null findOneByUsername(string $username) Return the first ChildAdmin filtered by the username column
+ * @method     ChildAdmin|null findOneByPassword(string $password) Return the first ChildAdmin filtered by the password column
  * @method     ChildAdmin|null findOneByApiKey(string $api_key) Return the first ChildAdmin filtered by the api_key column
  *
  * @method     ChildAdmin requirePk($key, ?ConnectionInterface $con = null) Return the ChildAdmin by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAdmin requireOne(?ConnectionInterface $con = null) Return the first ChildAdmin matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAdmin requireOneById(int $id) Return the first ChildAdmin filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAdmin requireOneByPassword(string $password) Return the first ChildAdmin filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAdmin requireOneByUsername(string $username) Return the first ChildAdmin filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAdmin requireOneByPassword(string $password) Return the first ChildAdmin filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAdmin requireOneByApiKey(string $api_key) Return the first ChildAdmin filtered by the api_key column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAdmin[]|Collection find(?ConnectionInterface $con = null) Return ChildAdmin objects based on current ModelCriteria
@@ -70,10 +70,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildAdmin[]|Collection findById(int|array<int> $id) Return ChildAdmin objects filtered by the id column
  * @psalm-method Collection&\Traversable<ChildAdmin> findById(int|array<int> $id) Return ChildAdmin objects filtered by the id column
- * @method     ChildAdmin[]|Collection findByPassword(string|array<string> $password) Return ChildAdmin objects filtered by the password column
- * @psalm-method Collection&\Traversable<ChildAdmin> findByPassword(string|array<string> $password) Return ChildAdmin objects filtered by the password column
  * @method     ChildAdmin[]|Collection findByUsername(string|array<string> $username) Return ChildAdmin objects filtered by the username column
  * @psalm-method Collection&\Traversable<ChildAdmin> findByUsername(string|array<string> $username) Return ChildAdmin objects filtered by the username column
+ * @method     ChildAdmin[]|Collection findByPassword(string|array<string> $password) Return ChildAdmin objects filtered by the password column
+ * @psalm-method Collection&\Traversable<ChildAdmin> findByPassword(string|array<string> $password) Return ChildAdmin objects filtered by the password column
  * @method     ChildAdmin[]|Collection findByApiKey(string|array<string> $api_key) Return ChildAdmin objects filtered by the api_key column
  * @psalm-method Collection&\Traversable<ChildAdmin> findByApiKey(string|array<string> $api_key) Return ChildAdmin objects filtered by the api_key column
  *
@@ -175,7 +175,7 @@ abstract class AdminQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, password, username, api_key FROM admin WHERE id = :p0';
+        $sql = 'SELECT id, username, password, api_key FROM admin WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -313,34 +313,6 @@ abstract class AdminQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the password column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByPassword('fooValue');   // WHERE password = 'fooValue'
-     * $query->filterByPassword('%fooValue%', Criteria::LIKE); // WHERE password LIKE '%fooValue%'
-     * $query->filterByPassword(['foo', 'bar']); // WHERE password IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $password The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByPassword($password = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($password)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(AdminTableMap::COL_PASSWORD, $password, $comparison);
-
-        return $this;
-    }
-
-    /**
      * Filter the query on the username column
      *
      * Example usage:
@@ -364,6 +336,34 @@ abstract class AdminQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(AdminTableMap::COL_USERNAME, $username, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the password column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPassword('fooValue');   // WHERE password = 'fooValue'
+     * $query->filterByPassword('%fooValue%', Criteria::LIKE); // WHERE password LIKE '%fooValue%'
+     * $query->filterByPassword(['foo', 'bar']); // WHERE password IN ('foo', 'bar')
+     * </code>
+     *
+     * @param string|string[] $password The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByPassword($password = null, ?string $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($password)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(AdminTableMap::COL_PASSWORD, $password, $comparison);
 
         return $this;
     }

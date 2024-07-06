@@ -104,6 +104,7 @@ abstract class Order implements ActiveRecordInterface
     /**
      * The value for the type field.
      *
+     * Note: this column has a database default value of: ''
      * @var        string
      */
     protected $type;
@@ -156,6 +157,7 @@ abstract class Order implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->expires_at = PropelDateTime::newInstance('2025-01-01', null, 'DateTime');
+        $this->type = '';
     }
 
     /**
@@ -611,6 +613,10 @@ abstract class Order implements ActiveRecordInterface
     public function hasOnlyDefaultValues(): bool
     {
             if ($this->expires_at && $this->expires_at->format('Y-m-d') !== '2025-01-01') {
+                return false;
+            }
+
+            if ($this->type !== '') {
                 return false;
             }
 
