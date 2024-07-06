@@ -2,8 +2,10 @@
 
 use Buildings\Permission;
 
-function permissionValidator(Permission $permissionObj, string $checkFor)
+function permissionValidator(string $apiKey, string $checkFor)
 {
+    $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+    $permissionObj = \Buildings\PermissionQuery::create()->findOneByAdminId($user->getId());
 
     $permissions = [
         "CREATE" => $permissionObj->getCreatePermission(),
