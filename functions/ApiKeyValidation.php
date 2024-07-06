@@ -1,21 +1,21 @@
 <?php
 
+use Buildings\AdminQuery;
 
 function apiKeyValidator()
 {
-    $apiKey = $_GET["api_key"];
-    echo $apiKey;
+    if (isset($_GET["api_key"])) {
+        $apiKey = $_GET["api_key"];
 
-    $result = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+        // Realiza a consulta no banco de dados para verificar a chave API
+        $result = AdminQuery::create()->findOneByApiKey($apiKey);
 
-    if(!isset($result)) {
-        $response = [
-            "error" => true,
-            "message" => "Invalid API Key, Unauthorized"
-        ];
-
-        http_response_code(403);
-
-        echo json_encode($response);
+        if (!$result) {
+            return false; // Chave API não encontrada ou inválida
+        } else {
+            return true; // Chave API válida
+        }
+    } else {
+        return false; // API key não foi fornecida na requisição
     }
 }
