@@ -28,12 +28,12 @@ DROP TABLE IF EXISTS `permission`;
 
 CREATE TABLE `permission`
 (
-    `admin_id` INTEGER NOT NULL,
-    `create` BINARY NOT NULL,
-    `read` BINARY NOT NULL,
-    `update` BINARY NOT NULL,
-    `delete` BINARY NOT NULL,
-    PRIMARY KEY (`admin_id`),
+    `admin_id` INTEGER,
+    `create_permission` INTEGER DEFAULT 0 NOT NULL,
+    `read_permission` INTEGER DEFAULT 0 NOT NULL,
+    `update_permission` INTEGER DEFAULT 0 NOT NULL,
+    `delete_permission` INTEGER DEFAULT 0 NOT NULL,
+    INDEX `fi_mission_admin_id` (`admin_id`),
     CONSTRAINT `permission_admin_id`
         FOREIGN KEY (`admin_id`)
         REFERENCES `admin` (`id`)
@@ -83,7 +83,7 @@ CREATE TABLE `order`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_client` INTEGER,
     `id_seller` INTEGER,
-    `expires_at` DATE NOT NULL,
+    `expires_at` DATE DEFAULT '2025-01-01' NOT NULL,
     `type` VARCHAR(10) NOT NULL,
     `updated_at` TIMESTAMP NULL,
     PRIMARY KEY (`id`),
@@ -122,7 +122,7 @@ DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `id_client` INTEGER NOT NULL,
+    `id_client` INTEGER DEFAULT 1 NOT NULL,
     `created_at` TIMESTAMP NULL,
     `updated_at` TIMESTAMP NULL,
     PRIMARY KEY (`id`),
@@ -141,9 +141,9 @@ DROP TABLE IF EXISTS `cart_products`;
 
 CREATE TABLE `cart_products`
 (
-    `id_cart` INTEGER NOT NULL,
-    `id_product` INTEGER NOT NULL,
-    `quantity` INTEGER NOT NULL,
+    `id_cart` INTEGER DEFAULT 1 NOT NULL,
+    `id_product` INTEGER DEFAULT 1 NOT NULL,
+    `quantity` INTEGER DEFAULT 1 NOT NULL,
     INDEX `fi_t_product_cart` (`id_cart`),
     INDEX `fi_t_product_product` (`id_product`),
     CONSTRAINT `cart_product_cart`
@@ -164,8 +164,8 @@ DROP TABLE IF EXISTS `seller_products`;
 
 CREATE TABLE `seller_products`
 (
-    `id_seller` INTEGER NOT NULL,
-    `id_product` INTEGER NOT NULL,
+    `id_seller` INTEGER DEFAULT 1 NOT NULL,
+    `id_product` INTEGER DEFAULT 1 NOT NULL,
     INDEX `fi_ler_product_seller` (`id_seller`),
     INDEX `fi_ler_product_product` (`id_product`),
     CONSTRAINT `seller_product_seller`
@@ -186,9 +186,9 @@ DROP TABLE IF EXISTS `order_products`;
 
 CREATE TABLE `order_products`
 (
-    `id_order` INTEGER NOT NULL,
-    `id_product` INTEGER NOT NULL,
-    `quantity` INTEGER NOT NULL,
+    `id_order` INTEGER DEFAULT 1 NOT NULL,
+    `id_product` INTEGER DEFAULT 1 NOT NULL,
+    `quantity` INTEGER DEFAULT 1 NOT NULL,
     INDEX `fi_er_product_cart` (`id_order`),
     INDEX `fi_er_product_product` (`id_product`),
     CONSTRAINT `order_product_cart`
@@ -215,7 +215,7 @@ CREATE TABLE `address`
     `city` VARCHAR(20) NOT NULL,
     `neighborhood` VARCHAR(20) NOT NULL,
     `street` VARCHAR(30) NOT NULL,
-    `number` INTEGER NOT NULL,
+    `number` INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -227,7 +227,7 @@ DROP TABLE IF EXISTS `address_owner`;
 
 CREATE TABLE `address_owner`
 (
-    `id_address` INTEGER NOT NULL,
+    `id_address` INTEGER DEFAULT 1 NOT NULL,
     `id_client` INTEGER,
     `id_seller` INTEGER,
     `type` VARCHAR(10) NOT NULL,
@@ -259,8 +259,8 @@ CREATE TABLE `product`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(50) NOT NULL,
     `desc` VARCHAR(200),
-    `unity_price` FLOAT NOT NULL,
-    `in_stock` INTEGER NOT NULL,
+    `unity_price` FLOAT DEFAULT 1 NOT NULL,
+    `in_stock` INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `product_title_unique` (`title`)
 ) ENGINE=InnoDB;
@@ -277,9 +277,9 @@ CREATE TABLE `discount`
     `type` VARCHAR(1) NOT NULL,
     `id_product` INTEGER,
     `id_category` INTEGER,
-    `percent` INTEGER NOT NULL,
-    `start_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `expires_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `percent` INTEGER DEFAULT 1 NOT NULL,
+    `start_at` TIMESTAMP NOT NULL DEFAULT '2024-01-01 00:00:00',
+    `expires_at` TIMESTAMP NOT NULL DEFAULT '2024-01-01 00:00:00',
     PRIMARY KEY (`id`),
     INDEX `fi_count_product_id` (`id_product`),
     INDEX `fi_count_category_id` (`id_category`),
@@ -301,8 +301,8 @@ DROP TABLE IF EXISTS `product_category`;
 
 CREATE TABLE `product_category`
 (
-    `id_product` INTEGER NOT NULL,
-    `id_category` INTEGER NOT NULL,
+    `id_product` INTEGER DEFAULT 1 NOT NULL,
+    `id_category` INTEGER DEFAULT 1 NOT NULL,
     INDEX `fi_duct_category_product` (`id_product`),
     INDEX `fi_duct_category_category` (`id_category`),
     CONSTRAINT `product_category_product`

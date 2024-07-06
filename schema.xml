@@ -13,11 +13,11 @@
     </unique>
   </table>
   <table name="permission" phpName="Permission">
-    <column name="admin_id" type="INTEGER" required="true" primaryKey="true" />
-    <column name="create" type="BINARY" required="true" />
-    <column name="read" type="BINARY" required="true" />
-    <column name="update" type="BINARY" required="true" />
-    <column name="delete" type="BINARY" required="true" />
+    <column name="admin_id" type="INTEGER" />
+    <column name="create_permission" type="INTEGER" required="true" defaultValue="0" />
+    <column name="read_permission" type="INTEGER" required="true" defaultValue="0" />
+    <column name="update_permission" type="INTEGER" required="true" defaultValue="0" />
+    <column name="delete_permission" type="INTEGER" required="true" defaultValue="0" />
     <foreign-key foreignTable="admin" name="permission_admin_id" onDelete="cascade"
       phpName="PermissionAdminId" refPhpName="Admin">
       <reference local="admin_id" foreign="id" />
@@ -41,7 +41,7 @@
     <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
     <column name="id_client" type="INTEGER" />
     <column name="id_seller" type="INTEGER" />
-    <column name="expires_at" type="DATE" required="true" />
+    <column name="expires_at" type="DATE" required="true" defaultValue="2025-01-01" />
     <column name="type" type="VARCHAR" size="10" required="true" />
     <foreign-key foreignTable="client" phpName="OrderIdClient" refPhpName="Client" onDelete="cascade" name="order_id_client">
       <reference local="id_client" foreign="id"/>
@@ -62,7 +62,7 @@
   </table>
   <table name="cart" phpName="Cart">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
-    <column name="id_client" type="INTEGER" required="true" />
+    <column name="id_client" type="INTEGER" required="true" defaultValue="1" />
     <foreign-key foreignTable="client" name="cart_client_id" phpName="CartClientId" refPhpName="Client"
       onDelete="cascade">
       <reference local="id_client" foreign="id" />
@@ -72,9 +72,9 @@
     </behavior>
   </table>
   <table name="cart_products" phpName="CartProduct">
-    <column name="id_cart" type="INTEGER" required="true"/>
-    <column name="id_product" type="INTEGER" required="true"/>
-    <column name="quantity" type="INTEGER" required="true"/>
+    <column name="id_cart" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>
     <foreign-key foreignTable="cart" phpName="CartProductCart" refPhpName="Cart" onDelete="cascade" name="cart_product_cart">
       <reference local="id_cart" foreign="id"/>
     </foreign-key>
@@ -83,8 +83,8 @@
     </foreign-key>
   </table>
   <table name="seller_products" phpName="SellerProduct">
-    <column name="id_seller" type="INTEGER" required="true"/>
-    <column name="id_product" type="INTEGER" required="true"/>
+    <column name="id_seller" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
     <foreign-key foreignTable="seller" phpName="SellerProductId" refPhpName="Seller" onDelete="cascade" name="seller_product_seller">
       <reference local="id_seller" foreign="id"/>
     </foreign-key>
@@ -93,9 +93,9 @@
     </foreign-key>
   </table>
   <table name="order_products" phpName="OrderProduct">
-    <column name="id_order" type="INTEGER" required="true"/>
-    <column name="id_product" type="INTEGER" required="true"/>
-    <column name="quantity" type="INTEGER" required="true"/>
+    <column name="id_order" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>
     <foreign-key foreignTable="order" phpName="OrderProductOrder" refPhpName="Order" onDelete="cascade" name="order_product_cart">
       <reference local="id_order" foreign="id"/>
     </foreign-key>
@@ -110,10 +110,10 @@
     <column name="city" type="VARCHAR" size="20" required="true"/>
     <column name="neighborhood" type="VARCHAR" size="20" required="true"/>
     <column name="street" type="VARCHAR" size="30" required="true"/>
-    <column name="number" type="INTEGER" required="true"/>
+    <column name="number" type="INTEGER" required="true" defaultValue="1"/>
   </table>
   <table name="address_owner" phpName="AddressOwner">
-    <column type="INTEGER" name="id_address" required="true"/>
+    <column type="INTEGER" name="id_address" required="true" defaultValue="1"/>
     <column type="INTEGER" name="id_client" />
     <column type="INTEGER" name="id_seller" />
     <column type="VARCHAR" name="type" size="10" required="true"/>
@@ -131,8 +131,8 @@
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="title" type="VARCHAR" size="50" required="true" />
     <column name="desc" type="VARCHAR" size="200" />
-    <column name="unity_price" type="FLOAT" required="true" />
-    <column name="in_stock" type="INTEGER" required="true" />
+    <column name="unity_price" type="FLOAT" required="true" defaultValue="1" />
+    <column name="in_stock" type="INTEGER" required="true" defaultValue="1" />
     <unique name="product_title_unique">
       <unique-column name="title" />
     </unique>
@@ -142,9 +142,9 @@
     <column name="type" type="VARCHAR" size="1" required="true"/>
     <column name="id_product" type="INTEGER"/>
     <column name="id_category" type="INTEGER"/>
-    <column name="percent" type="INTEGER" required="true"/>
-    <column name="start_at" type="TIMESTAMP" required="true"/>
-    <column name="expires_at" type="TIMESTAMP" required="true"/>
+    <column name="percent" type="INTEGER" required="true" defaultValue="1"/>
+    <column name="start_at" type="TIMESTAMP" required="true" defaultValue="2024-01-01 00:00:00"/>
+    <column name="expires_at" type="TIMESTAMP" required="true" defaultValue="2024-01-01 00:00:00"/>
     <foreign-key foreignTable="product" phpName="DiscountProduct" refPhpName="Product" onDelete="cascade" name="discount_product_id">
       <reference local="id_product" foreign="id"/>
     </foreign-key>
@@ -153,8 +153,8 @@
     </foreign-key>
   </table>
   <table name="product_category" phpName="ProductCategory">
-    <column type="INTEGER" required="true" name="id_product"/>
-    <column type="INTEGER" required="true" name="id_category"/>
+    <column type="INTEGER" required="true" name="id_product" defaultValue="1"/>
+    <column type="INTEGER" required="true" name="id_category" defaultValue="1"/>
     <foreign-key foreignTable="product" phpName="ProductCategoryProduct" refPhpName="Product" name="product_category_product" onDelete="cascade">
       <reference local="id_product" foreign="id"/>
     </foreign-key>
