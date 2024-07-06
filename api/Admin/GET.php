@@ -1,6 +1,9 @@
 <?php
 
+use Propel\Runtime\ActiveQuery\Criteria;
+
 require $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
@@ -9,11 +12,18 @@ permissionValidator($apiKey, "READ");
 
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 
-if($user->getUsername() === "root") {
-    $users = \Buildings\AdminQuery::create()->find()->toJSON();
-    http_response_code(200);
-    echo $users;
+if(isset($user) && $user->getUsername() === "root") {
+    $users = \Buildings\AdminQuery::create()->find();
+
+    $resultUsers = [];
+
+    foreach($users as $admin) {
+        $obj = $admin->toArray();
+        array_push($resultUsers, $obj);
+    }
+    sendResponse(200, false, "Users fetched successfully", ["users" => $resultUsers]);
+} elseif(isset($user)) {
+    sendResponse(200, false, "User data fetched successfully", $user);
 } else {
-    http_response_code(200);
-    echo json_encode($user->toArray());
+    sendResponse(404, true, "User does not exists");
 }
