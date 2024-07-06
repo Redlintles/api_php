@@ -98,6 +98,7 @@ abstract class Discount implements ActiveRecordInterface
     /**
      * The value for the percent field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $percent;
@@ -105,6 +106,7 @@ abstract class Discount implements ActiveRecordInterface
     /**
      * The value for the start_at field.
      *
+     * Note: this column has a database default value of: '2024-01-01 00:00:00.000000'
      * @var        DateTime
      */
     protected $start_at;
@@ -112,6 +114,7 @@ abstract class Discount implements ActiveRecordInterface
     /**
      * The value for the expires_at field.
      *
+     * Note: this column has a database default value of: '2024-01-01 00:00:00.000000'
      * @var        DateTime
      */
     protected $expires_at;
@@ -135,10 +138,25 @@ abstract class Discount implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->percent = 1;
+        $this->start_at = PropelDateTime::newInstance('2024-01-01 00:00:00.000000', null, 'DateTime');
+        $this->expires_at = PropelDateTime::newInstance('2024-01-01 00:00:00.000000', null, 'DateTime');
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Discount object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -573,7 +591,9 @@ abstract class Discount implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->start_at !== null || $dt !== null) {
-            if ($this->start_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->start_at->format("Y-m-d H:i:s.u")) {
+            if ( ($dt != $this->start_at) // normalized values don't match
+                || ($dt->format('Y-m-d H:i:s.u') === '2024-01-01 00:00:00.000000') // or the entered value matches the default
+                 ) {
                 $this->start_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[DiscountTableMap::COL_START_AT] = true;
             }
@@ -593,7 +613,9 @@ abstract class Discount implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->expires_at !== null || $dt !== null) {
-            if ($this->expires_at === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->expires_at->format("Y-m-d H:i:s.u")) {
+            if ( ($dt != $this->expires_at) // normalized values don't match
+                || ($dt->format('Y-m-d H:i:s.u') === '2024-01-01 00:00:00.000000') // or the entered value matches the default
+                 ) {
                 $this->expires_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[DiscountTableMap::COL_EXPIRES_AT] = true;
             }
@@ -612,6 +634,18 @@ abstract class Discount implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->percent !== 1) {
+                return false;
+            }
+
+            if ($this->start_at && $this->start_at->format('Y-m-d H:i:s.u') !== '2024-01-01 00:00:00.000000') {
+                return false;
+            }
+
+            if ($this->expires_at && $this->expires_at->format('Y-m-d H:i:s.u') !== '2024-01-01 00:00:00.000000') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1540,6 +1574,7 @@ abstract class Discount implements ActiveRecordInterface
         $this->expires_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

@@ -226,9 +226,9 @@ class DiscountTableMap extends TableMap
         $this->addColumn('type', 'Type', 'VARCHAR', true, 1, null);
         $this->addForeignKey('id_product', 'IdProduct', 'INTEGER', 'product', 'id', false, null, null);
         $this->addForeignKey('id_category', 'IdCategory', 'INTEGER', 'category', 'id', false, null, null);
-        $this->addColumn('percent', 'Percent', 'INTEGER', true, null, null);
-        $this->addColumn('start_at', 'StartAt', 'TIMESTAMP', true, null, null);
-        $this->addColumn('expires_at', 'ExpiresAt', 'TIMESTAMP', true, null, null);
+        $this->addColumn('percent', 'Percent', 'INTEGER', true, null, 1);
+        $this->addColumn('start_at', 'StartAt', 'TIMESTAMP', true, null, '2024-01-01 00:00:00');
+        $this->addColumn('expires_at', 'ExpiresAt', 'TIMESTAMP', true, null, '2024-01-01 00:00:00');
     }
 
     /**

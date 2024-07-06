@@ -96,6 +96,7 @@ abstract class Order implements ActiveRecordInterface
     /**
      * The value for the expires_at field.
      *
+     * Note: this column has a database default value of: '2025-01-01'
      * @var        DateTime
      */
     protected $expires_at;
@@ -147,10 +148,23 @@ abstract class Order implements ActiveRecordInterface
     protected $ordersScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->expires_at = PropelDateTime::newInstance('2025-01-01', null, 'DateTime');
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Order object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -535,7 +549,9 @@ abstract class Order implements ActiveRecordInterface
     {
         $dt = PropelDateTime::newInstance($v, null, 'DateTime');
         if ($this->expires_at !== null || $dt !== null) {
-            if ($this->expires_at === null || $dt === null || $dt->format("Y-m-d") !== $this->expires_at->format("Y-m-d")) {
+            if ( ($dt != $this->expires_at) // normalized values don't match
+                || ($dt->format('Y-m-d') === '2025-01-01') // or the entered value matches the default
+                 ) {
                 $this->expires_at = $dt === null ? null : clone $dt;
                 $this->modifiedColumns[OrderTableMap::COL_EXPIRES_AT] = true;
             }
@@ -594,6 +610,10 @@ abstract class Order implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->expires_at && $this->expires_at->format('Y-m-d') !== '2025-01-01') {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1840,6 +1860,7 @@ abstract class Order implements ActiveRecordInterface
         $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

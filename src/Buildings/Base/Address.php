@@ -111,6 +111,7 @@ abstract class Address implements ActiveRecordInterface
     /**
      * The value for the number field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $number;
@@ -138,10 +139,23 @@ abstract class Address implements ActiveRecordInterface
     protected $addressesScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->number = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Address object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -583,6 +597,10 @@ abstract class Address implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->number !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1688,6 +1706,7 @@ abstract class Address implements ActiveRecordInterface
         $this->number = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

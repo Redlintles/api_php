@@ -214,7 +214,7 @@ class OrderTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('id_client', 'IdClient', 'INTEGER', 'client', 'id', false, null, null);
         $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', false, null, null);
-        $this->addColumn('expires_at', 'ExpiresAt', 'DATE', true, null, null);
+        $this->addColumn('expires_at', 'ExpiresAt', 'DATE', true, null, '2025-01-01');
         $this->addColumn('type', 'Type', 'VARCHAR', true, 10, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     }

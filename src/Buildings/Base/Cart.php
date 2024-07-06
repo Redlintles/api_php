@@ -80,6 +80,7 @@ abstract class Cart implements ActiveRecordInterface
     /**
      * The value for the id_client field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_client;
@@ -126,10 +127,23 @@ abstract class Cart implements ActiveRecordInterface
     protected $cartsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->id_client = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Cart object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -509,6 +523,10 @@ abstract class Cart implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->id_client !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1284,7 +1302,7 @@ abstract class Cart implements ActiveRecordInterface
     public function setCartClientId(ChildClient $v = null)
     {
         if ($v === null) {
-            $this->setIdClient(NULL);
+            $this->setIdClient(1);
         } else {
             $this->setIdClient($v->getId());
         }
@@ -1625,6 +1643,7 @@ abstract class Cart implements ActiveRecordInterface
         $this->updated_at = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

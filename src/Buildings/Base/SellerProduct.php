@@ -68,6 +68,7 @@ abstract class SellerProduct implements ActiveRecordInterface
     /**
      * The value for the id_seller field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_seller;
@@ -75,6 +76,7 @@ abstract class SellerProduct implements ActiveRecordInterface
     /**
      * The value for the id_product field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_product;
@@ -98,10 +100,24 @@ abstract class SellerProduct implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->id_seller = 1;
+        $this->id_product = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\SellerProduct object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -401,6 +417,14 @@ abstract class SellerProduct implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->id_seller !== 1) {
+                return false;
+            }
+
+            if ($this->id_product !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1057,7 +1081,7 @@ abstract class SellerProduct implements ActiveRecordInterface
     public function setSellerProductId(ChildSeller $v = null)
     {
         if ($v === null) {
-            $this->setIdSeller(NULL);
+            $this->setIdSeller(1);
         } else {
             $this->setIdSeller($v->getId());
         }
@@ -1108,7 +1132,7 @@ abstract class SellerProduct implements ActiveRecordInterface
     public function setSellerProductProduct(ChildProduct $v = null)
     {
         if ($v === null) {
-            $this->setIdProduct(NULL);
+            $this->setIdProduct(1);
         } else {
             $this->setIdProduct($v->getId());
         }
@@ -1168,6 +1192,7 @@ abstract class SellerProduct implements ActiveRecordInterface
         $this->id_product = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

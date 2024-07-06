@@ -102,6 +102,7 @@ abstract class Product implements ActiveRecordInterface
     /**
      * The value for the unity_price field.
      *
+     * Note: this column has a database default value of: 1.0
      * @var        double
      */
     protected $unity_price;
@@ -109,6 +110,7 @@ abstract class Product implements ActiveRecordInterface
     /**
      * The value for the in_stock field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $in_stock;
@@ -192,10 +194,24 @@ abstract class Product implements ActiveRecordInterface
     protected $productsScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->unity_price = 1.0;
+        $this->in_stock = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Product object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -577,6 +593,14 @@ abstract class Product implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->unity_price !== 1.0) {
+                return false;
+            }
+
+            if ($this->in_stock !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -2842,6 +2866,7 @@ abstract class Product implements ActiveRecordInterface
         $this->in_stock = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

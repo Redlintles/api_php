@@ -66,37 +66,41 @@ abstract class Permission implements ActiveRecordInterface
     /**
      * The value for the admin_id field.
      *
-     * @var        int
+     * @var        int|null
      */
     protected $admin_id;
 
     /**
-     * The value for the create field.
+     * The value for the create_permission field.
      *
-     * @var        string
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
-    protected $create;
+    protected $create_permission;
 
     /**
-     * The value for the read field.
+     * The value for the read_permission field.
      *
-     * @var        string
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
-    protected $read;
+    protected $read_permission;
 
     /**
-     * The value for the update field.
+     * The value for the update_permission field.
      *
-     * @var        string
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
-    protected $update;
+    protected $update_permission;
 
     /**
-     * The value for the delete field.
+     * The value for the delete_permission field.
      *
-     * @var        string
+     * Note: this column has a database default value of: 0
+     * @var        int
      */
-    protected $delete;
+    protected $delete_permission;
 
     /**
      * @var        ChildAdmin
@@ -112,10 +116,26 @@ abstract class Permission implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->create_permission = 0;
+        $this->read_permission = 0;
+        $this->update_permission = 0;
+        $this->delete_permission = 0;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\Permission object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -340,7 +360,7 @@ abstract class Permission implements ActiveRecordInterface
     /**
      * Get the [admin_id] column value.
      *
-     * @return int
+     * @return int|null
      */
     public function getAdminId()
     {
@@ -348,49 +368,49 @@ abstract class Permission implements ActiveRecordInterface
     }
 
     /**
-     * Get the [create] column value.
+     * Get the [create_permission] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getCreate()
+    public function getCreatePermission()
     {
-        return $this->create;
+        return $this->create_permission;
     }
 
     /**
-     * Get the [read] column value.
+     * Get the [read_permission] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getRead()
+    public function getReadPermission()
     {
-        return $this->read;
+        return $this->read_permission;
     }
 
     /**
-     * Get the [update] column value.
+     * Get the [update_permission] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getUpdate()
+    public function getUpdatePermission()
     {
-        return $this->update;
+        return $this->update_permission;
     }
 
     /**
-     * Get the [delete] column value.
+     * Get the [delete_permission] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDelete()
+    public function getDeletePermission()
     {
-        return $this->delete;
+        return $this->delete_permission;
     }
 
     /**
      * Set the value of [admin_id] column.
      *
-     * @param int $v New value
+     * @param int|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setAdminId($v)
@@ -412,80 +432,80 @@ abstract class Permission implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [create] column.
+     * Set the value of [create_permission] column.
      *
-     * @param string $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setCreate($v)
+    public function setCreatePermission($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->create !== $v) {
-            $this->create = $v;
-            $this->modifiedColumns[PermissionTableMap::COL_CREATE] = true;
+        if ($this->create_permission !== $v) {
+            $this->create_permission = $v;
+            $this->modifiedColumns[PermissionTableMap::COL_CREATE_PERMISSION] = true;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [read] column.
+     * Set the value of [read_permission] column.
      *
-     * @param string $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setRead($v)
+    public function setReadPermission($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->read !== $v) {
-            $this->read = $v;
-            $this->modifiedColumns[PermissionTableMap::COL_READ] = true;
+        if ($this->read_permission !== $v) {
+            $this->read_permission = $v;
+            $this->modifiedColumns[PermissionTableMap::COL_READ_PERMISSION] = true;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [update] column.
+     * Set the value of [update_permission] column.
      *
-     * @param string $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setUpdate($v)
+    public function setUpdatePermission($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->update !== $v) {
-            $this->update = $v;
-            $this->modifiedColumns[PermissionTableMap::COL_UPDATE] = true;
+        if ($this->update_permission !== $v) {
+            $this->update_permission = $v;
+            $this->modifiedColumns[PermissionTableMap::COL_UPDATE_PERMISSION] = true;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [delete] column.
+     * Set the value of [delete_permission] column.
      *
-     * @param string $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setDelete($v)
+    public function setDeletePermission($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->delete !== $v) {
-            $this->delete = $v;
-            $this->modifiedColumns[PermissionTableMap::COL_DELETE] = true;
+        if ($this->delete_permission !== $v) {
+            $this->delete_permission = $v;
+            $this->modifiedColumns[PermissionTableMap::COL_DELETE_PERMISSION] = true;
         }
 
         return $this;
@@ -501,6 +521,22 @@ abstract class Permission implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->create_permission !== 0) {
+                return false;
+            }
+
+            if ($this->read_permission !== 0) {
+                return false;
+            }
+
+            if ($this->update_permission !== 0) {
+                return false;
+            }
+
+            if ($this->delete_permission !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -530,17 +566,17 @@ abstract class Permission implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PermissionTableMap::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->admin_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PermissionTableMap::translateFieldName('Create', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->create = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PermissionTableMap::translateFieldName('CreatePermission', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->create_permission = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PermissionTableMap::translateFieldName('Read', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->read = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PermissionTableMap::translateFieldName('ReadPermission', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->read_permission = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PermissionTableMap::translateFieldName('Update', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->update = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PermissionTableMap::translateFieldName('UpdatePermission', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->update_permission = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PermissionTableMap::translateFieldName('Delete', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->delete = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PermissionTableMap::translateFieldName('DeletePermission', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->delete_permission = (null !== $col) ? (int) $col : null;
 
             $this->resetModified();
             $this->setNew(false);
@@ -766,17 +802,17 @@ abstract class Permission implements ActiveRecordInterface
         if ($this->isColumnModified(PermissionTableMap::COL_ADMIN_ID)) {
             $modifiedColumns[':p' . $index++]  = 'admin_id';
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_CREATE)) {
-            $modifiedColumns[':p' . $index++]  = 'create';
+        if ($this->isColumnModified(PermissionTableMap::COL_CREATE_PERMISSION)) {
+            $modifiedColumns[':p' . $index++]  = 'create_permission';
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_READ)) {
-            $modifiedColumns[':p' . $index++]  = 'read';
+        if ($this->isColumnModified(PermissionTableMap::COL_READ_PERMISSION)) {
+            $modifiedColumns[':p' . $index++]  = 'read_permission';
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_UPDATE)) {
-            $modifiedColumns[':p' . $index++]  = 'update';
+        if ($this->isColumnModified(PermissionTableMap::COL_UPDATE_PERMISSION)) {
+            $modifiedColumns[':p' . $index++]  = 'update_permission';
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_DELETE)) {
-            $modifiedColumns[':p' . $index++]  = 'delete';
+        if ($this->isColumnModified(PermissionTableMap::COL_DELETE_PERMISSION)) {
+            $modifiedColumns[':p' . $index++]  = 'delete_permission';
         }
 
         $sql = sprintf(
@@ -793,20 +829,20 @@ abstract class Permission implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->admin_id, PDO::PARAM_INT);
 
                         break;
-                    case 'create':
-                        $stmt->bindValue($identifier, $this->create, PDO::PARAM_STR);
+                    case 'create_permission':
+                        $stmt->bindValue($identifier, $this->create_permission, PDO::PARAM_INT);
 
                         break;
-                    case 'read':
-                        $stmt->bindValue($identifier, $this->read, PDO::PARAM_STR);
+                    case 'read_permission':
+                        $stmt->bindValue($identifier, $this->read_permission, PDO::PARAM_INT);
 
                         break;
-                    case 'update':
-                        $stmt->bindValue($identifier, $this->update, PDO::PARAM_STR);
+                    case 'update_permission':
+                        $stmt->bindValue($identifier, $this->update_permission, PDO::PARAM_INT);
 
                         break;
-                    case 'delete':
-                        $stmt->bindValue($identifier, $this->delete, PDO::PARAM_STR);
+                    case 'delete_permission':
+                        $stmt->bindValue($identifier, $this->delete_permission, PDO::PARAM_INT);
 
                         break;
                 }
@@ -868,16 +904,16 @@ abstract class Permission implements ActiveRecordInterface
                 return $this->getAdminId();
 
             case 1:
-                return $this->getCreate();
+                return $this->getCreatePermission();
 
             case 2:
-                return $this->getRead();
+                return $this->getReadPermission();
 
             case 3:
-                return $this->getUpdate();
+                return $this->getUpdatePermission();
 
             case 4:
-                return $this->getDelete();
+                return $this->getDeletePermission();
 
             default:
                 return null;
@@ -908,10 +944,10 @@ abstract class Permission implements ActiveRecordInterface
         $keys = PermissionTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getAdminId(),
-            $keys[1] => $this->getCreate(),
-            $keys[2] => $this->getRead(),
-            $keys[3] => $this->getUpdate(),
-            $keys[4] => $this->getDelete(),
+            $keys[1] => $this->getCreatePermission(),
+            $keys[2] => $this->getReadPermission(),
+            $keys[3] => $this->getUpdatePermission(),
+            $keys[4] => $this->getDeletePermission(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -974,16 +1010,16 @@ abstract class Permission implements ActiveRecordInterface
                 $this->setAdminId($value);
                 break;
             case 1:
-                $this->setCreate($value);
+                $this->setCreatePermission($value);
                 break;
             case 2:
-                $this->setRead($value);
+                $this->setReadPermission($value);
                 break;
             case 3:
-                $this->setUpdate($value);
+                $this->setUpdatePermission($value);
                 break;
             case 4:
-                $this->setDelete($value);
+                $this->setDeletePermission($value);
                 break;
         } // switch()
 
@@ -1015,16 +1051,16 @@ abstract class Permission implements ActiveRecordInterface
             $this->setAdminId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCreate($arr[$keys[1]]);
+            $this->setCreatePermission($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setRead($arr[$keys[2]]);
+            $this->setReadPermission($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setUpdate($arr[$keys[3]]);
+            $this->setUpdatePermission($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setDelete($arr[$keys[4]]);
+            $this->setDeletePermission($arr[$keys[4]]);
         }
 
         return $this;
@@ -1072,17 +1108,17 @@ abstract class Permission implements ActiveRecordInterface
         if ($this->isColumnModified(PermissionTableMap::COL_ADMIN_ID)) {
             $criteria->add(PermissionTableMap::COL_ADMIN_ID, $this->admin_id);
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_CREATE)) {
-            $criteria->add(PermissionTableMap::COL_CREATE, $this->create);
+        if ($this->isColumnModified(PermissionTableMap::COL_CREATE_PERMISSION)) {
+            $criteria->add(PermissionTableMap::COL_CREATE_PERMISSION, $this->create_permission);
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_READ)) {
-            $criteria->add(PermissionTableMap::COL_READ, $this->read);
+        if ($this->isColumnModified(PermissionTableMap::COL_READ_PERMISSION)) {
+            $criteria->add(PermissionTableMap::COL_READ_PERMISSION, $this->read_permission);
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_UPDATE)) {
-            $criteria->add(PermissionTableMap::COL_UPDATE, $this->update);
+        if ($this->isColumnModified(PermissionTableMap::COL_UPDATE_PERMISSION)) {
+            $criteria->add(PermissionTableMap::COL_UPDATE_PERMISSION, $this->update_permission);
         }
-        if ($this->isColumnModified(PermissionTableMap::COL_DELETE)) {
-            $criteria->add(PermissionTableMap::COL_DELETE, $this->delete);
+        if ($this->isColumnModified(PermissionTableMap::COL_DELETE_PERMISSION)) {
+            $criteria->add(PermissionTableMap::COL_DELETE_PERMISSION, $this->delete_permission);
         }
 
         return $criteria;
@@ -1100,8 +1136,7 @@ abstract class Permission implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildPermissionQuery::create();
-        $criteria->add(PermissionTableMap::COL_ADMIN_ID, $this->admin_id);
+        throw new LogicException('The Permission object has no primary key');
 
         return $criteria;
     }
@@ -1114,17 +1149,10 @@ abstract class Permission implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getAdminId();
+        $validPk = false;
 
-        $validPrimaryKeyFKs = 1;
+        $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
-
-        //relation permission_admin_id to table admin
-        if ($this->aPermissionAdminId && $hash = spl_object_hash($this->aPermissionAdminId)) {
-            $primaryKeyFKs[] = $hash;
-        } else {
-            $validPrimaryKeyFKs = false;
-        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1136,23 +1164,13 @@ abstract class Permission implements ActiveRecordInterface
     }
 
     /**
-     * Returns the primary key for this object (row).
-     * @return int
+     * Returns NULL since this table doesn't have a primary key.
+     * This method exists only for BC and is deprecated!
+     * @return null
      */
     public function getPrimaryKey()
     {
-        return $this->getAdminId();
-    }
-
-    /**
-     * Generic method to set the primary key (admin_id column).
-     *
-     * @param int|null $key Primary key.
-     * @return void
-     */
-    public function setPrimaryKey(?int $key = null): void
-    {
-        $this->setAdminId($key);
+        return null;
     }
 
     /**
@@ -1162,7 +1180,7 @@ abstract class Permission implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull(): bool
     {
-        return null === $this->getAdminId();
+        return false;
     }
 
     /**
@@ -1180,10 +1198,10 @@ abstract class Permission implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setAdminId($this->getAdminId());
-        $copyObj->setCreate($this->getCreate());
-        $copyObj->setRead($this->getRead());
-        $copyObj->setUpdate($this->getUpdate());
-        $copyObj->setDelete($this->getDelete());
+        $copyObj->setCreatePermission($this->getCreatePermission());
+        $copyObj->setReadPermission($this->getReadPermission());
+        $copyObj->setUpdatePermission($this->getUpdatePermission());
+        $copyObj->setDeletePermission($this->getDeletePermission());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1214,7 +1232,7 @@ abstract class Permission implements ActiveRecordInterface
     /**
      * Declares an association between this object and a ChildAdmin object.
      *
-     * @param ChildAdmin $v
+     * @param ChildAdmin|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
@@ -1228,9 +1246,10 @@ abstract class Permission implements ActiveRecordInterface
 
         $this->aPermissionAdminId = $v;
 
-        // Add binding for other direction of this 1:1 relationship.
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildAdmin object, it will not be re-added.
         if ($v !== null) {
-            $v->setAdmin($this);
+            $v->addAdmin($this);
         }
 
 
@@ -1242,15 +1261,20 @@ abstract class Permission implements ActiveRecordInterface
      * Get the associated ChildAdmin object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildAdmin The associated ChildAdmin object.
+     * @return ChildAdmin|null The associated ChildAdmin object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function getPermissionAdminId(?ConnectionInterface $con = null)
     {
         if ($this->aPermissionAdminId === null && ($this->admin_id != 0)) {
             $this->aPermissionAdminId = ChildAdminQuery::create()->findPk($this->admin_id, $con);
-            // Because this foreign key represents a one-to-one relationship, we will create a bi-directional association.
-            $this->aPermissionAdminId->setAdmin($this);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aPermissionAdminId->addAdmins($this);
+             */
         }
 
         return $this->aPermissionAdminId;
@@ -1269,12 +1293,13 @@ abstract class Permission implements ActiveRecordInterface
             $this->aPermissionAdminId->removeAdmin($this);
         }
         $this->admin_id = null;
-        $this->create = null;
-        $this->read = null;
-        $this->update = null;
-        $this->delete = null;
+        $this->create_permission = null;
+        $this->read_permission = null;
+        $this->update_permission = null;
+        $this->delete_permission = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

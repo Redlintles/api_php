@@ -220,7 +220,7 @@ class AddressTableMap extends TableMap
         $this->addColumn('city', 'City', 'VARCHAR', true, 20, null);
         $this->addColumn('neighborhood', 'Neighborhood', 'VARCHAR', true, 20, null);
         $this->addColumn('street', 'Street', 'VARCHAR', true, 30, null);
-        $this->addColumn('number', 'Number', 'INTEGER', true, null, null);
+        $this->addColumn('number', 'Number', 'INTEGER', true, null, 1);
     }
 
     /**

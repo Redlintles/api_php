@@ -4,15 +4,18 @@ namespace Buildings\Base;
 
 use \Exception;
 use \PDO;
+use Buildings\Admin as ChildAdmin;
 use Buildings\AdminQuery as ChildAdminQuery;
 use Buildings\Permission as ChildPermission;
 use Buildings\PermissionQuery as ChildPermissionQuery;
 use Buildings\Map\AdminTableMap;
+use Buildings\Map\PermissionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -92,9 +95,11 @@ abstract class Admin implements ActiveRecordInterface
     protected $api_key;
 
     /**
-     * @var        ChildPermission one-to-one related ChildPermission object
+     * @var        ObjectCollection|ChildPermission[] Collection to store aggregation of ChildPermission objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildPermission> Collection to store aggregation of ChildPermission objects.
      */
-    protected $singleAdmin;
+    protected $collAdmins;
+    protected $collAdminsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -103,6 +108,13 @@ abstract class Admin implements ActiveRecordInterface
      * @var bool
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPermission[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildPermission>
+     */
+    protected $adminsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Buildings\Base\Admin object.
@@ -567,7 +579,7 @@ abstract class Admin implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->singleAdmin = null;
+            $this->collAdmins = null;
 
         } // if (deep)
     }
@@ -683,9 +695,20 @@ abstract class Admin implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->singleAdmin !== null) {
-                if (!$this->singleAdmin->isDeleted() && ($this->singleAdmin->isNew() || $this->singleAdmin->isModified())) {
-                    $affectedRows += $this->singleAdmin->save($con);
+            if ($this->adminsScheduledForDeletion !== null) {
+                if (!$this->adminsScheduledForDeletion->isEmpty()) {
+                    \Buildings\PermissionQuery::create()
+                        ->filterByPrimaryKeys($this->adminsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->adminsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collAdmins !== null) {
+                foreach ($this->collAdmins as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
                 }
             }
 
@@ -867,20 +890,20 @@ abstract class Admin implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->singleAdmin) {
+            if (null !== $this->collAdmins) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'permission';
+                        $key = 'permissions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'permission';
+                        $key = 'permissions';
                         break;
                     default:
-                        $key = 'Admin';
+                        $key = 'Admins';
                 }
 
-                $result[$key] = $this->singleAdmin->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
+                $result[$key] = $this->collAdmins->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1120,9 +1143,10 @@ abstract class Admin implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            $relObj = $this->getAdmin();
-            if ($relObj) {
-                $copyObj->setAdmin($relObj->copy($deepCopy));
+            foreach ($this->getAdmins() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addAdmin($relObj->copy($deepCopy));
+                }
             }
 
         } // if ($deepCopy)
@@ -1166,39 +1190,246 @@ abstract class Admin implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
+        if ('Admin' === $relationName) {
+            $this->initAdmins();
+            return;
+        }
     }
 
     /**
-     * Gets a single ChildPermission object, which is related to this object by a one-to-one relationship.
+     * Clears out the collAdmins collection
      *
-     * @param ConnectionInterface $con optional connection object
-     * @return ChildPermission|null
-     * @throws \Propel\Runtime\Exception\PropelException
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addAdmins()
      */
-    public function getAdmin(?ConnectionInterface $con = null)
+    public function clearAdmins()
     {
+        $this->collAdmins = null; // important to set this to NULL since that means it is uninitialized
 
-        if ($this->singleAdmin === null && !$this->isNew()) {
-            $this->singleAdmin = ChildPermissionQuery::create()->findPk($this->getPrimaryKey(), $con);
+        return $this;
+    }
+
+    /**
+     * Reset is the collAdmins collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialAdmins($v = true): void
+    {
+        $this->collAdminsPartial = $v;
+    }
+
+    /**
+     * Initializes the collAdmins collection.
+     *
+     * By default this just sets the collAdmins collection to an empty array (like clearcollAdmins());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initAdmins(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collAdmins && !$overrideExisting) {
+            return;
         }
 
-        return $this->singleAdmin;
+        $collectionClassName = PermissionTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collAdmins = new $collectionClassName;
+        $this->collAdmins->setModel('\Buildings\Permission');
     }
 
     /**
-     * Sets a single ChildPermission object as related to this object by a one-to-one relationship.
+     * Gets an array of ChildPermission objects which contain a foreign key that references this object.
      *
-     * @param ChildPermission $v ChildPermission
-     * @return $this The current object (for fluent API support)
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildAdmin is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPermission[] List of ChildPermission objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildPermission> List of ChildPermission objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setAdmin(ChildPermission $v = null)
+    public function getAdmins(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $this->singleAdmin = $v;
+        $partial = $this->collAdminsPartial && !$this->isNew();
+        if (null === $this->collAdmins || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collAdmins) {
+                    $this->initAdmins();
+                } else {
+                    $collectionClassName = PermissionTableMap::getTableMap()->getCollectionClassName();
 
-        // Make sure that that the passed-in ChildPermission isn't already associated with this object
-        if ($v !== null && $v->getPermissionAdminId(null, false) === null) {
-            $v->setPermissionAdminId($this);
+                    $collAdmins = new $collectionClassName;
+                    $collAdmins->setModel('\Buildings\Permission');
+
+                    return $collAdmins;
+                }
+            } else {
+                $collAdmins = ChildPermissionQuery::create(null, $criteria)
+                    ->filterByPermissionAdminId($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collAdminsPartial && count($collAdmins)) {
+                        $this->initAdmins(false);
+
+                        foreach ($collAdmins as $obj) {
+                            if (false == $this->collAdmins->contains($obj)) {
+                                $this->collAdmins->append($obj);
+                            }
+                        }
+
+                        $this->collAdminsPartial = true;
+                    }
+
+                    return $collAdmins;
+                }
+
+                if ($partial && $this->collAdmins) {
+                    foreach ($this->collAdmins as $obj) {
+                        if ($obj->isNew()) {
+                            $collAdmins[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collAdmins = $collAdmins;
+                $this->collAdminsPartial = false;
+            }
+        }
+
+        return $this->collAdmins;
+    }
+
+    /**
+     * Sets a collection of ChildPermission objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $admins A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setAdmins(Collection $admins, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildPermission[] $adminsToDelete */
+        $adminsToDelete = $this->getAdmins(new Criteria(), $con)->diff($admins);
+
+
+        $this->adminsScheduledForDeletion = $adminsToDelete;
+
+        foreach ($adminsToDelete as $adminRemoved) {
+            $adminRemoved->setPermissionAdminId(null);
+        }
+
+        $this->collAdmins = null;
+        foreach ($admins as $admin) {
+            $this->addAdmin($admin);
+        }
+
+        $this->collAdmins = $admins;
+        $this->collAdminsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Permission objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related Permission objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countAdmins(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collAdminsPartial && !$this->isNew();
+        if (null === $this->collAdmins || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAdmins) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getAdmins());
+            }
+
+            $query = ChildPermissionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPermissionAdminId($this)
+                ->count($con);
+        }
+
+        return count($this->collAdmins);
+    }
+
+    /**
+     * Method called to associate a ChildPermission object to this object
+     * through the ChildPermission foreign key attribute.
+     *
+     * @param ChildPermission $l ChildPermission
+     * @return $this The current object (for fluent API support)
+     */
+    public function addAdmin(ChildPermission $l)
+    {
+        if ($this->collAdmins === null) {
+            $this->initAdmins();
+            $this->collAdminsPartial = true;
+        }
+
+        if (!$this->collAdmins->contains($l)) {
+            $this->doAddAdmin($l);
+
+            if ($this->adminsScheduledForDeletion and $this->adminsScheduledForDeletion->contains($l)) {
+                $this->adminsScheduledForDeletion->remove($this->adminsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPermission $admin The ChildPermission object to add.
+     */
+    protected function doAddAdmin(ChildPermission $admin): void
+    {
+        $this->collAdmins[]= $admin;
+        $admin->setPermissionAdminId($this);
+    }
+
+    /**
+     * @param ChildPermission $admin The ChildPermission object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeAdmin(ChildPermission $admin)
+    {
+        if ($this->getAdmins()->contains($admin)) {
+            $pos = $this->collAdmins->search($admin);
+            $this->collAdmins->remove($pos);
+            if (null === $this->adminsScheduledForDeletion) {
+                $this->adminsScheduledForDeletion = clone $this->collAdmins;
+                $this->adminsScheduledForDeletion->clear();
+            }
+            $this->adminsScheduledForDeletion[]= $admin;
+            $admin->setPermissionAdminId(null);
         }
 
         return $this;
@@ -1238,12 +1469,14 @@ abstract class Admin implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->singleAdmin) {
-                $this->singleAdmin->clearAllReferences($deep);
+            if ($this->collAdmins) {
+                foreach ($this->collAdmins as $o) {
+                    $o->clearAllReferences($deep);
+                }
             }
         } // if ($deep)
 
-        $this->singleAdmin = null;
+        $this->collAdmins = null;
         return $this;
     }
 

@@ -68,6 +68,7 @@ abstract class CartProduct implements ActiveRecordInterface
     /**
      * The value for the id_cart field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_cart;
@@ -75,6 +76,7 @@ abstract class CartProduct implements ActiveRecordInterface
     /**
      * The value for the id_product field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_product;
@@ -82,6 +84,7 @@ abstract class CartProduct implements ActiveRecordInterface
     /**
      * The value for the quantity field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $quantity;
@@ -105,10 +108,25 @@ abstract class CartProduct implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->id_cart = 1;
+        $this->id_product = 1;
+        $this->quantity = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\CartProduct object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -438,6 +456,18 @@ abstract class CartProduct implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->id_cart !== 1) {
+                return false;
+            }
+
+            if ($this->id_product !== 1) {
+                return false;
+            }
+
+            if ($this->quantity !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1118,7 +1148,7 @@ abstract class CartProduct implements ActiveRecordInterface
     public function setCartProductCart(ChildCart $v = null)
     {
         if ($v === null) {
-            $this->setIdCart(NULL);
+            $this->setIdCart(1);
         } else {
             $this->setIdCart($v->getId());
         }
@@ -1169,7 +1199,7 @@ abstract class CartProduct implements ActiveRecordInterface
     public function setCartProductProduct(ChildProduct $v = null)
     {
         if ($v === null) {
-            $this->setIdProduct(NULL);
+            $this->setIdProduct(1);
         } else {
             $this->setIdProduct($v->getId());
         }
@@ -1230,6 +1260,7 @@ abstract class CartProduct implements ActiveRecordInterface
         $this->quantity = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

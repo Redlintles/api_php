@@ -70,6 +70,7 @@ abstract class AddressOwner implements ActiveRecordInterface
     /**
      * The value for the id_address field.
      *
+     * Note: this column has a database default value of: 1
      * @var        int
      */
     protected $id_address;
@@ -119,10 +120,23 @@ abstract class AddressOwner implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->id_address = 1;
+    }
+
+    /**
      * Initializes internal state of Buildings\Base\AddressOwner object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -486,6 +500,10 @@ abstract class AddressOwner implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->id_address !== 1) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -1216,7 +1234,7 @@ abstract class AddressOwner implements ActiveRecordInterface
     public function setAddressOwnerId(ChildAddress $v = null)
     {
         if ($v === null) {
-            $this->setIdAddress(NULL);
+            $this->setIdAddress(1);
         } else {
             $this->setIdAddress($v->getId());
         }
@@ -1383,6 +1401,7 @@ abstract class AddressOwner implements ActiveRecordInterface
         $this->type = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

@@ -164,8 +164,8 @@ class SellerProductTableMap extends TableMap
         $this->setPackage('Buildings');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', true, null, null);
-        $this->addForeignKey('id_product', 'IdProduct', 'INTEGER', 'product', 'id', true, null, null);
+        $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', true, null, 1);
+        $this->addForeignKey('id_product', 'IdProduct', 'INTEGER', 'product', 'id', true, null, 1);
     }
 
     /**

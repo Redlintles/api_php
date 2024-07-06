@@ -9,6 +9,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
+use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -81,24 +82,24 @@ class PermissionTableMap extends TableMap
     public const COL_ADMIN_ID = 'permission.admin_id';
 
     /**
-     * the column name for the create field
+     * the column name for the create_permission field
      */
-    public const COL_CREATE = 'permission.create';
+    public const COL_CREATE_PERMISSION = 'permission.create_permission';
 
     /**
-     * the column name for the read field
+     * the column name for the read_permission field
      */
-    public const COL_READ = 'permission.read';
+    public const COL_READ_PERMISSION = 'permission.read_permission';
 
     /**
-     * the column name for the update field
+     * the column name for the update_permission field
      */
-    public const COL_UPDATE = 'permission.update';
+    public const COL_UPDATE_PERMISSION = 'permission.update_permission';
 
     /**
-     * the column name for the delete field
+     * the column name for the delete_permission field
      */
-    public const COL_DELETE = 'permission.delete';
+    public const COL_DELETE_PERMISSION = 'permission.delete_permission';
 
     /**
      * The default string format for model objects of the related table
@@ -114,10 +115,10 @@ class PermissionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['AdminId', 'Create', 'Read', 'Update', 'Delete', ],
-        self::TYPE_CAMELNAME     => ['adminId', 'create', 'read', 'update', 'delete', ],
-        self::TYPE_COLNAME       => [PermissionTableMap::COL_ADMIN_ID, PermissionTableMap::COL_CREATE, PermissionTableMap::COL_READ, PermissionTableMap::COL_UPDATE, PermissionTableMap::COL_DELETE, ],
-        self::TYPE_FIELDNAME     => ['admin_id', 'create', 'read', 'update', 'delete', ],
+        self::TYPE_PHPNAME       => ['AdminId', 'CreatePermission', 'ReadPermission', 'UpdatePermission', 'DeletePermission', ],
+        self::TYPE_CAMELNAME     => ['adminId', 'createPermission', 'readPermission', 'updatePermission', 'deletePermission', ],
+        self::TYPE_COLNAME       => [PermissionTableMap::COL_ADMIN_ID, PermissionTableMap::COL_CREATE_PERMISSION, PermissionTableMap::COL_READ_PERMISSION, PermissionTableMap::COL_UPDATE_PERMISSION, PermissionTableMap::COL_DELETE_PERMISSION, ],
+        self::TYPE_FIELDNAME     => ['admin_id', 'create_permission', 'read_permission', 'update_permission', 'delete_permission', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
     ];
 
@@ -130,10 +131,10 @@ class PermissionTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['AdminId' => 0, 'Create' => 1, 'Read' => 2, 'Update' => 3, 'Delete' => 4, ],
-        self::TYPE_CAMELNAME     => ['adminId' => 0, 'create' => 1, 'read' => 2, 'update' => 3, 'delete' => 4, ],
-        self::TYPE_COLNAME       => [PermissionTableMap::COL_ADMIN_ID => 0, PermissionTableMap::COL_CREATE => 1, PermissionTableMap::COL_READ => 2, PermissionTableMap::COL_UPDATE => 3, PermissionTableMap::COL_DELETE => 4, ],
-        self::TYPE_FIELDNAME     => ['admin_id' => 0, 'create' => 1, 'read' => 2, 'update' => 3, 'delete' => 4, ],
+        self::TYPE_PHPNAME       => ['AdminId' => 0, 'CreatePermission' => 1, 'ReadPermission' => 2, 'UpdatePermission' => 3, 'DeletePermission' => 4, ],
+        self::TYPE_CAMELNAME     => ['adminId' => 0, 'createPermission' => 1, 'readPermission' => 2, 'updatePermission' => 3, 'deletePermission' => 4, ],
+        self::TYPE_COLNAME       => [PermissionTableMap::COL_ADMIN_ID => 0, PermissionTableMap::COL_CREATE_PERMISSION => 1, PermissionTableMap::COL_READ_PERMISSION => 2, PermissionTableMap::COL_UPDATE_PERMISSION => 3, PermissionTableMap::COL_DELETE_PERMISSION => 4, ],
+        self::TYPE_FIELDNAME     => ['admin_id' => 0, 'create_permission' => 1, 'read_permission' => 2, 'update_permission' => 3, 'delete_permission' => 4, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
     ];
 
@@ -151,30 +152,38 @@ class PermissionTableMap extends TableMap
         'COL_ADMIN_ID' => 'ADMIN_ID',
         'admin_id' => 'ADMIN_ID',
         'permission.admin_id' => 'ADMIN_ID',
-        'Create' => 'CREATE',
-        'Permission.Create' => 'CREATE',
-        'create' => 'CREATE',
-        'permission.create' => 'CREATE',
-        'PermissionTableMap::COL_CREATE' => 'CREATE',
-        'COL_CREATE' => 'CREATE',
-        'Read' => 'READ',
-        'Permission.Read' => 'READ',
-        'read' => 'READ',
-        'permission.read' => 'READ',
-        'PermissionTableMap::COL_READ' => 'READ',
-        'COL_READ' => 'READ',
-        'Update' => 'UPDATE',
-        'Permission.Update' => 'UPDATE',
-        'update' => 'UPDATE',
-        'permission.update' => 'UPDATE',
-        'PermissionTableMap::COL_UPDATE' => 'UPDATE',
-        'COL_UPDATE' => 'UPDATE',
-        'Delete' => 'DELETE',
-        'Permission.Delete' => 'DELETE',
-        'delete' => 'DELETE',
-        'permission.delete' => 'DELETE',
-        'PermissionTableMap::COL_DELETE' => 'DELETE',
-        'COL_DELETE' => 'DELETE',
+        'CreatePermission' => 'CREATE_PERMISSION',
+        'Permission.CreatePermission' => 'CREATE_PERMISSION',
+        'createPermission' => 'CREATE_PERMISSION',
+        'permission.createPermission' => 'CREATE_PERMISSION',
+        'PermissionTableMap::COL_CREATE_PERMISSION' => 'CREATE_PERMISSION',
+        'COL_CREATE_PERMISSION' => 'CREATE_PERMISSION',
+        'create_permission' => 'CREATE_PERMISSION',
+        'permission.create_permission' => 'CREATE_PERMISSION',
+        'ReadPermission' => 'READ_PERMISSION',
+        'Permission.ReadPermission' => 'READ_PERMISSION',
+        'readPermission' => 'READ_PERMISSION',
+        'permission.readPermission' => 'READ_PERMISSION',
+        'PermissionTableMap::COL_READ_PERMISSION' => 'READ_PERMISSION',
+        'COL_READ_PERMISSION' => 'READ_PERMISSION',
+        'read_permission' => 'READ_PERMISSION',
+        'permission.read_permission' => 'READ_PERMISSION',
+        'UpdatePermission' => 'UPDATE_PERMISSION',
+        'Permission.UpdatePermission' => 'UPDATE_PERMISSION',
+        'updatePermission' => 'UPDATE_PERMISSION',
+        'permission.updatePermission' => 'UPDATE_PERMISSION',
+        'PermissionTableMap::COL_UPDATE_PERMISSION' => 'UPDATE_PERMISSION',
+        'COL_UPDATE_PERMISSION' => 'UPDATE_PERMISSION',
+        'update_permission' => 'UPDATE_PERMISSION',
+        'permission.update_permission' => 'UPDATE_PERMISSION',
+        'DeletePermission' => 'DELETE_PERMISSION',
+        'Permission.DeletePermission' => 'DELETE_PERMISSION',
+        'deletePermission' => 'DELETE_PERMISSION',
+        'permission.deletePermission' => 'DELETE_PERMISSION',
+        'PermissionTableMap::COL_DELETE_PERMISSION' => 'DELETE_PERMISSION',
+        'COL_DELETE_PERMISSION' => 'DELETE_PERMISSION',
+        'delete_permission' => 'DELETE_PERMISSION',
+        'permission.delete_permission' => 'DELETE_PERMISSION',
     ];
 
     /**
@@ -194,11 +203,11 @@ class PermissionTableMap extends TableMap
         $this->setPackage('Buildings');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignPrimaryKey('admin_id', 'AdminId', 'INTEGER' , 'admin', 'id', true, null, null);
-        $this->addColumn('create', 'Create', 'BINARY', true, null, null);
-        $this->addColumn('read', 'Read', 'BINARY', true, null, null);
-        $this->addColumn('update', 'Update', 'BINARY', true, null, null);
-        $this->addColumn('delete', 'Delete', 'BINARY', true, null, null);
+        $this->addForeignKey('admin_id', 'AdminId', 'INTEGER', 'admin', 'id', false, null, null);
+        $this->addColumn('create_permission', 'CreatePermission', 'INTEGER', true, null, 0);
+        $this->addColumn('read_permission', 'ReadPermission', 'INTEGER', true, null, 0);
+        $this->addColumn('update_permission', 'UpdatePermission', 'INTEGER', true, null, 0);
+        $this->addColumn('delete_permission', 'DeletePermission', 'INTEGER', true, null, 0);
     }
 
     /**
@@ -232,12 +241,7 @@ class PermissionTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
-        // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
-            return null;
-        }
-
-        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)];
+        return null;
     }
 
     /**
@@ -254,11 +258,7 @@ class PermissionTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
-        return (int) $row[
-            $indexType == TableMap::TYPE_NUM
-                ? 0 + $offset
-                : self::translateFieldName('AdminId', TableMap::TYPE_PHPNAME, $indexType)
-        ];
+        return '';
     }
 
     /**
@@ -360,16 +360,16 @@ class PermissionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(PermissionTableMap::COL_ADMIN_ID);
-            $criteria->addSelectColumn(PermissionTableMap::COL_CREATE);
-            $criteria->addSelectColumn(PermissionTableMap::COL_READ);
-            $criteria->addSelectColumn(PermissionTableMap::COL_UPDATE);
-            $criteria->addSelectColumn(PermissionTableMap::COL_DELETE);
+            $criteria->addSelectColumn(PermissionTableMap::COL_CREATE_PERMISSION);
+            $criteria->addSelectColumn(PermissionTableMap::COL_READ_PERMISSION);
+            $criteria->addSelectColumn(PermissionTableMap::COL_UPDATE_PERMISSION);
+            $criteria->addSelectColumn(PermissionTableMap::COL_DELETE_PERMISSION);
         } else {
             $criteria->addSelectColumn($alias . '.admin_id');
-            $criteria->addSelectColumn($alias . '.create');
-            $criteria->addSelectColumn($alias . '.read');
-            $criteria->addSelectColumn($alias . '.update');
-            $criteria->addSelectColumn($alias . '.delete');
+            $criteria->addSelectColumn($alias . '.create_permission');
+            $criteria->addSelectColumn($alias . '.read_permission');
+            $criteria->addSelectColumn($alias . '.update_permission');
+            $criteria->addSelectColumn($alias . '.delete_permission');
         }
     }
 
@@ -389,16 +389,16 @@ class PermissionTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->removeSelectColumn(PermissionTableMap::COL_ADMIN_ID);
-            $criteria->removeSelectColumn(PermissionTableMap::COL_CREATE);
-            $criteria->removeSelectColumn(PermissionTableMap::COL_READ);
-            $criteria->removeSelectColumn(PermissionTableMap::COL_UPDATE);
-            $criteria->removeSelectColumn(PermissionTableMap::COL_DELETE);
+            $criteria->removeSelectColumn(PermissionTableMap::COL_CREATE_PERMISSION);
+            $criteria->removeSelectColumn(PermissionTableMap::COL_READ_PERMISSION);
+            $criteria->removeSelectColumn(PermissionTableMap::COL_UPDATE_PERMISSION);
+            $criteria->removeSelectColumn(PermissionTableMap::COL_DELETE_PERMISSION);
         } else {
             $criteria->removeSelectColumn($alias . '.admin_id');
-            $criteria->removeSelectColumn($alias . '.create');
-            $criteria->removeSelectColumn($alias . '.read');
-            $criteria->removeSelectColumn($alias . '.update');
-            $criteria->removeSelectColumn($alias . '.delete');
+            $criteria->removeSelectColumn($alias . '.create_permission');
+            $criteria->removeSelectColumn($alias . '.read_permission');
+            $criteria->removeSelectColumn($alias . '.update_permission');
+            $criteria->removeSelectColumn($alias . '.delete_permission');
         }
     }
 
@@ -435,11 +435,10 @@ class PermissionTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Buildings\Permission) { // it's a model object
-            // create criteria based on pk values
-            $criteria = $values->buildPkeyCriteria();
+            // create criteria based on pk value
+            $criteria = $values->buildCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PermissionTableMap::DATABASE_NAME);
-            $criteria->add(PermissionTableMap::COL_ADMIN_ID, (array) $values, Criteria::IN);
+            throw new LogicException('The Permission object has no primary key');
         }
 
         $query = PermissionQuery::create()->mergeWith($criteria);

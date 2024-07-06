@@ -431,7 +431,7 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinAdmin(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinAdmin(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('Admin');
@@ -466,7 +466,7 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return \Buildings\PermissionQuery A secondary query class using the current class as primary query
      */
-    public function useAdminQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useAdminQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinAdmin($relationAlias, $joinType)
@@ -487,7 +487,7 @@ abstract class AdminQuery extends ModelCriteria
     public function withAdminQuery(
         callable $callable,
         string $relationAlias = null,
-        ?string $joinType = Criteria::INNER_JOIN
+        ?string $joinType = Criteria::LEFT_JOIN
     ) {
         $relatedQuery = $this->useAdminQuery(
             $relationAlias,
