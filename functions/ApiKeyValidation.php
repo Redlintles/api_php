@@ -4,8 +4,8 @@ use Buildings\AdminQuery;
 
 function apiKeyValidator()
 {
-    if (isset($_GET["api_key"])) {
-        $apiKey = $_GET["api_key"];
+    if (isset($_SERVER["HTTP_X_API_KEY"])) {
+        $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
         // Realiza a consulta no banco de dados para verificar a chave API
         $result = AdminQuery::create()->findOneByApiKey($apiKey);

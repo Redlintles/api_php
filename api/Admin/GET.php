@@ -3,7 +3,7 @@
 require $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 
 
-$apiKey = $_GET["api_key"];
+$apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 permissionValidator($apiKey, "READ");
 
