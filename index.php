@@ -3,8 +3,8 @@
 require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/conf/config.php";
 
-require __DIR__ . "/functions/initDb.php";
-require __DIR__ . "/functions/ApiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
+require_once __DIR__ . "/functions/initDb.php";
+require_once __DIR__ . "/functions/ApiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
 
 initRoot();
 
@@ -32,7 +32,7 @@ switch ($request) {
         echo "<h1>Hello World!</h1>";
         break;
     case "/api/admin":
-        require __DIR__ . "/api/Admin/router.php";
+        require_once __DIR__ . "/api/Admin/router.php";
         break;
     default:
         // Rota padrão para tratamento de 404
