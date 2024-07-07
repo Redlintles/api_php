@@ -1,20 +1,23 @@
 <?php
 
-require $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
-require $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
-require $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 
 use Ramsey\Uuid\Uuid;
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
+$body = bodyParser();
+
 permissionValidator($apiKey, "CREATE");
 
-validateUsername($_POST["username"]);
-validatePassword($_POST["password"]);
-validatePermissionString($_POST["permissions"]);
+validateUsername($body["username"]);
+validatePassword($body["password"]);
+validatePermissionString($body["permissions"]);
 
-$permissionString = $_POST["permissions"];
+$permissionString = $body["permissions"];
 
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 
@@ -22,8 +25,8 @@ $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 if($user->getUsername() === "root") {
 
     $data = [
-        "username" => $_POST["username"],
-        "password" => $_POST["password"],
+        "username" => $body["username"],
+        "password" => $body["password"],
         "api_key" => Uuid::uuid4()->toString()
     ];
 
