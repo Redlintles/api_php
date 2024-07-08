@@ -1,7 +1,7 @@
 <?php
 
 
-require $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 
 
 function validateUsername(string $username)
