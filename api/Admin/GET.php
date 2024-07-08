@@ -23,7 +23,7 @@ if(isset($user) && $user->getUsername() === "root") {
     }
     sendResponse(200, false, "Users fetched successfully", ["users" => $resultUsers]);
 } elseif(isset($user)) {
-    sendResponse(200, false, "User data fetched successfully", $user);
+    sendResponse(200, false, "User data fetched successfully", $user->toArray());
 } else {
     sendResponse(404, true, "User does not exists");
 }
