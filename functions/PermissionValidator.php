@@ -1,6 +1,7 @@
 <?php
 
-use Buildings\Permission;
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 
 function permissionValidator(string $apiKey, string $checkFor)
 {
@@ -15,15 +16,6 @@ function permissionValidator(string $apiKey, string $checkFor)
     ];
 
     if($permissions[$checkFor] === 0) {
-
-        $response = [
-            "error" => true,
-            "message" => "User does not have the " . $checkFor . " permission"
-        ];
-
-        http_response_code(403);
-
-        echo json_encode($response);
-        exit;
+        sendResponse(403, true, "User does not have the " . $checkFor . " permission");
     }
 }
