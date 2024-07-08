@@ -13,6 +13,7 @@
     </unique>
   </table>
   <table name="permission" phpName="Permission">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true"/>
     <column name="admin_id" type="INTEGER" />
     <column name="create_permission" type="INTEGER" required="true" defaultValue="0" />
     <column name="read_permission" type="INTEGER" required="true" defaultValue="0" />

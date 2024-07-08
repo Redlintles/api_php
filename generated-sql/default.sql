@@ -28,11 +28,13 @@ DROP TABLE IF EXISTS `permission`;
 
 CREATE TABLE `permission`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `admin_id` INTEGER,
     `create_permission` INTEGER DEFAULT 0 NOT NULL,
     `read_permission` INTEGER DEFAULT 0 NOT NULL,
     `update_permission` INTEGER DEFAULT 0 NOT NULL,
     `delete_permission` INTEGER DEFAULT 0 NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_mission_admin_id` (`admin_id`),
     CONSTRAINT `permission_admin_id`
         FOREIGN KEY (`admin_id`)
