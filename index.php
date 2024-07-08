@@ -5,7 +5,7 @@ require_once __DIR__ . "/conf/config.php";
 
 require_once __DIR__ . "/functions/initDb.php";
 require_once __DIR__ . "/functions/ApiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
-
+require_once __DIR__ . "/functions/SendResponse.php";
 initRoot();
 
 $request = parse_url($_SERVER["REQUEST_URI"])["path"];
@@ -15,14 +15,7 @@ if (strpos($request, "/api") === 0) {
     // Realiza a validação da chave API apenas se a requisição é para uma rota "/api"
     if (!apiKeyValidator()) {
         // Chave API inválida, envia resposta de erro e interrompe a execução
-        $response = [
-            "error" => true,
-            "message" => "Invalid API Key, Unauthorized"
-        ];
-
-        http_response_code(403);
-        echo json_encode($response);
-        exit;
+        sendResponse(403, true, "Invalid API key, unauthorized");
     }
 }
 
@@ -39,7 +32,5 @@ switch ($request) {
         break;
     default:
         // Rota padrão para tratamento de 404
-        http_response_code(404);
-        echo "404 Not Found";
-        break;
+        sendResponse(404, true, "Page not found");
 }
