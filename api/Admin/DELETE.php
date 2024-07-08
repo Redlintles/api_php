@@ -4,6 +4,7 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 permissionValidator($apiKey, "DELETE");
@@ -26,7 +27,7 @@ if($user->getUsername() === "root") {
     }
 
     if(!isset($targetUser)) {
-        sendResponse(400, true, "User " . $body["username"] . " not found");
+        sendResponse(400, true, "User not found");
     }
 
     if($targetUser->getUsername() === "root") {
@@ -34,7 +35,7 @@ if($user->getUsername() === "root") {
     }
 
     $targetUser->delete();
-    sendResponse(200, false, "User " . $body["username"] . " Deleted successfully");
+    sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully");
 } else {
     sendResponse(403, true, "Only root can delete admins");
 }
