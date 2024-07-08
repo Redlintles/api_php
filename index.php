@@ -34,6 +34,9 @@ switch ($request) {
     case "/api/admin":
         require_once __DIR__ . "/api/Admin/router.php";
         break;
+    case "/api/permission":
+        require_once __DIR__ . "/api/Permission/router.php";
+        break;
     default:
         // Rota padrão para tratamento de 404
         http_response_code(404);
