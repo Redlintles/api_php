@@ -40,3 +40,13 @@ function validatePermissionString(string $permissionString)
         exit;
     }
 }
+
+function validateId(string $id)
+{
+    $regex = "/^\d+$/";
+
+    if(!preg_match($regex, $id)) {
+        sendResponse(400, true, "Invalid ID(must be a number)");
+        exit;
+    }
+}
