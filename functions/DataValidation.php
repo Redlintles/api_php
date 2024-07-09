@@ -4,9 +4,17 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 
 function validationFactory(string $regex, string $message)
 {
-    return function (string $toValidate) use ($regex, $message) {
-        if(!preg_match($regex, $toValidate)) {
-            sendResponse(400, true, $message);
+    return function (string | array $toValidate) use ($regex, $message) {
+        if(is_array($toValidate)) {
+            foreach($toValidate as $item) {
+                if(!preg_match($regex, $item)) {
+                    sendResponse(400, true, $message);
+                }
+            }
+        } else {
+            if(!preg_match($regex, $toValidate)) {
+                sendResponse(400, true, $message);
+            }
         }
     };
 }
