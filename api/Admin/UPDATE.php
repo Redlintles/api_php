@@ -15,11 +15,11 @@ if(!isset($body["admin_id"])) {
     sendResponse(400, true, "admin_id not defined");
 }
 if(isset($body["username"])) {
-    validateUsername($body["username"]);
+    $validateUsername($body["username"]);
 }
 
 if(isset($body["password"])) {
-    validatePassword($body["password"]);
+    $validatePassword($body["password"]);
 }
 
 $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);

@@ -23,10 +23,10 @@ if(isset($user) && $user->getUsername() === "root") {
 
 
     if(isset($body["admin_id"])) {
-        validateId($body["admin_id"]);
+        $validateId($body["admin_id"]);
         $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
     } elseif(isset($body["username"])) {
-        validateUsername($body["username"]);
+        $validateUsername($body["username"]);
         $targetUser = \Buildings\AdminQuery::create()->findOneByUsername($body["username"]);
     }
     if(!isset($targetUser)) {

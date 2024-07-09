@@ -17,9 +17,9 @@ if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permi
     sendResponse(400, true, "Username,Password or/and Permissions is/are not defined");
 }
 
-validateUsername($body["username"]);
-validatePassword($body["password"]);
-validatePermissionString($body["permissions"]);
+$validateUsername($body["username"]);
+$validatePassword($body["password"]);
+$validatePermissionString($body["permissions"]);
 
 $permissionString = $body["permissions"];
 
