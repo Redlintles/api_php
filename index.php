@@ -30,6 +30,9 @@ switch ($request) {
     case "/api/permission":
         require_once __DIR__ . "/api/Permission/router.php";
         break;
+    case "/api/address":
+        require_once __DIR__ . "/api/Address/router.php";
+        break;
     default:
         // Rota padrão para tratamento de 404
         sendResponse(404, true, "Page not found");
