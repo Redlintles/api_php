@@ -39,8 +39,30 @@ if(!$usernameExists->isEmpty()) {
     sendResponse(400, true, "Username already exists, choose another");
 }
 
+
+
+
+
 if((bool)$newClient->save()) {
-    sendResponse(200, false, "Client created successfully", ["client" => $newClient->toArray()]);
+
+    $user = \Buildings\ClientQuery::create()->findOneByUsername($newClient->getUsername());
+
+
+    if(!isset($user)) {
+        sendResponse(500, true, "Ocorreu um erro");
+    }
+
+
+
+    $cart = new \Buildings\Cart();
+
+    $cart->setIdClient($user->getId());
+
+    if((bool)$cart->save()) {
+        sendResponse(200, false, "Client created successfully", ["client" => $newClient->toArray()]);
+    } else {
+        sendResponse(500, true, "An unexpected error ocurred, try again later");
+    }
 } else {
     sendResponse(500, true, "An unexpected error ocurred, try again later");
 }
