@@ -47,25 +47,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAddressOwnerQuery rightJoinWithAddressOwnerId() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerId relation
  * @method     ChildAddressOwnerQuery innerJoinWithAddressOwnerId() Adds a INNER JOIN clause and with to the query using the AddressOwnerId relation
  *
- * @method     ChildAddressOwnerQuery leftJoinAddressOwnerClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the AddressOwnerClient relation
- * @method     ChildAddressOwnerQuery rightJoinAddressOwnerClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AddressOwnerClient relation
- * @method     ChildAddressOwnerQuery innerJoinAddressOwnerClient($relationAlias = null) Adds a INNER JOIN clause to the query using the AddressOwnerClient relation
+ * @method     ChildAddressOwnerQuery leftJoinAddressOwnerIdClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the AddressOwnerIdClient relation
+ * @method     ChildAddressOwnerQuery rightJoinAddressOwnerIdClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AddressOwnerIdClient relation
+ * @method     ChildAddressOwnerQuery innerJoinAddressOwnerIdClient($relationAlias = null) Adds a INNER JOIN clause to the query using the AddressOwnerIdClient relation
  *
- * @method     ChildAddressOwnerQuery joinWithAddressOwnerClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AddressOwnerClient relation
+ * @method     ChildAddressOwnerQuery joinWithAddressOwnerIdClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AddressOwnerIdClient relation
  *
- * @method     ChildAddressOwnerQuery leftJoinWithAddressOwnerClient() Adds a LEFT JOIN clause and with to the query using the AddressOwnerClient relation
- * @method     ChildAddressOwnerQuery rightJoinWithAddressOwnerClient() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerClient relation
- * @method     ChildAddressOwnerQuery innerJoinWithAddressOwnerClient() Adds a INNER JOIN clause and with to the query using the AddressOwnerClient relation
+ * @method     ChildAddressOwnerQuery leftJoinWithAddressOwnerIdClient() Adds a LEFT JOIN clause and with to the query using the AddressOwnerIdClient relation
+ * @method     ChildAddressOwnerQuery rightJoinWithAddressOwnerIdClient() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerIdClient relation
+ * @method     ChildAddressOwnerQuery innerJoinWithAddressOwnerIdClient() Adds a INNER JOIN clause and with to the query using the AddressOwnerIdClient relation
  *
- * @method     ChildAddressOwnerQuery leftJoinAddressOwnerSeller($relationAlias = null) Adds a LEFT JOIN clause to the query using the AddressOwnerSeller relation
- * @method     ChildAddressOwnerQuery rightJoinAddressOwnerSeller($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AddressOwnerSeller relation
- * @method     ChildAddressOwnerQuery innerJoinAddressOwnerSeller($relationAlias = null) Adds a INNER JOIN clause to the query using the AddressOwnerSeller relation
+ * @method     ChildAddressOwnerQuery leftJoinAddressOwnerIdSeller($relationAlias = null) Adds a LEFT JOIN clause to the query using the AddressOwnerIdSeller relation
+ * @method     ChildAddressOwnerQuery rightJoinAddressOwnerIdSeller($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AddressOwnerIdSeller relation
+ * @method     ChildAddressOwnerQuery innerJoinAddressOwnerIdSeller($relationAlias = null) Adds a INNER JOIN clause to the query using the AddressOwnerIdSeller relation
  *
- * @method     ChildAddressOwnerQuery joinWithAddressOwnerSeller($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AddressOwnerSeller relation
+ * @method     ChildAddressOwnerQuery joinWithAddressOwnerIdSeller($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AddressOwnerIdSeller relation
  *
- * @method     ChildAddressOwnerQuery leftJoinWithAddressOwnerSeller() Adds a LEFT JOIN clause and with to the query using the AddressOwnerSeller relation
- * @method     ChildAddressOwnerQuery rightJoinWithAddressOwnerSeller() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerSeller relation
- * @method     ChildAddressOwnerQuery innerJoinWithAddressOwnerSeller() Adds a INNER JOIN clause and with to the query using the AddressOwnerSeller relation
+ * @method     ChildAddressOwnerQuery leftJoinWithAddressOwnerIdSeller() Adds a LEFT JOIN clause and with to the query using the AddressOwnerIdSeller relation
+ * @method     ChildAddressOwnerQuery rightJoinWithAddressOwnerIdSeller() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerIdSeller relation
+ * @method     ChildAddressOwnerQuery innerJoinWithAddressOwnerIdSeller() Adds a INNER JOIN clause and with to the query using the AddressOwnerIdSeller relation
  *
  * @method     \Buildings\AddressQuery|\Buildings\ClientQuery|\Buildings\SellerQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -253,7 +253,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
      * $query->filterByIdClient(array('min' => 12)); // WHERE id_client > 12
      * </code>
      *
-     * @see       filterByAddressOwnerClient()
+     * @see       filterByAddressOwnerIdClient()
      *
      * @param mixed $idClient The value to use as filter.
      *              Use scalar values for equality.
@@ -298,7 +298,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
      * $query->filterByIdSeller(array('min' => 12)); // WHERE id_seller > 12
      * </code>
      *
-     * @see       filterByAddressOwnerSeller()
+     * @see       filterByAddressOwnerIdSeller()
      *
      * @param mixed $idSeller The value to use as filter.
      *              Use scalar values for equality.
@@ -546,7 +546,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByAddressOwnerClient($client, ?string $comparison = null)
+    public function filterByAddressOwnerIdClient($client, ?string $comparison = null)
     {
         if ($client instanceof \Buildings\Client) {
             return $this
@@ -561,22 +561,22 @@ abstract class AddressOwnerQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByAddressOwnerClient() only accepts arguments of type \Buildings\Client or Collection');
+            throw new PropelException('filterByAddressOwnerIdClient() only accepts arguments of type \Buildings\Client or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the AddressOwnerClient relation
+     * Adds a JOIN clause to the query using the AddressOwnerIdClient relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinAddressOwnerClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinAddressOwnerIdClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('AddressOwnerClient');
+        $relationMap = $tableMap->getRelation('AddressOwnerIdClient');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -591,14 +591,14 @@ abstract class AddressOwnerQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'AddressOwnerClient');
+            $this->addJoinObject($join, 'AddressOwnerIdClient');
         }
 
         return $this;
     }
 
     /**
-     * Use the AddressOwnerClient relation Client object
+     * Use the AddressOwnerIdClient relation Client object
      *
      * @see useQuery()
      *
@@ -608,15 +608,15 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\ClientQuery A secondary query class using the current class as primary query
      */
-    public function useAddressOwnerClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAddressOwnerIdClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinAddressOwnerClient($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'AddressOwnerClient', '\Buildings\ClientQuery');
+            ->joinAddressOwnerIdClient($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AddressOwnerIdClient', '\Buildings\ClientQuery');
     }
 
     /**
-     * Use the AddressOwnerClient relation Client object
+     * Use the AddressOwnerIdClient relation Client object
      *
      * @param callable(\Buildings\ClientQuery):\Buildings\ClientQuery $callable A function working on the related query
      *
@@ -626,12 +626,12 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withAddressOwnerClientQuery(
+    public function withAddressOwnerIdClientQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useAddressOwnerClientQuery(
+        $relatedQuery = $this->useAddressOwnerIdClientQuery(
             $relationAlias,
             $joinType
         );
@@ -642,7 +642,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
     }
 
     /**
-     * Use the AddressOwnerClient relation to the Client table for an EXISTS query.
+     * Use the AddressOwnerIdClient relation to the Client table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -652,32 +652,32 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\ClientQuery The inner query object of the EXISTS statement
      */
-    public function useAddressOwnerClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useAddressOwnerIdClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\ClientQuery */
-        $q = $this->useExistsQuery('AddressOwnerClient', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('AddressOwnerIdClient', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the AddressOwnerClient relation to the Client table for a NOT EXISTS query.
+     * Use the AddressOwnerIdClient relation to the Client table for a NOT EXISTS query.
      *
-     * @see useAddressOwnerClientExistsQuery()
+     * @see useAddressOwnerIdClientExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ClientQuery The inner query object of the NOT EXISTS statement
      */
-    public function useAddressOwnerClientNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useAddressOwnerIdClientNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ClientQuery */
-        $q = $this->useExistsQuery('AddressOwnerClient', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('AddressOwnerIdClient', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the AddressOwnerClient relation to the Client table for an IN query.
+     * Use the AddressOwnerIdClient relation to the Client table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -687,27 +687,27 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\ClientQuery The inner query object of the IN statement
      */
-    public function useInAddressOwnerClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInAddressOwnerIdClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\ClientQuery */
-        $q = $this->useInQuery('AddressOwnerClient', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('AddressOwnerIdClient', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the AddressOwnerClient relation to the Client table for a NOT IN query.
+     * Use the AddressOwnerIdClient relation to the Client table for a NOT IN query.
      *
-     * @see useAddressOwnerClientInQuery()
+     * @see useAddressOwnerIdClientInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ClientQuery The inner query object of the NOT IN statement
      */
-    public function useNotInAddressOwnerClientQuery($modelAlias = null, $queryClass = null)
+    public function useNotInAddressOwnerIdClientQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ClientQuery */
-        $q = $this->useInQuery('AddressOwnerClient', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('AddressOwnerIdClient', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -721,7 +721,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByAddressOwnerSeller($seller, ?string $comparison = null)
+    public function filterByAddressOwnerIdSeller($seller, ?string $comparison = null)
     {
         if ($seller instanceof \Buildings\Seller) {
             return $this
@@ -736,22 +736,22 @@ abstract class AddressOwnerQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByAddressOwnerSeller() only accepts arguments of type \Buildings\Seller or Collection');
+            throw new PropelException('filterByAddressOwnerIdSeller() only accepts arguments of type \Buildings\Seller or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the AddressOwnerSeller relation
+     * Adds a JOIN clause to the query using the AddressOwnerIdSeller relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinAddressOwnerSeller(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinAddressOwnerIdSeller(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('AddressOwnerSeller');
+        $relationMap = $tableMap->getRelation('AddressOwnerIdSeller');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -766,14 +766,14 @@ abstract class AddressOwnerQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'AddressOwnerSeller');
+            $this->addJoinObject($join, 'AddressOwnerIdSeller');
         }
 
         return $this;
     }
 
     /**
-     * Use the AddressOwnerSeller relation Seller object
+     * Use the AddressOwnerIdSeller relation Seller object
      *
      * @see useQuery()
      *
@@ -783,15 +783,15 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery A secondary query class using the current class as primary query
      */
-    public function useAddressOwnerSellerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAddressOwnerIdSellerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinAddressOwnerSeller($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'AddressOwnerSeller', '\Buildings\SellerQuery');
+            ->joinAddressOwnerIdSeller($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AddressOwnerIdSeller', '\Buildings\SellerQuery');
     }
 
     /**
-     * Use the AddressOwnerSeller relation Seller object
+     * Use the AddressOwnerIdSeller relation Seller object
      *
      * @param callable(\Buildings\SellerQuery):\Buildings\SellerQuery $callable A function working on the related query
      *
@@ -801,12 +801,12 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withAddressOwnerSellerQuery(
+    public function withAddressOwnerIdSellerQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useAddressOwnerSellerQuery(
+        $relatedQuery = $this->useAddressOwnerIdSellerQuery(
             $relationAlias,
             $joinType
         );
@@ -817,7 +817,7 @@ abstract class AddressOwnerQuery extends ModelCriteria
     }
 
     /**
-     * Use the AddressOwnerSeller relation to the Seller table for an EXISTS query.
+     * Use the AddressOwnerIdSeller relation to the Seller table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -827,32 +827,32 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery The inner query object of the EXISTS statement
      */
-    public function useAddressOwnerSellerExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useAddressOwnerIdSellerExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useExistsQuery('AddressOwnerSeller', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('AddressOwnerIdSeller', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the AddressOwnerSeller relation to the Seller table for a NOT EXISTS query.
+     * Use the AddressOwnerIdSeller relation to the Seller table for a NOT EXISTS query.
      *
-     * @see useAddressOwnerSellerExistsQuery()
+     * @see useAddressOwnerIdSellerExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\SellerQuery The inner query object of the NOT EXISTS statement
      */
-    public function useAddressOwnerSellerNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useAddressOwnerIdSellerNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useExistsQuery('AddressOwnerSeller', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('AddressOwnerIdSeller', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the AddressOwnerSeller relation to the Seller table for an IN query.
+     * Use the AddressOwnerIdSeller relation to the Seller table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -862,27 +862,27 @@ abstract class AddressOwnerQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery The inner query object of the IN statement
      */
-    public function useInAddressOwnerSellerQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInAddressOwnerIdSellerQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useInQuery('AddressOwnerSeller', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('AddressOwnerIdSeller', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the AddressOwnerSeller relation to the Seller table for a NOT IN query.
+     * Use the AddressOwnerIdSeller relation to the Seller table for a NOT IN query.
      *
-     * @see useAddressOwnerSellerInQuery()
+     * @see useAddressOwnerIdSellerInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\SellerQuery The inner query object of the NOT IN statement
      */
-    public function useNotInAddressOwnerSellerQuery($modelAlias = null, $queryClass = null)
+    public function useNotInAddressOwnerIdSellerQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useInQuery('AddressOwnerSeller', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('AddressOwnerIdSeller', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

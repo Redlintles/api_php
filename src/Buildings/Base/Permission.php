@@ -1332,7 +1332,7 @@ abstract class Permission implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildAdmin object, it will not be re-added.
         if ($v !== null) {
-            $v->addAdmin($this);
+            $v->addPermissionAdminAdmin($this);
         }
 
 
@@ -1356,7 +1356,7 @@ abstract class Permission implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aPermissionAdminId->addAdmins($this);
+                $this->aPermissionAdminId->addPermissionAdminAdmins($this);
              */
         }
 
@@ -1373,7 +1373,7 @@ abstract class Permission implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aPermissionAdminId) {
-            $this->aPermissionAdminId->removeAdmin($this);
+            $this->aPermissionAdminId->removePermissionAdminAdmin($this);
         }
         $this->id = null;
         $this->admin_id = null;

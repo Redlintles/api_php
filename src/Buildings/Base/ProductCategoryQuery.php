@@ -33,25 +33,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductCategoryQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildProductCategoryQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildProductCategoryQuery leftJoinProductCategoryProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductCategoryProduct relation
- * @method     ChildProductCategoryQuery rightJoinProductCategoryProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductCategoryProduct relation
- * @method     ChildProductCategoryQuery innerJoinProductCategoryProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductCategoryProduct relation
+ * @method     ChildProductCategoryQuery leftJoinProductCategoryIdProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductCategoryIdProduct relation
+ * @method     ChildProductCategoryQuery rightJoinProductCategoryIdProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductCategoryIdProduct relation
+ * @method     ChildProductCategoryQuery innerJoinProductCategoryIdProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductCategoryIdProduct relation
  *
- * @method     ChildProductCategoryQuery joinWithProductCategoryProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductCategoryProduct relation
+ * @method     ChildProductCategoryQuery joinWithProductCategoryIdProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductCategoryIdProduct relation
  *
- * @method     ChildProductCategoryQuery leftJoinWithProductCategoryProduct() Adds a LEFT JOIN clause and with to the query using the ProductCategoryProduct relation
- * @method     ChildProductCategoryQuery rightJoinWithProductCategoryProduct() Adds a RIGHT JOIN clause and with to the query using the ProductCategoryProduct relation
- * @method     ChildProductCategoryQuery innerJoinWithProductCategoryProduct() Adds a INNER JOIN clause and with to the query using the ProductCategoryProduct relation
+ * @method     ChildProductCategoryQuery leftJoinWithProductCategoryIdProduct() Adds a LEFT JOIN clause and with to the query using the ProductCategoryIdProduct relation
+ * @method     ChildProductCategoryQuery rightJoinWithProductCategoryIdProduct() Adds a RIGHT JOIN clause and with to the query using the ProductCategoryIdProduct relation
+ * @method     ChildProductCategoryQuery innerJoinWithProductCategoryIdProduct() Adds a INNER JOIN clause and with to the query using the ProductCategoryIdProduct relation
  *
- * @method     ChildProductCategoryQuery leftJoinProductCategoryCategory($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductCategoryCategory relation
- * @method     ChildProductCategoryQuery rightJoinProductCategoryCategory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductCategoryCategory relation
- * @method     ChildProductCategoryQuery innerJoinProductCategoryCategory($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductCategoryCategory relation
+ * @method     ChildProductCategoryQuery leftJoinProductCategoryIdCategory($relationAlias = null) Adds a LEFT JOIN clause to the query using the ProductCategoryIdCategory relation
+ * @method     ChildProductCategoryQuery rightJoinProductCategoryIdCategory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ProductCategoryIdCategory relation
+ * @method     ChildProductCategoryQuery innerJoinProductCategoryIdCategory($relationAlias = null) Adds a INNER JOIN clause to the query using the ProductCategoryIdCategory relation
  *
- * @method     ChildProductCategoryQuery joinWithProductCategoryCategory($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductCategoryCategory relation
+ * @method     ChildProductCategoryQuery joinWithProductCategoryIdCategory($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ProductCategoryIdCategory relation
  *
- * @method     ChildProductCategoryQuery leftJoinWithProductCategoryCategory() Adds a LEFT JOIN clause and with to the query using the ProductCategoryCategory relation
- * @method     ChildProductCategoryQuery rightJoinWithProductCategoryCategory() Adds a RIGHT JOIN clause and with to the query using the ProductCategoryCategory relation
- * @method     ChildProductCategoryQuery innerJoinWithProductCategoryCategory() Adds a INNER JOIN clause and with to the query using the ProductCategoryCategory relation
+ * @method     ChildProductCategoryQuery leftJoinWithProductCategoryIdCategory() Adds a LEFT JOIN clause and with to the query using the ProductCategoryIdCategory relation
+ * @method     ChildProductCategoryQuery rightJoinWithProductCategoryIdCategory() Adds a RIGHT JOIN clause and with to the query using the ProductCategoryIdCategory relation
+ * @method     ChildProductCategoryQuery innerJoinWithProductCategoryIdCategory() Adds a INNER JOIN clause and with to the query using the ProductCategoryIdCategory relation
  *
  * @method     \Buildings\ProductQuery|\Buildings\CategoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -186,7 +186,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
      * $query->filterByIdProduct(array('min' => 12)); // WHERE id_product > 12
      * </code>
      *
-     * @see       filterByProductCategoryProduct()
+     * @see       filterByProductCategoryIdProduct()
      *
      * @param mixed $idProduct The value to use as filter.
      *              Use scalar values for equality.
@@ -231,7 +231,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
      * $query->filterByIdCategory(array('min' => 12)); // WHERE id_category > 12
      * </code>
      *
-     * @see       filterByProductCategoryCategory()
+     * @see       filterByProductCategoryIdCategory()
      *
      * @param mixed $idCategory The value to use as filter.
      *              Use scalar values for equality.
@@ -276,7 +276,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByProductCategoryProduct($product, ?string $comparison = null)
+    public function filterByProductCategoryIdProduct($product, ?string $comparison = null)
     {
         if ($product instanceof \Buildings\Product) {
             return $this
@@ -291,22 +291,22 @@ abstract class ProductCategoryQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByProductCategoryProduct() only accepts arguments of type \Buildings\Product or Collection');
+            throw new PropelException('filterByProductCategoryIdProduct() only accepts arguments of type \Buildings\Product or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the ProductCategoryProduct relation
+     * Adds a JOIN clause to the query using the ProductCategoryIdProduct relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinProductCategoryProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinProductCategoryIdProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ProductCategoryProduct');
+        $relationMap = $tableMap->getRelation('ProductCategoryIdProduct');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -321,14 +321,14 @@ abstract class ProductCategoryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'ProductCategoryProduct');
+            $this->addJoinObject($join, 'ProductCategoryIdProduct');
         }
 
         return $this;
     }
 
     /**
-     * Use the ProductCategoryProduct relation Product object
+     * Use the ProductCategoryIdProduct relation Product object
      *
      * @see useQuery()
      *
@@ -338,15 +338,15 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery A secondary query class using the current class as primary query
      */
-    public function useProductCategoryProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useProductCategoryIdProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinProductCategoryProduct($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ProductCategoryProduct', '\Buildings\ProductQuery');
+            ->joinProductCategoryIdProduct($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductCategoryIdProduct', '\Buildings\ProductQuery');
     }
 
     /**
-     * Use the ProductCategoryProduct relation Product object
+     * Use the ProductCategoryIdProduct relation Product object
      *
      * @param callable(\Buildings\ProductQuery):\Buildings\ProductQuery $callable A function working on the related query
      *
@@ -356,12 +356,12 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withProductCategoryProductQuery(
+    public function withProductCategoryIdProductQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useProductCategoryProductQuery(
+        $relatedQuery = $this->useProductCategoryIdProductQuery(
             $relationAlias,
             $joinType
         );
@@ -372,7 +372,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
     }
 
     /**
-     * Use the ProductCategoryProduct relation to the Product table for an EXISTS query.
+     * Use the ProductCategoryIdProduct relation to the Product table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -382,32 +382,32 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the EXISTS statement
      */
-    public function useProductCategoryProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useProductCategoryIdProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('ProductCategoryProduct', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('ProductCategoryIdProduct', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the ProductCategoryProduct relation to the Product table for a NOT EXISTS query.
+     * Use the ProductCategoryIdProduct relation to the Product table for a NOT EXISTS query.
      *
-     * @see useProductCategoryProductExistsQuery()
+     * @see useProductCategoryIdProductExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT EXISTS statement
      */
-    public function useProductCategoryProductNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useProductCategoryIdProductNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('ProductCategoryProduct', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('ProductCategoryIdProduct', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the ProductCategoryProduct relation to the Product table for an IN query.
+     * Use the ProductCategoryIdProduct relation to the Product table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -417,27 +417,27 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the IN statement
      */
-    public function useInProductCategoryProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInProductCategoryIdProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('ProductCategoryProduct', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('ProductCategoryIdProduct', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the ProductCategoryProduct relation to the Product table for a NOT IN query.
+     * Use the ProductCategoryIdProduct relation to the Product table for a NOT IN query.
      *
-     * @see useProductCategoryProductInQuery()
+     * @see useProductCategoryIdProductInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT IN statement
      */
-    public function useNotInProductCategoryProductQuery($modelAlias = null, $queryClass = null)
+    public function useNotInProductCategoryIdProductQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('ProductCategoryProduct', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('ProductCategoryIdProduct', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -451,7 +451,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByProductCategoryCategory($category, ?string $comparison = null)
+    public function filterByProductCategoryIdCategory($category, ?string $comparison = null)
     {
         if ($category instanceof \Buildings\Category) {
             return $this
@@ -466,22 +466,22 @@ abstract class ProductCategoryQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByProductCategoryCategory() only accepts arguments of type \Buildings\Category or Collection');
+            throw new PropelException('filterByProductCategoryIdCategory() only accepts arguments of type \Buildings\Category or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the ProductCategoryCategory relation
+     * Adds a JOIN clause to the query using the ProductCategoryIdCategory relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinProductCategoryCategory(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinProductCategoryIdCategory(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('ProductCategoryCategory');
+        $relationMap = $tableMap->getRelation('ProductCategoryIdCategory');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -496,14 +496,14 @@ abstract class ProductCategoryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'ProductCategoryCategory');
+            $this->addJoinObject($join, 'ProductCategoryIdCategory');
         }
 
         return $this;
     }
 
     /**
-     * Use the ProductCategoryCategory relation Category object
+     * Use the ProductCategoryIdCategory relation Category object
      *
      * @see useQuery()
      *
@@ -513,15 +513,15 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\CategoryQuery A secondary query class using the current class as primary query
      */
-    public function useProductCategoryCategoryQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useProductCategoryIdCategoryQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinProductCategoryCategory($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'ProductCategoryCategory', '\Buildings\CategoryQuery');
+            ->joinProductCategoryIdCategory($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ProductCategoryIdCategory', '\Buildings\CategoryQuery');
     }
 
     /**
-     * Use the ProductCategoryCategory relation Category object
+     * Use the ProductCategoryIdCategory relation Category object
      *
      * @param callable(\Buildings\CategoryQuery):\Buildings\CategoryQuery $callable A function working on the related query
      *
@@ -531,12 +531,12 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withProductCategoryCategoryQuery(
+    public function withProductCategoryIdCategoryQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useProductCategoryCategoryQuery(
+        $relatedQuery = $this->useProductCategoryIdCategoryQuery(
             $relationAlias,
             $joinType
         );
@@ -547,7 +547,7 @@ abstract class ProductCategoryQuery extends ModelCriteria
     }
 
     /**
-     * Use the ProductCategoryCategory relation to the Category table for an EXISTS query.
+     * Use the ProductCategoryIdCategory relation to the Category table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -557,32 +557,32 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\CategoryQuery The inner query object of the EXISTS statement
      */
-    public function useProductCategoryCategoryExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useProductCategoryIdCategoryExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\CategoryQuery */
-        $q = $this->useExistsQuery('ProductCategoryCategory', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('ProductCategoryIdCategory', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the ProductCategoryCategory relation to the Category table for a NOT EXISTS query.
+     * Use the ProductCategoryIdCategory relation to the Category table for a NOT EXISTS query.
      *
-     * @see useProductCategoryCategoryExistsQuery()
+     * @see useProductCategoryIdCategoryExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CategoryQuery The inner query object of the NOT EXISTS statement
      */
-    public function useProductCategoryCategoryNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useProductCategoryIdCategoryNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CategoryQuery */
-        $q = $this->useExistsQuery('ProductCategoryCategory', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('ProductCategoryIdCategory', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the ProductCategoryCategory relation to the Category table for an IN query.
+     * Use the ProductCategoryIdCategory relation to the Category table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -592,27 +592,27 @@ abstract class ProductCategoryQuery extends ModelCriteria
      *
      * @return \Buildings\CategoryQuery The inner query object of the IN statement
      */
-    public function useInProductCategoryCategoryQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInProductCategoryIdCategoryQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\CategoryQuery */
-        $q = $this->useInQuery('ProductCategoryCategory', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('ProductCategoryIdCategory', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the ProductCategoryCategory relation to the Category table for a NOT IN query.
+     * Use the ProductCategoryIdCategory relation to the Category table for a NOT IN query.
      *
-     * @see useProductCategoryCategoryInQuery()
+     * @see useProductCategoryIdCategoryInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CategoryQuery The inner query object of the NOT IN statement
      */
-    public function useNotInProductCategoryCategoryQuery($modelAlias = null, $queryClass = null)
+    public function useNotInProductCategoryIdCategoryQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CategoryQuery */
-        $q = $this->useInQuery('ProductCategoryCategory', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('ProductCategoryIdCategory', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

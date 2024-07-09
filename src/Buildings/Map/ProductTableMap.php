@@ -210,41 +210,41 @@ class ProductTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Product', '\\Buildings\\CartProduct', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('CartProduct', '\\Buildings\\CartProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Products', false);
-        $this->addRelation('Product', '\\Buildings\\SellerProduct', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'CartProducts', false);
+        $this->addRelation('SellerProductProduct', '\\Buildings\\SellerProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Products', false);
-        $this->addRelation('Product', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'SellerProductProducts', false);
+        $this->addRelation('OrderProductProduct', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Products', false);
-        $this->addRelation('Product', '\\Buildings\\Discount', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'OrderProductProducts', false);
+        $this->addRelation('DiscountProductProduct', '\\Buildings\\Discount', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Products', false);
-        $this->addRelation('Product', '\\Buildings\\ProductCategory', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'DiscountProductProducts', false);
+        $this->addRelation('ProductCategoryProduct', '\\Buildings\\ProductCategory', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Products', false);
+), 'CASCADE', null, 'ProductCategoryProducts', false);
     }
 
     /**

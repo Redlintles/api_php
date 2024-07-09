@@ -35,25 +35,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCartProductQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildCartProductQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildCartProductQuery leftJoinCartProductCart($relationAlias = null) Adds a LEFT JOIN clause to the query using the CartProductCart relation
- * @method     ChildCartProductQuery rightJoinCartProductCart($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CartProductCart relation
- * @method     ChildCartProductQuery innerJoinCartProductCart($relationAlias = null) Adds a INNER JOIN clause to the query using the CartProductCart relation
+ * @method     ChildCartProductQuery leftJoinCartProductIdCart($relationAlias = null) Adds a LEFT JOIN clause to the query using the CartProductIdCart relation
+ * @method     ChildCartProductQuery rightJoinCartProductIdCart($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CartProductIdCart relation
+ * @method     ChildCartProductQuery innerJoinCartProductIdCart($relationAlias = null) Adds a INNER JOIN clause to the query using the CartProductIdCart relation
  *
- * @method     ChildCartProductQuery joinWithCartProductCart($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CartProductCart relation
+ * @method     ChildCartProductQuery joinWithCartProductIdCart($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CartProductIdCart relation
  *
- * @method     ChildCartProductQuery leftJoinWithCartProductCart() Adds a LEFT JOIN clause and with to the query using the CartProductCart relation
- * @method     ChildCartProductQuery rightJoinWithCartProductCart() Adds a RIGHT JOIN clause and with to the query using the CartProductCart relation
- * @method     ChildCartProductQuery innerJoinWithCartProductCart() Adds a INNER JOIN clause and with to the query using the CartProductCart relation
+ * @method     ChildCartProductQuery leftJoinWithCartProductIdCart() Adds a LEFT JOIN clause and with to the query using the CartProductIdCart relation
+ * @method     ChildCartProductQuery rightJoinWithCartProductIdCart() Adds a RIGHT JOIN clause and with to the query using the CartProductIdCart relation
+ * @method     ChildCartProductQuery innerJoinWithCartProductIdCart() Adds a INNER JOIN clause and with to the query using the CartProductIdCart relation
  *
- * @method     ChildCartProductQuery leftJoinCartProductProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the CartProductProduct relation
- * @method     ChildCartProductQuery rightJoinCartProductProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CartProductProduct relation
- * @method     ChildCartProductQuery innerJoinCartProductProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the CartProductProduct relation
+ * @method     ChildCartProductQuery leftJoinCartProductIdProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the CartProductIdProduct relation
+ * @method     ChildCartProductQuery rightJoinCartProductIdProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CartProductIdProduct relation
+ * @method     ChildCartProductQuery innerJoinCartProductIdProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the CartProductIdProduct relation
  *
- * @method     ChildCartProductQuery joinWithCartProductProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CartProductProduct relation
+ * @method     ChildCartProductQuery joinWithCartProductIdProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CartProductIdProduct relation
  *
- * @method     ChildCartProductQuery leftJoinWithCartProductProduct() Adds a LEFT JOIN clause and with to the query using the CartProductProduct relation
- * @method     ChildCartProductQuery rightJoinWithCartProductProduct() Adds a RIGHT JOIN clause and with to the query using the CartProductProduct relation
- * @method     ChildCartProductQuery innerJoinWithCartProductProduct() Adds a INNER JOIN clause and with to the query using the CartProductProduct relation
+ * @method     ChildCartProductQuery leftJoinWithCartProductIdProduct() Adds a LEFT JOIN clause and with to the query using the CartProductIdProduct relation
+ * @method     ChildCartProductQuery rightJoinWithCartProductIdProduct() Adds a RIGHT JOIN clause and with to the query using the CartProductIdProduct relation
+ * @method     ChildCartProductQuery innerJoinWithCartProductIdProduct() Adds a INNER JOIN clause and with to the query using the CartProductIdProduct relation
  *
  * @method     \Buildings\CartQuery|\Buildings\ProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -192,7 +192,7 @@ abstract class CartProductQuery extends ModelCriteria
      * $query->filterByIdCart(array('min' => 12)); // WHERE id_cart > 12
      * </code>
      *
-     * @see       filterByCartProductCart()
+     * @see       filterByCartProductIdCart()
      *
      * @param mixed $idCart The value to use as filter.
      *              Use scalar values for equality.
@@ -237,7 +237,7 @@ abstract class CartProductQuery extends ModelCriteria
      * $query->filterByIdProduct(array('min' => 12)); // WHERE id_product > 12
      * </code>
      *
-     * @see       filterByCartProductProduct()
+     * @see       filterByCartProductIdProduct()
      *
      * @param mixed $idProduct The value to use as filter.
      *              Use scalar values for equality.
@@ -325,7 +325,7 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByCartProductCart($cart, ?string $comparison = null)
+    public function filterByCartProductIdCart($cart, ?string $comparison = null)
     {
         if ($cart instanceof \Buildings\Cart) {
             return $this
@@ -340,22 +340,22 @@ abstract class CartProductQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByCartProductCart() only accepts arguments of type \Buildings\Cart or Collection');
+            throw new PropelException('filterByCartProductIdCart() only accepts arguments of type \Buildings\Cart or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the CartProductCart relation
+     * Adds a JOIN clause to the query using the CartProductIdCart relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinCartProductCart(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinCartProductIdCart(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CartProductCart');
+        $relationMap = $tableMap->getRelation('CartProductIdCart');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -370,14 +370,14 @@ abstract class CartProductQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'CartProductCart');
+            $this->addJoinObject($join, 'CartProductIdCart');
         }
 
         return $this;
     }
 
     /**
-     * Use the CartProductCart relation Cart object
+     * Use the CartProductIdCart relation Cart object
      *
      * @see useQuery()
      *
@@ -387,15 +387,15 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery A secondary query class using the current class as primary query
      */
-    public function useCartProductCartQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCartProductIdCartQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinCartProductCart($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CartProductCart', '\Buildings\CartQuery');
+            ->joinCartProductIdCart($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CartProductIdCart', '\Buildings\CartQuery');
     }
 
     /**
-     * Use the CartProductCart relation Cart object
+     * Use the CartProductIdCart relation Cart object
      *
      * @param callable(\Buildings\CartQuery):\Buildings\CartQuery $callable A function working on the related query
      *
@@ -405,12 +405,12 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withCartProductCartQuery(
+    public function withCartProductIdCartQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useCartProductCartQuery(
+        $relatedQuery = $this->useCartProductIdCartQuery(
             $relationAlias,
             $joinType
         );
@@ -421,7 +421,7 @@ abstract class CartProductQuery extends ModelCriteria
     }
 
     /**
-     * Use the CartProductCart relation to the Cart table for an EXISTS query.
+     * Use the CartProductIdCart relation to the Cart table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -431,32 +431,32 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery The inner query object of the EXISTS statement
      */
-    public function useCartProductCartExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useCartProductIdCartExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useExistsQuery('CartProductCart', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('CartProductIdCart', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the CartProductCart relation to the Cart table for a NOT EXISTS query.
+     * Use the CartProductIdCart relation to the Cart table for a NOT EXISTS query.
      *
-     * @see useCartProductCartExistsQuery()
+     * @see useCartProductIdCartExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CartQuery The inner query object of the NOT EXISTS statement
      */
-    public function useCartProductCartNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useCartProductIdCartNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useExistsQuery('CartProductCart', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('CartProductIdCart', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the CartProductCart relation to the Cart table for an IN query.
+     * Use the CartProductIdCart relation to the Cart table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -466,27 +466,27 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery The inner query object of the IN statement
      */
-    public function useInCartProductCartQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInCartProductIdCartQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useInQuery('CartProductCart', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('CartProductIdCart', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the CartProductCart relation to the Cart table for a NOT IN query.
+     * Use the CartProductIdCart relation to the Cart table for a NOT IN query.
      *
-     * @see useCartProductCartInQuery()
+     * @see useCartProductIdCartInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CartQuery The inner query object of the NOT IN statement
      */
-    public function useNotInCartProductCartQuery($modelAlias = null, $queryClass = null)
+    public function useNotInCartProductIdCartQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useInQuery('CartProductCart', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('CartProductIdCart', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -500,7 +500,7 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByCartProductProduct($product, ?string $comparison = null)
+    public function filterByCartProductIdProduct($product, ?string $comparison = null)
     {
         if ($product instanceof \Buildings\Product) {
             return $this
@@ -515,22 +515,22 @@ abstract class CartProductQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByCartProductProduct() only accepts arguments of type \Buildings\Product or Collection');
+            throw new PropelException('filterByCartProductIdProduct() only accepts arguments of type \Buildings\Product or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the CartProductProduct relation
+     * Adds a JOIN clause to the query using the CartProductIdProduct relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinCartProductProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinCartProductIdProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CartProductProduct');
+        $relationMap = $tableMap->getRelation('CartProductIdProduct');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -545,14 +545,14 @@ abstract class CartProductQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'CartProductProduct');
+            $this->addJoinObject($join, 'CartProductIdProduct');
         }
 
         return $this;
     }
 
     /**
-     * Use the CartProductProduct relation Product object
+     * Use the CartProductIdProduct relation Product object
      *
      * @see useQuery()
      *
@@ -562,15 +562,15 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery A secondary query class using the current class as primary query
      */
-    public function useCartProductProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCartProductIdProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinCartProductProduct($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CartProductProduct', '\Buildings\ProductQuery');
+            ->joinCartProductIdProduct($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CartProductIdProduct', '\Buildings\ProductQuery');
     }
 
     /**
-     * Use the CartProductProduct relation Product object
+     * Use the CartProductIdProduct relation Product object
      *
      * @param callable(\Buildings\ProductQuery):\Buildings\ProductQuery $callable A function working on the related query
      *
@@ -580,12 +580,12 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withCartProductProductQuery(
+    public function withCartProductIdProductQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useCartProductProductQuery(
+        $relatedQuery = $this->useCartProductIdProductQuery(
             $relationAlias,
             $joinType
         );
@@ -596,7 +596,7 @@ abstract class CartProductQuery extends ModelCriteria
     }
 
     /**
-     * Use the CartProductProduct relation to the Product table for an EXISTS query.
+     * Use the CartProductIdProduct relation to the Product table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -606,32 +606,32 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the EXISTS statement
      */
-    public function useCartProductProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useCartProductIdProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('CartProductProduct', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('CartProductIdProduct', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the CartProductProduct relation to the Product table for a NOT EXISTS query.
+     * Use the CartProductIdProduct relation to the Product table for a NOT EXISTS query.
      *
-     * @see useCartProductProductExistsQuery()
+     * @see useCartProductIdProductExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT EXISTS statement
      */
-    public function useCartProductProductNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useCartProductIdProductNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('CartProductProduct', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('CartProductIdProduct', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the CartProductProduct relation to the Product table for an IN query.
+     * Use the CartProductIdProduct relation to the Product table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -641,27 +641,27 @@ abstract class CartProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the IN statement
      */
-    public function useInCartProductProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInCartProductIdProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('CartProductProduct', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('CartProductIdProduct', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the CartProductProduct relation to the Product table for a NOT IN query.
+     * Use the CartProductIdProduct relation to the Product table for a NOT IN query.
      *
-     * @see useCartProductProductInQuery()
+     * @see useCartProductIdProductInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT IN statement
      */
-    public function useNotInCartProductProductQuery($modelAlias = null, $queryClass = null)
+    public function useNotInCartProductIdProductQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('CartProductProduct', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('CartProductIdProduct', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

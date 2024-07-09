@@ -170,20 +170,20 @@ class CategoryTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Category', '\\Buildings\\Discount', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('DiscountCategory', '\\Buildings\\Discount', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_category',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Categories', false);
-        $this->addRelation('Category', '\\Buildings\\ProductCategory', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'DiscountCategories', false);
+        $this->addRelation('ProductCategoryCategory', '\\Buildings\\ProductCategory', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_category',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Categories', false);
+), 'CASCADE', null, 'ProductCategoryCategories', false);
     }
 
     /**

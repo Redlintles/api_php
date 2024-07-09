@@ -175,14 +175,14 @@ class ProductCategoryTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('ProductCategoryProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('ProductCategoryIdProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('ProductCategoryCategory', '\\Buildings\\Category', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('ProductCategoryIdCategory', '\\Buildings\\Category', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_category',

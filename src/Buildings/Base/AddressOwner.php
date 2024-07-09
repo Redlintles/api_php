@@ -105,12 +105,12 @@ abstract class AddressOwner implements ActiveRecordInterface
     /**
      * @var        ChildClient
      */
-    protected $aAddressOwnerClient;
+    protected $aAddressOwnerIdClient;
 
     /**
      * @var        ChildSeller
      */
-    protected $aAddressOwnerSeller;
+    protected $aAddressOwnerIdSeller;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -441,8 +441,8 @@ abstract class AddressOwner implements ActiveRecordInterface
             $this->modifiedColumns[AddressOwnerTableMap::COL_ID_CLIENT] = true;
         }
 
-        if ($this->aAddressOwnerClient !== null && $this->aAddressOwnerClient->getId() !== $v) {
-            $this->aAddressOwnerClient = null;
+        if ($this->aAddressOwnerIdClient !== null && $this->aAddressOwnerIdClient->getId() !== $v) {
+            $this->aAddressOwnerIdClient = null;
         }
 
         return $this;
@@ -465,8 +465,8 @@ abstract class AddressOwner implements ActiveRecordInterface
             $this->modifiedColumns[AddressOwnerTableMap::COL_ID_SELLER] = true;
         }
 
-        if ($this->aAddressOwnerSeller !== null && $this->aAddressOwnerSeller->getId() !== $v) {
-            $this->aAddressOwnerSeller = null;
+        if ($this->aAddressOwnerIdSeller !== null && $this->aAddressOwnerIdSeller->getId() !== $v) {
+            $this->aAddressOwnerIdSeller = null;
         }
 
         return $this;
@@ -581,11 +581,11 @@ abstract class AddressOwner implements ActiveRecordInterface
         if ($this->aAddressOwnerId !== null && $this->id_address !== $this->aAddressOwnerId->getId()) {
             $this->aAddressOwnerId = null;
         }
-        if ($this->aAddressOwnerClient !== null && $this->id_client !== $this->aAddressOwnerClient->getId()) {
-            $this->aAddressOwnerClient = null;
+        if ($this->aAddressOwnerIdClient !== null && $this->id_client !== $this->aAddressOwnerIdClient->getId()) {
+            $this->aAddressOwnerIdClient = null;
         }
-        if ($this->aAddressOwnerSeller !== null && $this->id_seller !== $this->aAddressOwnerSeller->getId()) {
-            $this->aAddressOwnerSeller = null;
+        if ($this->aAddressOwnerIdSeller !== null && $this->id_seller !== $this->aAddressOwnerIdSeller->getId()) {
+            $this->aAddressOwnerIdSeller = null;
         }
     }
 
@@ -627,8 +627,8 @@ abstract class AddressOwner implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aAddressOwnerId = null;
-            $this->aAddressOwnerClient = null;
-            $this->aAddressOwnerSeller = null;
+            $this->aAddressOwnerIdClient = null;
+            $this->aAddressOwnerIdSeller = null;
         } // if (deep)
     }
 
@@ -744,18 +744,18 @@ abstract class AddressOwner implements ActiveRecordInterface
                 $this->setAddressOwnerId($this->aAddressOwnerId);
             }
 
-            if ($this->aAddressOwnerClient !== null) {
-                if ($this->aAddressOwnerClient->isModified() || $this->aAddressOwnerClient->isNew()) {
-                    $affectedRows += $this->aAddressOwnerClient->save($con);
+            if ($this->aAddressOwnerIdClient !== null) {
+                if ($this->aAddressOwnerIdClient->isModified() || $this->aAddressOwnerIdClient->isNew()) {
+                    $affectedRows += $this->aAddressOwnerIdClient->save($con);
                 }
-                $this->setAddressOwnerClient($this->aAddressOwnerClient);
+                $this->setAddressOwnerIdClient($this->aAddressOwnerIdClient);
             }
 
-            if ($this->aAddressOwnerSeller !== null) {
-                if ($this->aAddressOwnerSeller->isModified() || $this->aAddressOwnerSeller->isNew()) {
-                    $affectedRows += $this->aAddressOwnerSeller->save($con);
+            if ($this->aAddressOwnerIdSeller !== null) {
+                if ($this->aAddressOwnerIdSeller->isModified() || $this->aAddressOwnerIdSeller->isNew()) {
+                    $affectedRows += $this->aAddressOwnerIdSeller->save($con);
                 }
-                $this->setAddressOwnerSeller($this->aAddressOwnerSeller);
+                $this->setAddressOwnerIdSeller($this->aAddressOwnerIdSeller);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -951,7 +951,7 @@ abstract class AddressOwner implements ActiveRecordInterface
 
                 $result[$key] = $this->aAddressOwnerId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aAddressOwnerClient) {
+            if (null !== $this->aAddressOwnerIdClient) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -961,12 +961,12 @@ abstract class AddressOwner implements ActiveRecordInterface
                         $key = 'client';
                         break;
                     default:
-                        $key = 'AddressOwnerClient';
+                        $key = 'AddressOwnerIdClient';
                 }
 
-                $result[$key] = $this->aAddressOwnerClient->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aAddressOwnerIdClient->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aAddressOwnerSeller) {
+            if (null !== $this->aAddressOwnerIdSeller) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -976,10 +976,10 @@ abstract class AddressOwner implements ActiveRecordInterface
                         $key = 'seller';
                         break;
                     default:
-                        $key = 'AddressOwnerSeller';
+                        $key = 'AddressOwnerIdSeller';
                 }
 
-                $result[$key] = $this->aAddressOwnerSeller->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aAddressOwnerIdSeller->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1250,7 +1250,7 @@ abstract class AddressOwner implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildAddress object, it will not be re-added.
         if ($v !== null) {
-            $v->addAddress($this);
+            $v->addAddressOwnerAddress($this);
         }
 
 
@@ -1274,7 +1274,7 @@ abstract class AddressOwner implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aAddressOwnerId->addAddresses($this);
+                $this->aAddressOwnerId->addAddressOwnerAddresses($this);
              */
         }
 
@@ -1288,7 +1288,7 @@ abstract class AddressOwner implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setAddressOwnerClient(ChildClient $v = null)
+    public function setAddressOwnerIdClient(ChildClient $v = null)
     {
         if ($v === null) {
             $this->setIdClient(NULL);
@@ -1296,12 +1296,12 @@ abstract class AddressOwner implements ActiveRecordInterface
             $this->setIdClient($v->getId());
         }
 
-        $this->aAddressOwnerClient = $v;
+        $this->aAddressOwnerIdClient = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildClient object, it will not be re-added.
         if ($v !== null) {
-            $v->addClient($this);
+            $v->addAddressOwnerClient($this);
         }
 
 
@@ -1316,20 +1316,20 @@ abstract class AddressOwner implements ActiveRecordInterface
      * @return ChildClient|null The associated ChildClient object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getAddressOwnerClient(?ConnectionInterface $con = null)
+    public function getAddressOwnerIdClient(?ConnectionInterface $con = null)
     {
-        if ($this->aAddressOwnerClient === null && ($this->id_client != 0)) {
-            $this->aAddressOwnerClient = ChildClientQuery::create()->findPk($this->id_client, $con);
+        if ($this->aAddressOwnerIdClient === null && ($this->id_client != 0)) {
+            $this->aAddressOwnerIdClient = ChildClientQuery::create()->findPk($this->id_client, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aAddressOwnerClient->addClients($this);
+                $this->aAddressOwnerIdClient->addAddressOwnerClients($this);
              */
         }
 
-        return $this->aAddressOwnerClient;
+        return $this->aAddressOwnerIdClient;
     }
 
     /**
@@ -1339,7 +1339,7 @@ abstract class AddressOwner implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setAddressOwnerSeller(ChildSeller $v = null)
+    public function setAddressOwnerIdSeller(ChildSeller $v = null)
     {
         if ($v === null) {
             $this->setIdSeller(NULL);
@@ -1347,12 +1347,12 @@ abstract class AddressOwner implements ActiveRecordInterface
             $this->setIdSeller($v->getId());
         }
 
-        $this->aAddressOwnerSeller = $v;
+        $this->aAddressOwnerIdSeller = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildSeller object, it will not be re-added.
         if ($v !== null) {
-            $v->addSeller($this);
+            $v->addAddressOwnerSeller($this);
         }
 
 
@@ -1367,20 +1367,20 @@ abstract class AddressOwner implements ActiveRecordInterface
      * @return ChildSeller|null The associated ChildSeller object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getAddressOwnerSeller(?ConnectionInterface $con = null)
+    public function getAddressOwnerIdSeller(?ConnectionInterface $con = null)
     {
-        if ($this->aAddressOwnerSeller === null && ($this->id_seller != 0)) {
-            $this->aAddressOwnerSeller = ChildSellerQuery::create()->findPk($this->id_seller, $con);
+        if ($this->aAddressOwnerIdSeller === null && ($this->id_seller != 0)) {
+            $this->aAddressOwnerIdSeller = ChildSellerQuery::create()->findPk($this->id_seller, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aAddressOwnerSeller->addSellers($this);
+                $this->aAddressOwnerIdSeller->addAddressOwnerSellers($this);
              */
         }
 
-        return $this->aAddressOwnerSeller;
+        return $this->aAddressOwnerIdSeller;
     }
 
     /**
@@ -1393,13 +1393,13 @@ abstract class AddressOwner implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aAddressOwnerId) {
-            $this->aAddressOwnerId->removeAddress($this);
+            $this->aAddressOwnerId->removeAddressOwnerAddress($this);
         }
-        if (null !== $this->aAddressOwnerClient) {
-            $this->aAddressOwnerClient->removeClient($this);
+        if (null !== $this->aAddressOwnerIdClient) {
+            $this->aAddressOwnerIdClient->removeAddressOwnerClient($this);
         }
-        if (null !== $this->aAddressOwnerSeller) {
-            $this->aAddressOwnerSeller->removeSeller($this);
+        if (null !== $this->aAddressOwnerIdSeller) {
+            $this->aAddressOwnerIdSeller->removeAddressOwnerSeller($this);
         }
         $this->id_address = null;
         $this->id_client = null;
@@ -1430,8 +1430,8 @@ abstract class AddressOwner implements ActiveRecordInterface
         } // if ($deep)
 
         $this->aAddressOwnerId = null;
-        $this->aAddressOwnerClient = null;
-        $this->aAddressOwnerSeller = null;
+        $this->aAddressOwnerIdClient = null;
+        $this->aAddressOwnerIdSeller = null;
         return $this;
     }
 

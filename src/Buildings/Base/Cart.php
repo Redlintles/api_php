@@ -108,8 +108,8 @@ abstract class Cart implements ActiveRecordInterface
      * @var        ObjectCollection|ChildCartProduct[] Collection to store aggregation of ChildCartProduct objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildCartProduct> Collection to store aggregation of ChildCartProduct objects.
      */
-    protected $collCarts;
-    protected $collCartsPartial;
+    protected $collCartProductsCarts;
+    protected $collCartProductsCartsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -124,7 +124,7 @@ abstract class Cart implements ActiveRecordInterface
      * @var ObjectCollection|ChildCartProduct[]
      * @phpstan-var ObjectCollection&\Traversable<ChildCartProduct>
      */
-    protected $cartsScheduledForDeletion = null;
+    protected $cartProductsCartsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -644,7 +644,7 @@ abstract class Cart implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCartClientId = null;
-            $this->collCarts = null;
+            $this->collCartProductsCarts = null;
 
         } // if (deep)
     }
@@ -785,17 +785,17 @@ abstract class Cart implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->cartsScheduledForDeletion !== null) {
-                if (!$this->cartsScheduledForDeletion->isEmpty()) {
+            if ($this->cartProductsCartsScheduledForDeletion !== null) {
+                if (!$this->cartProductsCartsScheduledForDeletion->isEmpty()) {
                     \Buildings\CartProductQuery::create()
-                        ->filterByPrimaryKeys($this->cartsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->cartProductsCartsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->cartsScheduledForDeletion = null;
+                    $this->cartProductsCartsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCarts !== null) {
-                foreach ($this->collCarts as $referrerFK) {
+            if ($this->collCartProductsCarts !== null) {
+                foreach ($this->collCartProductsCarts as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1003,7 +1003,7 @@ abstract class Cart implements ActiveRecordInterface
 
                 $result[$key] = $this->aCartClientId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collCarts) {
+            if (null !== $this->collCartProductsCarts) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1013,10 +1013,10 @@ abstract class Cart implements ActiveRecordInterface
                         $key = 'cart_productss';
                         break;
                     default:
-                        $key = 'Carts';
+                        $key = 'CartProductsCarts';
                 }
 
-                $result[$key] = $this->collCarts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collCartProductsCarts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1256,9 +1256,9 @@ abstract class Cart implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getCarts() as $relObj) {
+            foreach ($this->getCartProductsCarts() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCart($relObj->copy($deepCopy));
+                    $copyObj->addCartProductsCart($relObj->copy($deepCopy));
                 }
             }
 
@@ -1312,7 +1312,7 @@ abstract class Cart implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildClient object, it will not be re-added.
         if ($v !== null) {
-            $v->addClient($this);
+            $v->addCartClient($this);
         }
 
 
@@ -1336,7 +1336,7 @@ abstract class Cart implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCartClientId->addClients($this);
+                $this->aCartClientId->addCartClients($this);
              */
         }
 
@@ -1354,42 +1354,42 @@ abstract class Cart implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Cart' === $relationName) {
-            $this->initCarts();
+        if ('CartProductsCart' === $relationName) {
+            $this->initCartProductsCarts();
             return;
         }
     }
 
     /**
-     * Clears out the collCarts collection
+     * Clears out the collCartProductsCarts collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addCarts()
+     * @see addCartProductsCarts()
      */
-    public function clearCarts()
+    public function clearCartProductsCarts()
     {
-        $this->collCarts = null; // important to set this to NULL since that means it is uninitialized
+        $this->collCartProductsCarts = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collCarts collection loaded partially.
+     * Reset is the collCartProductsCarts collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialCarts($v = true): void
+    public function resetPartialCartProductsCarts($v = true): void
     {
-        $this->collCartsPartial = $v;
+        $this->collCartProductsCartsPartial = $v;
     }
 
     /**
-     * Initializes the collCarts collection.
+     * Initializes the collCartProductsCarts collection.
      *
-     * By default this just sets the collCarts collection to an empty array (like clearcollCarts());
+     * By default this just sets the collCartProductsCarts collection to an empty array (like clearcollCartProductsCarts());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1398,16 +1398,16 @@ abstract class Cart implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCarts(bool $overrideExisting = true): void
+    public function initCartProductsCarts(bool $overrideExisting = true): void
     {
-        if (null !== $this->collCarts && !$overrideExisting) {
+        if (null !== $this->collCartProductsCarts && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = CartProductTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collCarts = new $collectionClassName;
-        $this->collCarts->setModel('\Buildings\CartProduct');
+        $this->collCartProductsCarts = new $collectionClassName;
+        $this->collCartProductsCarts->setModel('\Buildings\CartProduct');
     }
 
     /**
@@ -1425,57 +1425,57 @@ abstract class Cart implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildCartProduct> List of ChildCartProduct objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getCarts(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getCartProductsCarts(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collCartsPartial && !$this->isNew();
-        if (null === $this->collCarts || null !== $criteria || $partial) {
+        $partial = $this->collCartProductsCartsPartial && !$this->isNew();
+        if (null === $this->collCartProductsCarts || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collCarts) {
-                    $this->initCarts();
+                if (null === $this->collCartProductsCarts) {
+                    $this->initCartProductsCarts();
                 } else {
                     $collectionClassName = CartProductTableMap::getTableMap()->getCollectionClassName();
 
-                    $collCarts = new $collectionClassName;
-                    $collCarts->setModel('\Buildings\CartProduct');
+                    $collCartProductsCarts = new $collectionClassName;
+                    $collCartProductsCarts->setModel('\Buildings\CartProduct');
 
-                    return $collCarts;
+                    return $collCartProductsCarts;
                 }
             } else {
-                $collCarts = ChildCartProductQuery::create(null, $criteria)
-                    ->filterByCartProductCart($this)
+                $collCartProductsCarts = ChildCartProductQuery::create(null, $criteria)
+                    ->filterByCartProductIdCart($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCartsPartial && count($collCarts)) {
-                        $this->initCarts(false);
+                    if (false !== $this->collCartProductsCartsPartial && count($collCartProductsCarts)) {
+                        $this->initCartProductsCarts(false);
 
-                        foreach ($collCarts as $obj) {
-                            if (false == $this->collCarts->contains($obj)) {
-                                $this->collCarts->append($obj);
+                        foreach ($collCartProductsCarts as $obj) {
+                            if (false == $this->collCartProductsCarts->contains($obj)) {
+                                $this->collCartProductsCarts->append($obj);
                             }
                         }
 
-                        $this->collCartsPartial = true;
+                        $this->collCartProductsCartsPartial = true;
                     }
 
-                    return $collCarts;
+                    return $collCartProductsCarts;
                 }
 
-                if ($partial && $this->collCarts) {
-                    foreach ($this->collCarts as $obj) {
+                if ($partial && $this->collCartProductsCarts) {
+                    foreach ($this->collCartProductsCarts as $obj) {
                         if ($obj->isNew()) {
-                            $collCarts[] = $obj;
+                            $collCartProductsCarts[] = $obj;
                         }
                     }
                 }
 
-                $this->collCarts = $collCarts;
-                $this->collCartsPartial = false;
+                $this->collCartProductsCarts = $collCartProductsCarts;
+                $this->collCartProductsCartsPartial = false;
             }
         }
 
-        return $this->collCarts;
+        return $this->collCartProductsCarts;
     }
 
     /**
@@ -1484,29 +1484,29 @@ abstract class Cart implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $carts A Propel collection.
+     * @param Collection $cartProductsCarts A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setCarts(Collection $carts, ?ConnectionInterface $con = null)
+    public function setCartProductsCarts(Collection $cartProductsCarts, ?ConnectionInterface $con = null)
     {
-        /** @var ChildCartProduct[] $cartsToDelete */
-        $cartsToDelete = $this->getCarts(new Criteria(), $con)->diff($carts);
+        /** @var ChildCartProduct[] $cartProductsCartsToDelete */
+        $cartProductsCartsToDelete = $this->getCartProductsCarts(new Criteria(), $con)->diff($cartProductsCarts);
 
 
-        $this->cartsScheduledForDeletion = $cartsToDelete;
+        $this->cartProductsCartsScheduledForDeletion = $cartProductsCartsToDelete;
 
-        foreach ($cartsToDelete as $cartRemoved) {
-            $cartRemoved->setCartProductCart(null);
+        foreach ($cartProductsCartsToDelete as $cartProductsCartRemoved) {
+            $cartProductsCartRemoved->setCartProductIdCart(null);
         }
 
-        $this->collCarts = null;
-        foreach ($carts as $cart) {
-            $this->addCart($cart);
+        $this->collCartProductsCarts = null;
+        foreach ($cartProductsCarts as $cartProductsCart) {
+            $this->addCartProductsCart($cartProductsCart);
         }
 
-        $this->collCarts = $carts;
-        $this->collCartsPartial = false;
+        $this->collCartProductsCarts = $cartProductsCarts;
+        $this->collCartProductsCartsPartial = false;
 
         return $this;
     }
@@ -1520,16 +1520,16 @@ abstract class Cart implements ActiveRecordInterface
      * @return int Count of related CartProduct objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countCarts(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countCartProductsCarts(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collCartsPartial && !$this->isNew();
-        if (null === $this->collCarts || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCarts) {
+        $partial = $this->collCartProductsCartsPartial && !$this->isNew();
+        if (null === $this->collCartProductsCarts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCartProductsCarts) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCarts());
+                return count($this->getCartProductsCarts());
             }
 
             $query = ChildCartProductQuery::create(null, $criteria);
@@ -1538,11 +1538,11 @@ abstract class Cart implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByCartProductCart($this)
+                ->filterByCartProductIdCart($this)
                 ->count($con);
         }
 
-        return count($this->collCarts);
+        return count($this->collCartProductsCarts);
     }
 
     /**
@@ -1552,18 +1552,18 @@ abstract class Cart implements ActiveRecordInterface
      * @param ChildCartProduct $l ChildCartProduct
      * @return $this The current object (for fluent API support)
      */
-    public function addCart(ChildCartProduct $l)
+    public function addCartProductsCart(ChildCartProduct $l)
     {
-        if ($this->collCarts === null) {
-            $this->initCarts();
-            $this->collCartsPartial = true;
+        if ($this->collCartProductsCarts === null) {
+            $this->initCartProductsCarts();
+            $this->collCartProductsCartsPartial = true;
         }
 
-        if (!$this->collCarts->contains($l)) {
-            $this->doAddCart($l);
+        if (!$this->collCartProductsCarts->contains($l)) {
+            $this->doAddCartProductsCart($l);
 
-            if ($this->cartsScheduledForDeletion and $this->cartsScheduledForDeletion->contains($l)) {
-                $this->cartsScheduledForDeletion->remove($this->cartsScheduledForDeletion->search($l));
+            if ($this->cartProductsCartsScheduledForDeletion and $this->cartProductsCartsScheduledForDeletion->contains($l)) {
+                $this->cartProductsCartsScheduledForDeletion->remove($this->cartProductsCartsScheduledForDeletion->search($l));
             }
         }
 
@@ -1571,29 +1571,29 @@ abstract class Cart implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildCartProduct $cart The ChildCartProduct object to add.
+     * @param ChildCartProduct $cartProductsCart The ChildCartProduct object to add.
      */
-    protected function doAddCart(ChildCartProduct $cart): void
+    protected function doAddCartProductsCart(ChildCartProduct $cartProductsCart): void
     {
-        $this->collCarts[]= $cart;
-        $cart->setCartProductCart($this);
+        $this->collCartProductsCarts[]= $cartProductsCart;
+        $cartProductsCart->setCartProductIdCart($this);
     }
 
     /**
-     * @param ChildCartProduct $cart The ChildCartProduct object to remove.
+     * @param ChildCartProduct $cartProductsCart The ChildCartProduct object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeCart(ChildCartProduct $cart)
+    public function removeCartProductsCart(ChildCartProduct $cartProductsCart)
     {
-        if ($this->getCarts()->contains($cart)) {
-            $pos = $this->collCarts->search($cart);
-            $this->collCarts->remove($pos);
-            if (null === $this->cartsScheduledForDeletion) {
-                $this->cartsScheduledForDeletion = clone $this->collCarts;
-                $this->cartsScheduledForDeletion->clear();
+        if ($this->getCartProductsCarts()->contains($cartProductsCart)) {
+            $pos = $this->collCartProductsCarts->search($cartProductsCart);
+            $this->collCartProductsCarts->remove($pos);
+            if (null === $this->cartProductsCartsScheduledForDeletion) {
+                $this->cartProductsCartsScheduledForDeletion = clone $this->collCartProductsCarts;
+                $this->cartProductsCartsScheduledForDeletion->clear();
             }
-            $this->cartsScheduledForDeletion[]= clone $cart;
-            $cart->setCartProductCart(null);
+            $this->cartProductsCartsScheduledForDeletion[]= clone $cartProductsCart;
+            $cartProductsCart->setCartProductIdCart(null);
         }
 
         return $this;
@@ -1605,7 +1605,7 @@ abstract class Cart implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Cart is new, it will return
      * an empty collection; or if this Cart has previously
-     * been saved, it will retrieve related Carts from storage.
+     * been saved, it will retrieve related CartProductsCarts from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1617,12 +1617,12 @@ abstract class Cart implements ActiveRecordInterface
      * @return ObjectCollection|ChildCartProduct[] List of ChildCartProduct objects
      * @phpstan-return ObjectCollection&\Traversable<ChildCartProduct}> List of ChildCartProduct objects
      */
-    public function getCartsJoinCartProductProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCartProductsCartsJoinCartProductIdProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCartProductQuery::create(null, $criteria);
-        $query->joinWith('CartProductProduct', $joinBehavior);
+        $query->joinWith('CartProductIdProduct', $joinBehavior);
 
-        return $this->getCarts($query, $con);
+        return $this->getCartProductsCarts($query, $con);
     }
 
     /**
@@ -1635,7 +1635,7 @@ abstract class Cart implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aCartClientId) {
-            $this->aCartClientId->removeClient($this);
+            $this->aCartClientId->removeCartClient($this);
         }
         $this->id = null;
         $this->id_client = null;
@@ -1663,14 +1663,14 @@ abstract class Cart implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collCarts) {
-                foreach ($this->collCarts as $o) {
+            if ($this->collCartProductsCarts) {
+                foreach ($this->collCartProductsCarts as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collCarts = null;
+        $this->collCartProductsCarts = null;
         $this->aCartClientId = null;
         return $this;
     }

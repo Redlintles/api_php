@@ -188,14 +188,14 @@ class OrderProductTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('OrderProductOrder', '\\Buildings\\Order', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('OrderProductIdOrder', '\\Buildings\\Order', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_order',
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('OrderProductProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('OrderProductIdProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_product',

@@ -84,12 +84,12 @@ abstract class ProductCategory implements ActiveRecordInterface
     /**
      * @var        ChildProduct
      */
-    protected $aProductCategoryProduct;
+    protected $aProductCategoryIdProduct;
 
     /**
      * @var        ChildCategory
      */
-    protected $aProductCategoryCategory;
+    protected $aProductCategoryIdCategory;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -376,8 +376,8 @@ abstract class ProductCategory implements ActiveRecordInterface
             $this->modifiedColumns[ProductCategoryTableMap::COL_ID_PRODUCT] = true;
         }
 
-        if ($this->aProductCategoryProduct !== null && $this->aProductCategoryProduct->getId() !== $v) {
-            $this->aProductCategoryProduct = null;
+        if ($this->aProductCategoryIdProduct !== null && $this->aProductCategoryIdProduct->getId() !== $v) {
+            $this->aProductCategoryIdProduct = null;
         }
 
         return $this;
@@ -400,8 +400,8 @@ abstract class ProductCategory implements ActiveRecordInterface
             $this->modifiedColumns[ProductCategoryTableMap::COL_ID_CATEGORY] = true;
         }
 
-        if ($this->aProductCategoryCategory !== null && $this->aProductCategoryCategory->getId() !== $v) {
-            $this->aProductCategoryCategory = null;
+        if ($this->aProductCategoryIdCategory !== null && $this->aProductCategoryIdCategory->getId() !== $v) {
+            $this->aProductCategoryIdCategory = null;
         }
 
         return $this;
@@ -487,11 +487,11 @@ abstract class ProductCategory implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aProductCategoryProduct !== null && $this->id_product !== $this->aProductCategoryProduct->getId()) {
-            $this->aProductCategoryProduct = null;
+        if ($this->aProductCategoryIdProduct !== null && $this->id_product !== $this->aProductCategoryIdProduct->getId()) {
+            $this->aProductCategoryIdProduct = null;
         }
-        if ($this->aProductCategoryCategory !== null && $this->id_category !== $this->aProductCategoryCategory->getId()) {
-            $this->aProductCategoryCategory = null;
+        if ($this->aProductCategoryIdCategory !== null && $this->id_category !== $this->aProductCategoryIdCategory->getId()) {
+            $this->aProductCategoryIdCategory = null;
         }
     }
 
@@ -532,8 +532,8 @@ abstract class ProductCategory implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aProductCategoryProduct = null;
-            $this->aProductCategoryCategory = null;
+            $this->aProductCategoryIdProduct = null;
+            $this->aProductCategoryIdCategory = null;
         } // if (deep)
     }
 
@@ -642,18 +642,18 @@ abstract class ProductCategory implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aProductCategoryProduct !== null) {
-                if ($this->aProductCategoryProduct->isModified() || $this->aProductCategoryProduct->isNew()) {
-                    $affectedRows += $this->aProductCategoryProduct->save($con);
+            if ($this->aProductCategoryIdProduct !== null) {
+                if ($this->aProductCategoryIdProduct->isModified() || $this->aProductCategoryIdProduct->isNew()) {
+                    $affectedRows += $this->aProductCategoryIdProduct->save($con);
                 }
-                $this->setProductCategoryProduct($this->aProductCategoryProduct);
+                $this->setProductCategoryIdProduct($this->aProductCategoryIdProduct);
             }
 
-            if ($this->aProductCategoryCategory !== null) {
-                if ($this->aProductCategoryCategory->isModified() || $this->aProductCategoryCategory->isNew()) {
-                    $affectedRows += $this->aProductCategoryCategory->save($con);
+            if ($this->aProductCategoryIdCategory !== null) {
+                if ($this->aProductCategoryIdCategory->isModified() || $this->aProductCategoryIdCategory->isNew()) {
+                    $affectedRows += $this->aProductCategoryIdCategory->save($con);
                 }
-                $this->setProductCategoryCategory($this->aProductCategoryCategory);
+                $this->setProductCategoryIdCategory($this->aProductCategoryIdCategory);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -812,7 +812,7 @@ abstract class ProductCategory implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aProductCategoryProduct) {
+            if (null !== $this->aProductCategoryIdProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -822,12 +822,12 @@ abstract class ProductCategory implements ActiveRecordInterface
                         $key = 'product';
                         break;
                     default:
-                        $key = 'ProductCategoryProduct';
+                        $key = 'ProductCategoryIdProduct';
                 }
 
-                $result[$key] = $this->aProductCategoryProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aProductCategoryIdProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aProductCategoryCategory) {
+            if (null !== $this->aProductCategoryIdCategory) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -837,10 +837,10 @@ abstract class ProductCategory implements ActiveRecordInterface
                         $key = 'category';
                         break;
                     default:
-                        $key = 'ProductCategoryCategory';
+                        $key = 'ProductCategoryIdCategory';
                 }
 
-                $result[$key] = $this->aProductCategoryCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aProductCategoryIdCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1078,7 +1078,7 @@ abstract class ProductCategory implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setProductCategoryProduct(ChildProduct $v = null)
+    public function setProductCategoryIdProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setIdProduct(1);
@@ -1086,12 +1086,12 @@ abstract class ProductCategory implements ActiveRecordInterface
             $this->setIdProduct($v->getId());
         }
 
-        $this->aProductCategoryProduct = $v;
+        $this->aProductCategoryIdProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addProduct($this);
+            $v->addProductCategoryProduct($this);
         }
 
 
@@ -1106,20 +1106,20 @@ abstract class ProductCategory implements ActiveRecordInterface
      * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getProductCategoryProduct(?ConnectionInterface $con = null)
+    public function getProductCategoryIdProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aProductCategoryProduct === null && ($this->id_product != 0)) {
-            $this->aProductCategoryProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
+        if ($this->aProductCategoryIdProduct === null && ($this->id_product != 0)) {
+            $this->aProductCategoryIdProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aProductCategoryProduct->addProducts($this);
+                $this->aProductCategoryIdProduct->addProductCategoryProducts($this);
              */
         }
 
-        return $this->aProductCategoryProduct;
+        return $this->aProductCategoryIdProduct;
     }
 
     /**
@@ -1129,7 +1129,7 @@ abstract class ProductCategory implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setProductCategoryCategory(ChildCategory $v = null)
+    public function setProductCategoryIdCategory(ChildCategory $v = null)
     {
         if ($v === null) {
             $this->setIdCategory(1);
@@ -1137,12 +1137,12 @@ abstract class ProductCategory implements ActiveRecordInterface
             $this->setIdCategory($v->getId());
         }
 
-        $this->aProductCategoryCategory = $v;
+        $this->aProductCategoryIdCategory = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildCategory object, it will not be re-added.
         if ($v !== null) {
-            $v->addCategory($this);
+            $v->addProductCategoryCategory($this);
         }
 
 
@@ -1157,20 +1157,20 @@ abstract class ProductCategory implements ActiveRecordInterface
      * @return ChildCategory The associated ChildCategory object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getProductCategoryCategory(?ConnectionInterface $con = null)
+    public function getProductCategoryIdCategory(?ConnectionInterface $con = null)
     {
-        if ($this->aProductCategoryCategory === null && ($this->id_category != 0)) {
-            $this->aProductCategoryCategory = ChildCategoryQuery::create()->findPk($this->id_category, $con);
+        if ($this->aProductCategoryIdCategory === null && ($this->id_category != 0)) {
+            $this->aProductCategoryIdCategory = ChildCategoryQuery::create()->findPk($this->id_category, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aProductCategoryCategory->addCategories($this);
+                $this->aProductCategoryIdCategory->addProductCategoryCategories($this);
              */
         }
 
-        return $this->aProductCategoryCategory;
+        return $this->aProductCategoryIdCategory;
     }
 
     /**
@@ -1182,11 +1182,11 @@ abstract class ProductCategory implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aProductCategoryProduct) {
-            $this->aProductCategoryProduct->removeProduct($this);
+        if (null !== $this->aProductCategoryIdProduct) {
+            $this->aProductCategoryIdProduct->removeProductCategoryProduct($this);
         }
-        if (null !== $this->aProductCategoryCategory) {
-            $this->aProductCategoryCategory->removeCategory($this);
+        if (null !== $this->aProductCategoryIdCategory) {
+            $this->aProductCategoryIdCategory->removeProductCategoryCategory($this);
         }
         $this->id_product = null;
         $this->id_category = null;
@@ -1214,8 +1214,8 @@ abstract class ProductCategory implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aProductCategoryProduct = null;
-        $this->aProductCategoryCategory = null;
+        $this->aProductCategoryIdProduct = null;
+        $this->aProductCategoryIdCategory = null;
         return $this;
     }
 

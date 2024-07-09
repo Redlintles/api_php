@@ -92,12 +92,12 @@ abstract class CartProduct implements ActiveRecordInterface
     /**
      * @var        ChildCart
      */
-    protected $aCartProductCart;
+    protected $aCartProductIdCart;
 
     /**
      * @var        ChildProduct
      */
-    protected $aCartProductProduct;
+    protected $aCartProductIdProduct;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -395,8 +395,8 @@ abstract class CartProduct implements ActiveRecordInterface
             $this->modifiedColumns[CartProductTableMap::COL_ID_CART] = true;
         }
 
-        if ($this->aCartProductCart !== null && $this->aCartProductCart->getId() !== $v) {
-            $this->aCartProductCart = null;
+        if ($this->aCartProductIdCart !== null && $this->aCartProductIdCart->getId() !== $v) {
+            $this->aCartProductIdCart = null;
         }
 
         return $this;
@@ -419,8 +419,8 @@ abstract class CartProduct implements ActiveRecordInterface
             $this->modifiedColumns[CartProductTableMap::COL_ID_PRODUCT] = true;
         }
 
-        if ($this->aCartProductProduct !== null && $this->aCartProductProduct->getId() !== $v) {
-            $this->aCartProductProduct = null;
+        if ($this->aCartProductIdProduct !== null && $this->aCartProductIdProduct->getId() !== $v) {
+            $this->aCartProductIdProduct = null;
         }
 
         return $this;
@@ -533,11 +533,11 @@ abstract class CartProduct implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aCartProductCart !== null && $this->id_cart !== $this->aCartProductCart->getId()) {
-            $this->aCartProductCart = null;
+        if ($this->aCartProductIdCart !== null && $this->id_cart !== $this->aCartProductIdCart->getId()) {
+            $this->aCartProductIdCart = null;
         }
-        if ($this->aCartProductProduct !== null && $this->id_product !== $this->aCartProductProduct->getId()) {
-            $this->aCartProductProduct = null;
+        if ($this->aCartProductIdProduct !== null && $this->id_product !== $this->aCartProductIdProduct->getId()) {
+            $this->aCartProductIdProduct = null;
         }
     }
 
@@ -578,8 +578,8 @@ abstract class CartProduct implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCartProductCart = null;
-            $this->aCartProductProduct = null;
+            $this->aCartProductIdCart = null;
+            $this->aCartProductIdProduct = null;
         } // if (deep)
     }
 
@@ -688,18 +688,18 @@ abstract class CartProduct implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCartProductCart !== null) {
-                if ($this->aCartProductCart->isModified() || $this->aCartProductCart->isNew()) {
-                    $affectedRows += $this->aCartProductCart->save($con);
+            if ($this->aCartProductIdCart !== null) {
+                if ($this->aCartProductIdCart->isModified() || $this->aCartProductIdCart->isNew()) {
+                    $affectedRows += $this->aCartProductIdCart->save($con);
                 }
-                $this->setCartProductCart($this->aCartProductCart);
+                $this->setCartProductIdCart($this->aCartProductIdCart);
             }
 
-            if ($this->aCartProductProduct !== null) {
-                if ($this->aCartProductProduct->isModified() || $this->aCartProductProduct->isNew()) {
-                    $affectedRows += $this->aCartProductProduct->save($con);
+            if ($this->aCartProductIdProduct !== null) {
+                if ($this->aCartProductIdProduct->isModified() || $this->aCartProductIdProduct->isNew()) {
+                    $affectedRows += $this->aCartProductIdProduct->save($con);
                 }
-                $this->setCartProductProduct($this->aCartProductProduct);
+                $this->setCartProductIdProduct($this->aCartProductIdProduct);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -869,7 +869,7 @@ abstract class CartProduct implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCartProductCart) {
+            if (null !== $this->aCartProductIdCart) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -879,12 +879,12 @@ abstract class CartProduct implements ActiveRecordInterface
                         $key = 'cart';
                         break;
                     default:
-                        $key = 'CartProductCart';
+                        $key = 'CartProductIdCart';
                 }
 
-                $result[$key] = $this->aCartProductCart->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aCartProductIdCart->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aCartProductProduct) {
+            if (null !== $this->aCartProductIdProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -894,10 +894,10 @@ abstract class CartProduct implements ActiveRecordInterface
                         $key = 'product';
                         break;
                     default:
-                        $key = 'CartProductProduct';
+                        $key = 'CartProductIdProduct';
                 }
 
-                $result[$key] = $this->aCartProductProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aCartProductIdProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1145,7 +1145,7 @@ abstract class CartProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setCartProductCart(ChildCart $v = null)
+    public function setCartProductIdCart(ChildCart $v = null)
     {
         if ($v === null) {
             $this->setIdCart(1);
@@ -1153,12 +1153,12 @@ abstract class CartProduct implements ActiveRecordInterface
             $this->setIdCart($v->getId());
         }
 
-        $this->aCartProductCart = $v;
+        $this->aCartProductIdCart = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildCart object, it will not be re-added.
         if ($v !== null) {
-            $v->addCart($this);
+            $v->addCartProductsCart($this);
         }
 
 
@@ -1173,20 +1173,20 @@ abstract class CartProduct implements ActiveRecordInterface
      * @return ChildCart The associated ChildCart object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getCartProductCart(?ConnectionInterface $con = null)
+    public function getCartProductIdCart(?ConnectionInterface $con = null)
     {
-        if ($this->aCartProductCart === null && ($this->id_cart != 0)) {
-            $this->aCartProductCart = ChildCartQuery::create()->findPk($this->id_cart, $con);
+        if ($this->aCartProductIdCart === null && ($this->id_cart != 0)) {
+            $this->aCartProductIdCart = ChildCartQuery::create()->findPk($this->id_cart, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCartProductCart->addCarts($this);
+                $this->aCartProductIdCart->addCartProductsCarts($this);
              */
         }
 
-        return $this->aCartProductCart;
+        return $this->aCartProductIdCart;
     }
 
     /**
@@ -1196,7 +1196,7 @@ abstract class CartProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setCartProductProduct(ChildProduct $v = null)
+    public function setCartProductIdProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setIdProduct(1);
@@ -1204,12 +1204,12 @@ abstract class CartProduct implements ActiveRecordInterface
             $this->setIdProduct($v->getId());
         }
 
-        $this->aCartProductProduct = $v;
+        $this->aCartProductIdProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addProduct($this);
+            $v->addCartProduct($this);
         }
 
 
@@ -1224,20 +1224,20 @@ abstract class CartProduct implements ActiveRecordInterface
      * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getCartProductProduct(?ConnectionInterface $con = null)
+    public function getCartProductIdProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aCartProductProduct === null && ($this->id_product != 0)) {
-            $this->aCartProductProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
+        if ($this->aCartProductIdProduct === null && ($this->id_product != 0)) {
+            $this->aCartProductIdProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCartProductProduct->addProducts($this);
+                $this->aCartProductIdProduct->addCartProducts($this);
              */
         }
 
-        return $this->aCartProductProduct;
+        return $this->aCartProductIdProduct;
     }
 
     /**
@@ -1249,11 +1249,11 @@ abstract class CartProduct implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aCartProductCart) {
-            $this->aCartProductCart->removeCart($this);
+        if (null !== $this->aCartProductIdCart) {
+            $this->aCartProductIdCart->removeCartProductsCart($this);
         }
-        if (null !== $this->aCartProductProduct) {
-            $this->aCartProductProduct->removeProduct($this);
+        if (null !== $this->aCartProductIdProduct) {
+            $this->aCartProductIdProduct->removeCartProduct($this);
         }
         $this->id_cart = null;
         $this->id_product = null;
@@ -1282,8 +1282,8 @@ abstract class CartProduct implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aCartProductCart = null;
-        $this->aCartProductProduct = null;
+        $this->aCartProductIdCart = null;
+        $this->aCartProductIdProduct = null;
         return $this;
     }
 

@@ -207,13 +207,13 @@ class CartTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('Cart', '\\Buildings\\CartProduct', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('CartProductsCart', '\\Buildings\\CartProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_cart',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Carts', false);
+), 'CASCADE', null, 'CartProductsCarts', false);
     }
 
     /**

@@ -240,13 +240,13 @@ class OrderTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('Order', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('OrderProductOrder', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_order',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Orders', false);
+), 'CASCADE', null, 'OrderProductOrders', false);
     }
 
     /**

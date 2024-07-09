@@ -115,22 +115,22 @@ abstract class Client implements ActiveRecordInterface
      * @var        ObjectCollection|ChildOrder[] Collection to store aggregation of ChildOrder objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildOrder> Collection to store aggregation of ChildOrder objects.
      */
-    protected $collClients;
-    protected $collClientsPartial;
+    protected $collOrderClients;
+    protected $collOrderClientsPartial;
 
     /**
      * @var        ObjectCollection|ChildCart[] Collection to store aggregation of ChildCart objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildCart> Collection to store aggregation of ChildCart objects.
      */
-    protected $collClients;
-    protected $collClientsPartial;
+    protected $collCartClients;
+    protected $collCartClientsPartial;
 
     /**
      * @var        ObjectCollection|ChildAddressOwner[] Collection to store aggregation of ChildAddressOwner objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner> Collection to store aggregation of ChildAddressOwner objects.
      */
-    protected $collClients;
-    protected $collClientsPartial;
+    protected $collAddressOwnerClients;
+    protected $collAddressOwnerClientsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -145,21 +145,21 @@ abstract class Client implements ActiveRecordInterface
      * @var ObjectCollection|ChildOrder[]
      * @phpstan-var ObjectCollection&\Traversable<ChildOrder>
      */
-    protected $clientsScheduledForDeletion = null;
+    protected $orderClientsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildCart[]
      * @phpstan-var ObjectCollection&\Traversable<ChildCart>
      */
-    protected $clientsScheduledForDeletion = null;
+    protected $cartClientsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildAddressOwner[]
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner>
      */
-    protected $clientsScheduledForDeletion = null;
+    protected $addressOwnerClientsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -689,11 +689,11 @@ abstract class Client implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collClients = null;
+            $this->collOrderClients = null;
 
-            $this->collClients = null;
+            $this->collCartClients = null;
 
-            $this->collClients = null;
+            $this->collAddressOwnerClients = null;
 
         } // if (deep)
     }
@@ -809,51 +809,51 @@ abstract class Client implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->clientsScheduledForDeletion !== null) {
-                if (!$this->clientsScheduledForDeletion->isEmpty()) {
+            if ($this->orderClientsScheduledForDeletion !== null) {
+                if (!$this->orderClientsScheduledForDeletion->isEmpty()) {
                     \Buildings\OrderQuery::create()
-                        ->filterByPrimaryKeys($this->clientsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->orderClientsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->clientsScheduledForDeletion = null;
+                    $this->orderClientsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collClients !== null) {
-                foreach ($this->collClients as $referrerFK) {
+            if ($this->collOrderClients !== null) {
+                foreach ($this->collOrderClients as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->clientsScheduledForDeletion !== null) {
-                if (!$this->clientsScheduledForDeletion->isEmpty()) {
+            if ($this->cartClientsScheduledForDeletion !== null) {
+                if (!$this->cartClientsScheduledForDeletion->isEmpty()) {
                     \Buildings\CartQuery::create()
-                        ->filterByPrimaryKeys($this->clientsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->cartClientsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->clientsScheduledForDeletion = null;
+                    $this->cartClientsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collClients !== null) {
-                foreach ($this->collClients as $referrerFK) {
+            if ($this->collCartClients !== null) {
+                foreach ($this->collCartClients as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->clientsScheduledForDeletion !== null) {
-                if (!$this->clientsScheduledForDeletion->isEmpty()) {
+            if ($this->addressOwnerClientsScheduledForDeletion !== null) {
+                if (!$this->addressOwnerClientsScheduledForDeletion->isEmpty()) {
                     \Buildings\AddressOwnerQuery::create()
-                        ->filterByPrimaryKeys($this->clientsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->addressOwnerClientsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->clientsScheduledForDeletion = null;
+                    $this->addressOwnerClientsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collClients !== null) {
-                foreach ($this->collClients as $referrerFK) {
+            if ($this->collAddressOwnerClients !== null) {
+                foreach ($this->collAddressOwnerClients as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1049,7 +1049,7 @@ abstract class Client implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collClients) {
+            if (null !== $this->collOrderClients) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1059,12 +1059,12 @@ abstract class Client implements ActiveRecordInterface
                         $key = 'orders';
                         break;
                     default:
-                        $key = 'Clients';
+                        $key = 'OrderClients';
                 }
 
-                $result[$key] = $this->collClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collOrderClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collClients) {
+            if (null !== $this->collCartClients) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1074,12 +1074,12 @@ abstract class Client implements ActiveRecordInterface
                         $key = 'carts';
                         break;
                     default:
-                        $key = 'Clients';
+                        $key = 'CartClients';
                 }
 
-                $result[$key] = $this->collClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collCartClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collClients) {
+            if (null !== $this->collAddressOwnerClients) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1089,10 +1089,10 @@ abstract class Client implements ActiveRecordInterface
                         $key = 'address_owners';
                         break;
                     default:
-                        $key = 'Clients';
+                        $key = 'AddressOwnerClients';
                 }
 
-                $result[$key] = $this->collClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collAddressOwnerClients->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1342,21 +1342,21 @@ abstract class Client implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getClients() as $relObj) {
+            foreach ($this->getOrderClients() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addClient($relObj->copy($deepCopy));
+                    $copyObj->addOrderClient($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getClients() as $relObj) {
+            foreach ($this->getCartClients() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addClient($relObj->copy($deepCopy));
+                    $copyObj->addCartClient($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getClients() as $relObj) {
+            foreach ($this->getAddressOwnerClients() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addClient($relObj->copy($deepCopy));
+                    $copyObj->addAddressOwnerClient($relObj->copy($deepCopy));
                 }
             }
 
@@ -1401,50 +1401,50 @@ abstract class Client implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Client' === $relationName) {
-            $this->initClients();
+        if ('OrderClient' === $relationName) {
+            $this->initOrderClients();
             return;
         }
-        if ('Client' === $relationName) {
-            $this->initClients();
+        if ('CartClient' === $relationName) {
+            $this->initCartClients();
             return;
         }
-        if ('Client' === $relationName) {
-            $this->initClients();
+        if ('AddressOwnerClient' === $relationName) {
+            $this->initAddressOwnerClients();
             return;
         }
     }
 
     /**
-     * Clears out the collClients collection
+     * Clears out the collOrderClients collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addClients()
+     * @see addOrderClients()
      */
-    public function clearClients()
+    public function clearOrderClients()
     {
-        $this->collClients = null; // important to set this to NULL since that means it is uninitialized
+        $this->collOrderClients = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collClients collection loaded partially.
+     * Reset is the collOrderClients collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialClients($v = true): void
+    public function resetPartialOrderClients($v = true): void
     {
-        $this->collClientsPartial = $v;
+        $this->collOrderClientsPartial = $v;
     }
 
     /**
-     * Initializes the collClients collection.
+     * Initializes the collOrderClients collection.
      *
-     * By default this just sets the collClients collection to an empty array (like clearcollClients());
+     * By default this just sets the collOrderClients collection to an empty array (like clearcollOrderClients());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1453,16 +1453,16 @@ abstract class Client implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initClients(bool $overrideExisting = true): void
+    public function initOrderClients(bool $overrideExisting = true): void
     {
-        if (null !== $this->collClients && !$overrideExisting) {
+        if (null !== $this->collOrderClients && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = OrderTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collClients = new $collectionClassName;
-        $this->collClients->setModel('\Buildings\Order');
+        $this->collOrderClients = new $collectionClassName;
+        $this->collOrderClients->setModel('\Buildings\Order');
     }
 
     /**
@@ -1480,57 +1480,57 @@ abstract class Client implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildOrder> List of ChildOrder objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getOrderClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
+        $partial = $this->collOrderClientsPartial && !$this->isNew();
+        if (null === $this->collOrderClients || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collClients) {
-                    $this->initClients();
+                if (null === $this->collOrderClients) {
+                    $this->initOrderClients();
                 } else {
                     $collectionClassName = OrderTableMap::getTableMap()->getCollectionClassName();
 
-                    $collClients = new $collectionClassName;
-                    $collClients->setModel('\Buildings\Order');
+                    $collOrderClients = new $collectionClassName;
+                    $collOrderClients->setModel('\Buildings\Order');
 
-                    return $collClients;
+                    return $collOrderClients;
                 }
             } else {
-                $collClients = ChildOrderQuery::create(null, $criteria)
+                $collOrderClients = ChildOrderQuery::create(null, $criteria)
                     ->filterByOrderIdClient($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collClientsPartial && count($collClients)) {
-                        $this->initClients(false);
+                    if (false !== $this->collOrderClientsPartial && count($collOrderClients)) {
+                        $this->initOrderClients(false);
 
-                        foreach ($collClients as $obj) {
-                            if (false == $this->collClients->contains($obj)) {
-                                $this->collClients->append($obj);
+                        foreach ($collOrderClients as $obj) {
+                            if (false == $this->collOrderClients->contains($obj)) {
+                                $this->collOrderClients->append($obj);
                             }
                         }
 
-                        $this->collClientsPartial = true;
+                        $this->collOrderClientsPartial = true;
                     }
 
-                    return $collClients;
+                    return $collOrderClients;
                 }
 
-                if ($partial && $this->collClients) {
-                    foreach ($this->collClients as $obj) {
+                if ($partial && $this->collOrderClients) {
+                    foreach ($this->collOrderClients as $obj) {
                         if ($obj->isNew()) {
-                            $collClients[] = $obj;
+                            $collOrderClients[] = $obj;
                         }
                     }
                 }
 
-                $this->collClients = $collClients;
-                $this->collClientsPartial = false;
+                $this->collOrderClients = $collOrderClients;
+                $this->collOrderClientsPartial = false;
             }
         }
 
-        return $this->collClients;
+        return $this->collOrderClients;
     }
 
     /**
@@ -1539,29 +1539,29 @@ abstract class Client implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $clients A Propel collection.
+     * @param Collection $orderClients A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setClients(Collection $clients, ?ConnectionInterface $con = null)
+    public function setOrderClients(Collection $orderClients, ?ConnectionInterface $con = null)
     {
-        /** @var ChildOrder[] $clientsToDelete */
-        $clientsToDelete = $this->getClients(new Criteria(), $con)->diff($clients);
+        /** @var ChildOrder[] $orderClientsToDelete */
+        $orderClientsToDelete = $this->getOrderClients(new Criteria(), $con)->diff($orderClients);
 
 
-        $this->clientsScheduledForDeletion = $clientsToDelete;
+        $this->orderClientsScheduledForDeletion = $orderClientsToDelete;
 
-        foreach ($clientsToDelete as $clientRemoved) {
-            $clientRemoved->setOrderIdClient(null);
+        foreach ($orderClientsToDelete as $orderClientRemoved) {
+            $orderClientRemoved->setOrderIdClient(null);
         }
 
-        $this->collClients = null;
-        foreach ($clients as $client) {
-            $this->addClient($client);
+        $this->collOrderClients = null;
+        foreach ($orderClients as $orderClient) {
+            $this->addOrderClient($orderClient);
         }
 
-        $this->collClients = $clients;
-        $this->collClientsPartial = false;
+        $this->collOrderClients = $orderClients;
+        $this->collOrderClientsPartial = false;
 
         return $this;
     }
@@ -1575,16 +1575,16 @@ abstract class Client implements ActiveRecordInterface
      * @return int Count of related Order objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countOrderClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collClients) {
+        $partial = $this->collOrderClientsPartial && !$this->isNew();
+        if (null === $this->collOrderClients || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collOrderClients) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getClients());
+                return count($this->getOrderClients());
             }
 
             $query = ChildOrderQuery::create(null, $criteria);
@@ -1597,7 +1597,7 @@ abstract class Client implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collClients);
+        return count($this->collOrderClients);
     }
 
     /**
@@ -1607,18 +1607,18 @@ abstract class Client implements ActiveRecordInterface
      * @param ChildOrder $l ChildOrder
      * @return $this The current object (for fluent API support)
      */
-    public function addClient(ChildOrder $l)
+    public function addOrderClient(ChildOrder $l)
     {
-        if ($this->collClients === null) {
-            $this->initClients();
-            $this->collClientsPartial = true;
+        if ($this->collOrderClients === null) {
+            $this->initOrderClients();
+            $this->collOrderClientsPartial = true;
         }
 
-        if (!$this->collClients->contains($l)) {
-            $this->doAddClient($l);
+        if (!$this->collOrderClients->contains($l)) {
+            $this->doAddOrderClient($l);
 
-            if ($this->clientsScheduledForDeletion and $this->clientsScheduledForDeletion->contains($l)) {
-                $this->clientsScheduledForDeletion->remove($this->clientsScheduledForDeletion->search($l));
+            if ($this->orderClientsScheduledForDeletion and $this->orderClientsScheduledForDeletion->contains($l)) {
+                $this->orderClientsScheduledForDeletion->remove($this->orderClientsScheduledForDeletion->search($l));
             }
         }
 
@@ -1626,29 +1626,29 @@ abstract class Client implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildOrder $client The ChildOrder object to add.
+     * @param ChildOrder $orderClient The ChildOrder object to add.
      */
-    protected function doAddClient(ChildOrder $client): void
+    protected function doAddOrderClient(ChildOrder $orderClient): void
     {
-        $this->collClients[]= $client;
-        $client->setOrderIdClient($this);
+        $this->collOrderClients[]= $orderClient;
+        $orderClient->setOrderIdClient($this);
     }
 
     /**
-     * @param ChildOrder $client The ChildOrder object to remove.
+     * @param ChildOrder $orderClient The ChildOrder object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeClient(ChildOrder $client)
+    public function removeOrderClient(ChildOrder $orderClient)
     {
-        if ($this->getClients()->contains($client)) {
-            $pos = $this->collClients->search($client);
-            $this->collClients->remove($pos);
-            if (null === $this->clientsScheduledForDeletion) {
-                $this->clientsScheduledForDeletion = clone $this->collClients;
-                $this->clientsScheduledForDeletion->clear();
+        if ($this->getOrderClients()->contains($orderClient)) {
+            $pos = $this->collOrderClients->search($orderClient);
+            $this->collOrderClients->remove($pos);
+            if (null === $this->orderClientsScheduledForDeletion) {
+                $this->orderClientsScheduledForDeletion = clone $this->collOrderClients;
+                $this->orderClientsScheduledForDeletion->clear();
             }
-            $this->clientsScheduledForDeletion[]= $client;
-            $client->setOrderIdClient(null);
+            $this->orderClientsScheduledForDeletion[]= $orderClient;
+            $orderClient->setOrderIdClient(null);
         }
 
         return $this;
@@ -1660,7 +1660,7 @@ abstract class Client implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Client is new, it will return
      * an empty collection; or if this Client has previously
-     * been saved, it will retrieve related Clients from storage.
+     * been saved, it will retrieve related OrderClients from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1672,44 +1672,44 @@ abstract class Client implements ActiveRecordInterface
      * @return ObjectCollection|ChildOrder[] List of ChildOrder objects
      * @phpstan-return ObjectCollection&\Traversable<ChildOrder}> List of ChildOrder objects
      */
-    public function getClientsJoinOrderIdSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getOrderClientsJoinOrderIdSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildOrderQuery::create(null, $criteria);
         $query->joinWith('OrderIdSeller', $joinBehavior);
 
-        return $this->getClients($query, $con);
+        return $this->getOrderClients($query, $con);
     }
 
     /**
-     * Clears out the collClients collection
+     * Clears out the collCartClients collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addClients()
+     * @see addCartClients()
      */
-    public function clearClients()
+    public function clearCartClients()
     {
-        $this->collClients = null; // important to set this to NULL since that means it is uninitialized
+        $this->collCartClients = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collClients collection loaded partially.
+     * Reset is the collCartClients collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialClients($v = true): void
+    public function resetPartialCartClients($v = true): void
     {
-        $this->collClientsPartial = $v;
+        $this->collCartClientsPartial = $v;
     }
 
     /**
-     * Initializes the collClients collection.
+     * Initializes the collCartClients collection.
      *
-     * By default this just sets the collClients collection to an empty array (like clearcollClients());
+     * By default this just sets the collCartClients collection to an empty array (like clearcollCartClients());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1718,16 +1718,16 @@ abstract class Client implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initClients(bool $overrideExisting = true): void
+    public function initCartClients(bool $overrideExisting = true): void
     {
-        if (null !== $this->collClients && !$overrideExisting) {
+        if (null !== $this->collCartClients && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = CartTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collClients = new $collectionClassName;
-        $this->collClients->setModel('\Buildings\Cart');
+        $this->collCartClients = new $collectionClassName;
+        $this->collCartClients->setModel('\Buildings\Cart');
     }
 
     /**
@@ -1745,57 +1745,57 @@ abstract class Client implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildCart> List of ChildCart objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getCartClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
+        $partial = $this->collCartClientsPartial && !$this->isNew();
+        if (null === $this->collCartClients || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collClients) {
-                    $this->initClients();
+                if (null === $this->collCartClients) {
+                    $this->initCartClients();
                 } else {
                     $collectionClassName = CartTableMap::getTableMap()->getCollectionClassName();
 
-                    $collClients = new $collectionClassName;
-                    $collClients->setModel('\Buildings\Cart');
+                    $collCartClients = new $collectionClassName;
+                    $collCartClients->setModel('\Buildings\Cart');
 
-                    return $collClients;
+                    return $collCartClients;
                 }
             } else {
-                $collClients = ChildCartQuery::create(null, $criteria)
+                $collCartClients = ChildCartQuery::create(null, $criteria)
                     ->filterByCartClientId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collClientsPartial && count($collClients)) {
-                        $this->initClients(false);
+                    if (false !== $this->collCartClientsPartial && count($collCartClients)) {
+                        $this->initCartClients(false);
 
-                        foreach ($collClients as $obj) {
-                            if (false == $this->collClients->contains($obj)) {
-                                $this->collClients->append($obj);
+                        foreach ($collCartClients as $obj) {
+                            if (false == $this->collCartClients->contains($obj)) {
+                                $this->collCartClients->append($obj);
                             }
                         }
 
-                        $this->collClientsPartial = true;
+                        $this->collCartClientsPartial = true;
                     }
 
-                    return $collClients;
+                    return $collCartClients;
                 }
 
-                if ($partial && $this->collClients) {
-                    foreach ($this->collClients as $obj) {
+                if ($partial && $this->collCartClients) {
+                    foreach ($this->collCartClients as $obj) {
                         if ($obj->isNew()) {
-                            $collClients[] = $obj;
+                            $collCartClients[] = $obj;
                         }
                     }
                 }
 
-                $this->collClients = $collClients;
-                $this->collClientsPartial = false;
+                $this->collCartClients = $collCartClients;
+                $this->collCartClientsPartial = false;
             }
         }
 
-        return $this->collClients;
+        return $this->collCartClients;
     }
 
     /**
@@ -1804,29 +1804,29 @@ abstract class Client implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $clients A Propel collection.
+     * @param Collection $cartClients A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setClients(Collection $clients, ?ConnectionInterface $con = null)
+    public function setCartClients(Collection $cartClients, ?ConnectionInterface $con = null)
     {
-        /** @var ChildCart[] $clientsToDelete */
-        $clientsToDelete = $this->getClients(new Criteria(), $con)->diff($clients);
+        /** @var ChildCart[] $cartClientsToDelete */
+        $cartClientsToDelete = $this->getCartClients(new Criteria(), $con)->diff($cartClients);
 
 
-        $this->clientsScheduledForDeletion = $clientsToDelete;
+        $this->cartClientsScheduledForDeletion = $cartClientsToDelete;
 
-        foreach ($clientsToDelete as $clientRemoved) {
-            $clientRemoved->setCartClientId(null);
+        foreach ($cartClientsToDelete as $cartClientRemoved) {
+            $cartClientRemoved->setCartClientId(null);
         }
 
-        $this->collClients = null;
-        foreach ($clients as $client) {
-            $this->addClient($client);
+        $this->collCartClients = null;
+        foreach ($cartClients as $cartClient) {
+            $this->addCartClient($cartClient);
         }
 
-        $this->collClients = $clients;
-        $this->collClientsPartial = false;
+        $this->collCartClients = $cartClients;
+        $this->collCartClientsPartial = false;
 
         return $this;
     }
@@ -1840,16 +1840,16 @@ abstract class Client implements ActiveRecordInterface
      * @return int Count of related Cart objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countCartClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collClients) {
+        $partial = $this->collCartClientsPartial && !$this->isNew();
+        if (null === $this->collCartClients || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCartClients) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getClients());
+                return count($this->getCartClients());
             }
 
             $query = ChildCartQuery::create(null, $criteria);
@@ -1862,7 +1862,7 @@ abstract class Client implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collClients);
+        return count($this->collCartClients);
     }
 
     /**
@@ -1872,18 +1872,18 @@ abstract class Client implements ActiveRecordInterface
      * @param ChildCart $l ChildCart
      * @return $this The current object (for fluent API support)
      */
-    public function addClient(ChildCart $l)
+    public function addCartClient(ChildCart $l)
     {
-        if ($this->collClients === null) {
-            $this->initClients();
-            $this->collClientsPartial = true;
+        if ($this->collCartClients === null) {
+            $this->initCartClients();
+            $this->collCartClientsPartial = true;
         }
 
-        if (!$this->collClients->contains($l)) {
-            $this->doAddClient($l);
+        if (!$this->collCartClients->contains($l)) {
+            $this->doAddCartClient($l);
 
-            if ($this->clientsScheduledForDeletion and $this->clientsScheduledForDeletion->contains($l)) {
-                $this->clientsScheduledForDeletion->remove($this->clientsScheduledForDeletion->search($l));
+            if ($this->cartClientsScheduledForDeletion and $this->cartClientsScheduledForDeletion->contains($l)) {
+                $this->cartClientsScheduledForDeletion->remove($this->cartClientsScheduledForDeletion->search($l));
             }
         }
 
@@ -1891,64 +1891,64 @@ abstract class Client implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildCart $client The ChildCart object to add.
+     * @param ChildCart $cartClient The ChildCart object to add.
      */
-    protected function doAddClient(ChildCart $client): void
+    protected function doAddCartClient(ChildCart $cartClient): void
     {
-        $this->collClients[]= $client;
-        $client->setCartClientId($this);
+        $this->collCartClients[]= $cartClient;
+        $cartClient->setCartClientId($this);
     }
 
     /**
-     * @param ChildCart $client The ChildCart object to remove.
+     * @param ChildCart $cartClient The ChildCart object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeClient(ChildCart $client)
+    public function removeCartClient(ChildCart $cartClient)
     {
-        if ($this->getClients()->contains($client)) {
-            $pos = $this->collClients->search($client);
-            $this->collClients->remove($pos);
-            if (null === $this->clientsScheduledForDeletion) {
-                $this->clientsScheduledForDeletion = clone $this->collClients;
-                $this->clientsScheduledForDeletion->clear();
+        if ($this->getCartClients()->contains($cartClient)) {
+            $pos = $this->collCartClients->search($cartClient);
+            $this->collCartClients->remove($pos);
+            if (null === $this->cartClientsScheduledForDeletion) {
+                $this->cartClientsScheduledForDeletion = clone $this->collCartClients;
+                $this->cartClientsScheduledForDeletion->clear();
             }
-            $this->clientsScheduledForDeletion[]= clone $client;
-            $client->setCartClientId(null);
+            $this->cartClientsScheduledForDeletion[]= clone $cartClient;
+            $cartClient->setCartClientId(null);
         }
 
         return $this;
     }
 
     /**
-     * Clears out the collClients collection
+     * Clears out the collAddressOwnerClients collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addClients()
+     * @see addAddressOwnerClients()
      */
-    public function clearClients()
+    public function clearAddressOwnerClients()
     {
-        $this->collClients = null; // important to set this to NULL since that means it is uninitialized
+        $this->collAddressOwnerClients = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collClients collection loaded partially.
+     * Reset is the collAddressOwnerClients collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialClients($v = true): void
+    public function resetPartialAddressOwnerClients($v = true): void
     {
-        $this->collClientsPartial = $v;
+        $this->collAddressOwnerClientsPartial = $v;
     }
 
     /**
-     * Initializes the collClients collection.
+     * Initializes the collAddressOwnerClients collection.
      *
-     * By default this just sets the collClients collection to an empty array (like clearcollClients());
+     * By default this just sets the collAddressOwnerClients collection to an empty array (like clearcollAddressOwnerClients());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1957,16 +1957,16 @@ abstract class Client implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initClients(bool $overrideExisting = true): void
+    public function initAddressOwnerClients(bool $overrideExisting = true): void
     {
-        if (null !== $this->collClients && !$overrideExisting) {
+        if (null !== $this->collAddressOwnerClients && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collClients = new $collectionClassName;
-        $this->collClients->setModel('\Buildings\AddressOwner');
+        $this->collAddressOwnerClients = new $collectionClassName;
+        $this->collAddressOwnerClients->setModel('\Buildings\AddressOwner');
     }
 
     /**
@@ -1984,57 +1984,57 @@ abstract class Client implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner> List of ChildAddressOwner objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getAddressOwnerClients(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
+        $partial = $this->collAddressOwnerClientsPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerClients || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collClients) {
-                    $this->initClients();
+                if (null === $this->collAddressOwnerClients) {
+                    $this->initAddressOwnerClients();
                 } else {
                     $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-                    $collClients = new $collectionClassName;
-                    $collClients->setModel('\Buildings\AddressOwner');
+                    $collAddressOwnerClients = new $collectionClassName;
+                    $collAddressOwnerClients->setModel('\Buildings\AddressOwner');
 
-                    return $collClients;
+                    return $collAddressOwnerClients;
                 }
             } else {
-                $collClients = ChildAddressOwnerQuery::create(null, $criteria)
-                    ->filterByAddressOwnerClient($this)
+                $collAddressOwnerClients = ChildAddressOwnerQuery::create(null, $criteria)
+                    ->filterByAddressOwnerIdClient($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collClientsPartial && count($collClients)) {
-                        $this->initClients(false);
+                    if (false !== $this->collAddressOwnerClientsPartial && count($collAddressOwnerClients)) {
+                        $this->initAddressOwnerClients(false);
 
-                        foreach ($collClients as $obj) {
-                            if (false == $this->collClients->contains($obj)) {
-                                $this->collClients->append($obj);
+                        foreach ($collAddressOwnerClients as $obj) {
+                            if (false == $this->collAddressOwnerClients->contains($obj)) {
+                                $this->collAddressOwnerClients->append($obj);
                             }
                         }
 
-                        $this->collClientsPartial = true;
+                        $this->collAddressOwnerClientsPartial = true;
                     }
 
-                    return $collClients;
+                    return $collAddressOwnerClients;
                 }
 
-                if ($partial && $this->collClients) {
-                    foreach ($this->collClients as $obj) {
+                if ($partial && $this->collAddressOwnerClients) {
+                    foreach ($this->collAddressOwnerClients as $obj) {
                         if ($obj->isNew()) {
-                            $collClients[] = $obj;
+                            $collAddressOwnerClients[] = $obj;
                         }
                     }
                 }
 
-                $this->collClients = $collClients;
-                $this->collClientsPartial = false;
+                $this->collAddressOwnerClients = $collAddressOwnerClients;
+                $this->collAddressOwnerClientsPartial = false;
             }
         }
 
-        return $this->collClients;
+        return $this->collAddressOwnerClients;
     }
 
     /**
@@ -2043,29 +2043,29 @@ abstract class Client implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $clients A Propel collection.
+     * @param Collection $addressOwnerClients A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setClients(Collection $clients, ?ConnectionInterface $con = null)
+    public function setAddressOwnerClients(Collection $addressOwnerClients, ?ConnectionInterface $con = null)
     {
-        /** @var ChildAddressOwner[] $clientsToDelete */
-        $clientsToDelete = $this->getClients(new Criteria(), $con)->diff($clients);
+        /** @var ChildAddressOwner[] $addressOwnerClientsToDelete */
+        $addressOwnerClientsToDelete = $this->getAddressOwnerClients(new Criteria(), $con)->diff($addressOwnerClients);
 
 
-        $this->clientsScheduledForDeletion = $clientsToDelete;
+        $this->addressOwnerClientsScheduledForDeletion = $addressOwnerClientsToDelete;
 
-        foreach ($clientsToDelete as $clientRemoved) {
-            $clientRemoved->setAddressOwnerClient(null);
+        foreach ($addressOwnerClientsToDelete as $addressOwnerClientRemoved) {
+            $addressOwnerClientRemoved->setAddressOwnerIdClient(null);
         }
 
-        $this->collClients = null;
-        foreach ($clients as $client) {
-            $this->addClient($client);
+        $this->collAddressOwnerClients = null;
+        foreach ($addressOwnerClients as $addressOwnerClient) {
+            $this->addAddressOwnerClient($addressOwnerClient);
         }
 
-        $this->collClients = $clients;
-        $this->collClientsPartial = false;
+        $this->collAddressOwnerClients = $addressOwnerClients;
+        $this->collAddressOwnerClientsPartial = false;
 
         return $this;
     }
@@ -2079,16 +2079,16 @@ abstract class Client implements ActiveRecordInterface
      * @return int Count of related AddressOwner objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countAddressOwnerClients(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collClientsPartial && !$this->isNew();
-        if (null === $this->collClients || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collClients) {
+        $partial = $this->collAddressOwnerClientsPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerClients || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAddressOwnerClients) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getClients());
+                return count($this->getAddressOwnerClients());
             }
 
             $query = ChildAddressOwnerQuery::create(null, $criteria);
@@ -2097,11 +2097,11 @@ abstract class Client implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByAddressOwnerClient($this)
+                ->filterByAddressOwnerIdClient($this)
                 ->count($con);
         }
 
-        return count($this->collClients);
+        return count($this->collAddressOwnerClients);
     }
 
     /**
@@ -2111,18 +2111,18 @@ abstract class Client implements ActiveRecordInterface
      * @param ChildAddressOwner $l ChildAddressOwner
      * @return $this The current object (for fluent API support)
      */
-    public function addClient(ChildAddressOwner $l)
+    public function addAddressOwnerClient(ChildAddressOwner $l)
     {
-        if ($this->collClients === null) {
-            $this->initClients();
-            $this->collClientsPartial = true;
+        if ($this->collAddressOwnerClients === null) {
+            $this->initAddressOwnerClients();
+            $this->collAddressOwnerClientsPartial = true;
         }
 
-        if (!$this->collClients->contains($l)) {
-            $this->doAddClient($l);
+        if (!$this->collAddressOwnerClients->contains($l)) {
+            $this->doAddAddressOwnerClient($l);
 
-            if ($this->clientsScheduledForDeletion and $this->clientsScheduledForDeletion->contains($l)) {
-                $this->clientsScheduledForDeletion->remove($this->clientsScheduledForDeletion->search($l));
+            if ($this->addressOwnerClientsScheduledForDeletion and $this->addressOwnerClientsScheduledForDeletion->contains($l)) {
+                $this->addressOwnerClientsScheduledForDeletion->remove($this->addressOwnerClientsScheduledForDeletion->search($l));
             }
         }
 
@@ -2130,29 +2130,29 @@ abstract class Client implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildAddressOwner $client The ChildAddressOwner object to add.
+     * @param ChildAddressOwner $addressOwnerClient The ChildAddressOwner object to add.
      */
-    protected function doAddClient(ChildAddressOwner $client): void
+    protected function doAddAddressOwnerClient(ChildAddressOwner $addressOwnerClient): void
     {
-        $this->collClients[]= $client;
-        $client->setAddressOwnerClient($this);
+        $this->collAddressOwnerClients[]= $addressOwnerClient;
+        $addressOwnerClient->setAddressOwnerIdClient($this);
     }
 
     /**
-     * @param ChildAddressOwner $client The ChildAddressOwner object to remove.
+     * @param ChildAddressOwner $addressOwnerClient The ChildAddressOwner object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeClient(ChildAddressOwner $client)
+    public function removeAddressOwnerClient(ChildAddressOwner $addressOwnerClient)
     {
-        if ($this->getClients()->contains($client)) {
-            $pos = $this->collClients->search($client);
-            $this->collClients->remove($pos);
-            if (null === $this->clientsScheduledForDeletion) {
-                $this->clientsScheduledForDeletion = clone $this->collClients;
-                $this->clientsScheduledForDeletion->clear();
+        if ($this->getAddressOwnerClients()->contains($addressOwnerClient)) {
+            $pos = $this->collAddressOwnerClients->search($addressOwnerClient);
+            $this->collAddressOwnerClients->remove($pos);
+            if (null === $this->addressOwnerClientsScheduledForDeletion) {
+                $this->addressOwnerClientsScheduledForDeletion = clone $this->collAddressOwnerClients;
+                $this->addressOwnerClientsScheduledForDeletion->clear();
             }
-            $this->clientsScheduledForDeletion[]= $client;
-            $client->setAddressOwnerClient(null);
+            $this->addressOwnerClientsScheduledForDeletion[]= $addressOwnerClient;
+            $addressOwnerClient->setAddressOwnerIdClient(null);
         }
 
         return $this;
@@ -2164,7 +2164,7 @@ abstract class Client implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Client is new, it will return
      * an empty collection; or if this Client has previously
-     * been saved, it will retrieve related Clients from storage.
+     * been saved, it will retrieve related AddressOwnerClients from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2176,12 +2176,12 @@ abstract class Client implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getClientsJoinAddressOwnerId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerClientsJoinAddressOwnerId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
         $query->joinWith('AddressOwnerId', $joinBehavior);
 
-        return $this->getClients($query, $con);
+        return $this->getAddressOwnerClients($query, $con);
     }
 
 
@@ -2190,7 +2190,7 @@ abstract class Client implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Client is new, it will return
      * an empty collection; or if this Client has previously
-     * been saved, it will retrieve related Clients from storage.
+     * been saved, it will retrieve related AddressOwnerClients from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2202,12 +2202,12 @@ abstract class Client implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getClientsJoinAddressOwnerSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerClientsJoinAddressOwnerIdSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
-        $query->joinWith('AddressOwnerSeller', $joinBehavior);
+        $query->joinWith('AddressOwnerIdSeller', $joinBehavior);
 
-        return $this->getClients($query, $con);
+        return $this->getAddressOwnerClients($query, $con);
     }
 
     /**
@@ -2246,26 +2246,26 @@ abstract class Client implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collClients) {
-                foreach ($this->collClients as $o) {
+            if ($this->collOrderClients) {
+                foreach ($this->collOrderClients as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collClients) {
-                foreach ($this->collClients as $o) {
+            if ($this->collCartClients) {
+                foreach ($this->collCartClients as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collClients) {
-                foreach ($this->collClients as $o) {
+            if ($this->collAddressOwnerClients) {
+                foreach ($this->collAddressOwnerClients as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collClients = null;
-        $this->collClients = null;
-        $this->collClients = null;
+        $this->collOrderClients = null;
+        $this->collCartClients = null;
+        $this->collAddressOwnerClients = null;
         return $this;
     }
 

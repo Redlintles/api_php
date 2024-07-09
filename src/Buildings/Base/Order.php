@@ -130,8 +130,8 @@ abstract class Order implements ActiveRecordInterface
      * @var        ObjectCollection|ChildOrderProduct[] Collection to store aggregation of ChildOrderProduct objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildOrderProduct> Collection to store aggregation of ChildOrderProduct objects.
      */
-    protected $collOrders;
-    protected $collOrdersPartial;
+    protected $collOrderProductOrders;
+    protected $collOrderProductOrdersPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -146,7 +146,7 @@ abstract class Order implements ActiveRecordInterface
      * @var ObjectCollection|ChildOrderProduct[]
      * @phpstan-var ObjectCollection&\Traversable<ChildOrderProduct>
      */
-    protected $ordersScheduledForDeletion = null;
+    protected $orderProductOrdersScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -747,7 +747,7 @@ abstract class Order implements ActiveRecordInterface
 
             $this->aOrderIdClient = null;
             $this->aOrderIdSeller = null;
-            $this->collOrders = null;
+            $this->collOrderProductOrders = null;
 
         } // if (deep)
     }
@@ -895,17 +895,17 @@ abstract class Order implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->ordersScheduledForDeletion !== null) {
-                if (!$this->ordersScheduledForDeletion->isEmpty()) {
+            if ($this->orderProductOrdersScheduledForDeletion !== null) {
+                if (!$this->orderProductOrdersScheduledForDeletion->isEmpty()) {
                     \Buildings\OrderProductQuery::create()
-                        ->filterByPrimaryKeys($this->ordersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->orderProductOrdersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->ordersScheduledForDeletion = null;
+                    $this->orderProductOrdersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collOrders !== null) {
-                foreach ($this->collOrders as $referrerFK) {
+            if ($this->collOrderProductOrders !== null) {
+                foreach ($this->collOrderProductOrders as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1150,7 +1150,7 @@ abstract class Order implements ActiveRecordInterface
 
                 $result[$key] = $this->aOrderIdSeller->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collOrders) {
+            if (null !== $this->collOrderProductOrders) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1160,10 +1160,10 @@ abstract class Order implements ActiveRecordInterface
                         $key = 'order_productss';
                         break;
                     default:
-                        $key = 'Orders';
+                        $key = 'OrderProductOrders';
                 }
 
-                $result[$key] = $this->collOrders->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collOrderProductOrders->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1423,9 +1423,9 @@ abstract class Order implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getOrders() as $relObj) {
+            foreach ($this->getOrderProductOrders() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addOrder($relObj->copy($deepCopy));
+                    $copyObj->addOrderProductOrder($relObj->copy($deepCopy));
                 }
             }
 
@@ -1479,7 +1479,7 @@ abstract class Order implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildClient object, it will not be re-added.
         if ($v !== null) {
-            $v->addClient($this);
+            $v->addOrderClient($this);
         }
 
 
@@ -1503,7 +1503,7 @@ abstract class Order implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aOrderIdClient->addClients($this);
+                $this->aOrderIdClient->addOrderClients($this);
              */
         }
 
@@ -1530,7 +1530,7 @@ abstract class Order implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildSeller object, it will not be re-added.
         if ($v !== null) {
-            $v->addSeller($this);
+            $v->addOrderSeller($this);
         }
 
 
@@ -1554,7 +1554,7 @@ abstract class Order implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aOrderIdSeller->addSellers($this);
+                $this->aOrderIdSeller->addOrderSellers($this);
              */
         }
 
@@ -1572,42 +1572,42 @@ abstract class Order implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Order' === $relationName) {
-            $this->initOrders();
+        if ('OrderProductOrder' === $relationName) {
+            $this->initOrderProductOrders();
             return;
         }
     }
 
     /**
-     * Clears out the collOrders collection
+     * Clears out the collOrderProductOrders collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addOrders()
+     * @see addOrderProductOrders()
      */
-    public function clearOrders()
+    public function clearOrderProductOrders()
     {
-        $this->collOrders = null; // important to set this to NULL since that means it is uninitialized
+        $this->collOrderProductOrders = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collOrders collection loaded partially.
+     * Reset is the collOrderProductOrders collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialOrders($v = true): void
+    public function resetPartialOrderProductOrders($v = true): void
     {
-        $this->collOrdersPartial = $v;
+        $this->collOrderProductOrdersPartial = $v;
     }
 
     /**
-     * Initializes the collOrders collection.
+     * Initializes the collOrderProductOrders collection.
      *
-     * By default this just sets the collOrders collection to an empty array (like clearcollOrders());
+     * By default this just sets the collOrderProductOrders collection to an empty array (like clearcollOrderProductOrders());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1616,16 +1616,16 @@ abstract class Order implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initOrders(bool $overrideExisting = true): void
+    public function initOrderProductOrders(bool $overrideExisting = true): void
     {
-        if (null !== $this->collOrders && !$overrideExisting) {
+        if (null !== $this->collOrderProductOrders && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = OrderProductTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collOrders = new $collectionClassName;
-        $this->collOrders->setModel('\Buildings\OrderProduct');
+        $this->collOrderProductOrders = new $collectionClassName;
+        $this->collOrderProductOrders->setModel('\Buildings\OrderProduct');
     }
 
     /**
@@ -1643,57 +1643,57 @@ abstract class Order implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildOrderProduct> List of ChildOrderProduct objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getOrders(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getOrderProductOrders(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collOrdersPartial && !$this->isNew();
-        if (null === $this->collOrders || null !== $criteria || $partial) {
+        $partial = $this->collOrderProductOrdersPartial && !$this->isNew();
+        if (null === $this->collOrderProductOrders || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collOrders) {
-                    $this->initOrders();
+                if (null === $this->collOrderProductOrders) {
+                    $this->initOrderProductOrders();
                 } else {
                     $collectionClassName = OrderProductTableMap::getTableMap()->getCollectionClassName();
 
-                    $collOrders = new $collectionClassName;
-                    $collOrders->setModel('\Buildings\OrderProduct');
+                    $collOrderProductOrders = new $collectionClassName;
+                    $collOrderProductOrders->setModel('\Buildings\OrderProduct');
 
-                    return $collOrders;
+                    return $collOrderProductOrders;
                 }
             } else {
-                $collOrders = ChildOrderProductQuery::create(null, $criteria)
-                    ->filterByOrderProductOrder($this)
+                $collOrderProductOrders = ChildOrderProductQuery::create(null, $criteria)
+                    ->filterByOrderProductIdOrder($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collOrdersPartial && count($collOrders)) {
-                        $this->initOrders(false);
+                    if (false !== $this->collOrderProductOrdersPartial && count($collOrderProductOrders)) {
+                        $this->initOrderProductOrders(false);
 
-                        foreach ($collOrders as $obj) {
-                            if (false == $this->collOrders->contains($obj)) {
-                                $this->collOrders->append($obj);
+                        foreach ($collOrderProductOrders as $obj) {
+                            if (false == $this->collOrderProductOrders->contains($obj)) {
+                                $this->collOrderProductOrders->append($obj);
                             }
                         }
 
-                        $this->collOrdersPartial = true;
+                        $this->collOrderProductOrdersPartial = true;
                     }
 
-                    return $collOrders;
+                    return $collOrderProductOrders;
                 }
 
-                if ($partial && $this->collOrders) {
-                    foreach ($this->collOrders as $obj) {
+                if ($partial && $this->collOrderProductOrders) {
+                    foreach ($this->collOrderProductOrders as $obj) {
                         if ($obj->isNew()) {
-                            $collOrders[] = $obj;
+                            $collOrderProductOrders[] = $obj;
                         }
                     }
                 }
 
-                $this->collOrders = $collOrders;
-                $this->collOrdersPartial = false;
+                $this->collOrderProductOrders = $collOrderProductOrders;
+                $this->collOrderProductOrdersPartial = false;
             }
         }
 
-        return $this->collOrders;
+        return $this->collOrderProductOrders;
     }
 
     /**
@@ -1702,29 +1702,29 @@ abstract class Order implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $orders A Propel collection.
+     * @param Collection $orderProductOrders A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setOrders(Collection $orders, ?ConnectionInterface $con = null)
+    public function setOrderProductOrders(Collection $orderProductOrders, ?ConnectionInterface $con = null)
     {
-        /** @var ChildOrderProduct[] $ordersToDelete */
-        $ordersToDelete = $this->getOrders(new Criteria(), $con)->diff($orders);
+        /** @var ChildOrderProduct[] $orderProductOrdersToDelete */
+        $orderProductOrdersToDelete = $this->getOrderProductOrders(new Criteria(), $con)->diff($orderProductOrders);
 
 
-        $this->ordersScheduledForDeletion = $ordersToDelete;
+        $this->orderProductOrdersScheduledForDeletion = $orderProductOrdersToDelete;
 
-        foreach ($ordersToDelete as $orderRemoved) {
-            $orderRemoved->setOrderProductOrder(null);
+        foreach ($orderProductOrdersToDelete as $orderProductOrderRemoved) {
+            $orderProductOrderRemoved->setOrderProductIdOrder(null);
         }
 
-        $this->collOrders = null;
-        foreach ($orders as $order) {
-            $this->addOrder($order);
+        $this->collOrderProductOrders = null;
+        foreach ($orderProductOrders as $orderProductOrder) {
+            $this->addOrderProductOrder($orderProductOrder);
         }
 
-        $this->collOrders = $orders;
-        $this->collOrdersPartial = false;
+        $this->collOrderProductOrders = $orderProductOrders;
+        $this->collOrderProductOrdersPartial = false;
 
         return $this;
     }
@@ -1738,16 +1738,16 @@ abstract class Order implements ActiveRecordInterface
      * @return int Count of related OrderProduct objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countOrders(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countOrderProductOrders(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collOrdersPartial && !$this->isNew();
-        if (null === $this->collOrders || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collOrders) {
+        $partial = $this->collOrderProductOrdersPartial && !$this->isNew();
+        if (null === $this->collOrderProductOrders || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collOrderProductOrders) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getOrders());
+                return count($this->getOrderProductOrders());
             }
 
             $query = ChildOrderProductQuery::create(null, $criteria);
@@ -1756,11 +1756,11 @@ abstract class Order implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByOrderProductOrder($this)
+                ->filterByOrderProductIdOrder($this)
                 ->count($con);
         }
 
-        return count($this->collOrders);
+        return count($this->collOrderProductOrders);
     }
 
     /**
@@ -1770,18 +1770,18 @@ abstract class Order implements ActiveRecordInterface
      * @param ChildOrderProduct $l ChildOrderProduct
      * @return $this The current object (for fluent API support)
      */
-    public function addOrder(ChildOrderProduct $l)
+    public function addOrderProductOrder(ChildOrderProduct $l)
     {
-        if ($this->collOrders === null) {
-            $this->initOrders();
-            $this->collOrdersPartial = true;
+        if ($this->collOrderProductOrders === null) {
+            $this->initOrderProductOrders();
+            $this->collOrderProductOrdersPartial = true;
         }
 
-        if (!$this->collOrders->contains($l)) {
-            $this->doAddOrder($l);
+        if (!$this->collOrderProductOrders->contains($l)) {
+            $this->doAddOrderProductOrder($l);
 
-            if ($this->ordersScheduledForDeletion and $this->ordersScheduledForDeletion->contains($l)) {
-                $this->ordersScheduledForDeletion->remove($this->ordersScheduledForDeletion->search($l));
+            if ($this->orderProductOrdersScheduledForDeletion and $this->orderProductOrdersScheduledForDeletion->contains($l)) {
+                $this->orderProductOrdersScheduledForDeletion->remove($this->orderProductOrdersScheduledForDeletion->search($l));
             }
         }
 
@@ -1789,29 +1789,29 @@ abstract class Order implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildOrderProduct $order The ChildOrderProduct object to add.
+     * @param ChildOrderProduct $orderProductOrder The ChildOrderProduct object to add.
      */
-    protected function doAddOrder(ChildOrderProduct $order): void
+    protected function doAddOrderProductOrder(ChildOrderProduct $orderProductOrder): void
     {
-        $this->collOrders[]= $order;
-        $order->setOrderProductOrder($this);
+        $this->collOrderProductOrders[]= $orderProductOrder;
+        $orderProductOrder->setOrderProductIdOrder($this);
     }
 
     /**
-     * @param ChildOrderProduct $order The ChildOrderProduct object to remove.
+     * @param ChildOrderProduct $orderProductOrder The ChildOrderProduct object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeOrder(ChildOrderProduct $order)
+    public function removeOrderProductOrder(ChildOrderProduct $orderProductOrder)
     {
-        if ($this->getOrders()->contains($order)) {
-            $pos = $this->collOrders->search($order);
-            $this->collOrders->remove($pos);
-            if (null === $this->ordersScheduledForDeletion) {
-                $this->ordersScheduledForDeletion = clone $this->collOrders;
-                $this->ordersScheduledForDeletion->clear();
+        if ($this->getOrderProductOrders()->contains($orderProductOrder)) {
+            $pos = $this->collOrderProductOrders->search($orderProductOrder);
+            $this->collOrderProductOrders->remove($pos);
+            if (null === $this->orderProductOrdersScheduledForDeletion) {
+                $this->orderProductOrdersScheduledForDeletion = clone $this->collOrderProductOrders;
+                $this->orderProductOrdersScheduledForDeletion->clear();
             }
-            $this->ordersScheduledForDeletion[]= clone $order;
-            $order->setOrderProductOrder(null);
+            $this->orderProductOrdersScheduledForDeletion[]= clone $orderProductOrder;
+            $orderProductOrder->setOrderProductIdOrder(null);
         }
 
         return $this;
@@ -1823,7 +1823,7 @@ abstract class Order implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Order is new, it will return
      * an empty collection; or if this Order has previously
-     * been saved, it will retrieve related Orders from storage.
+     * been saved, it will retrieve related OrderProductOrders from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1835,12 +1835,12 @@ abstract class Order implements ActiveRecordInterface
      * @return ObjectCollection|ChildOrderProduct[] List of ChildOrderProduct objects
      * @phpstan-return ObjectCollection&\Traversable<ChildOrderProduct}> List of ChildOrderProduct objects
      */
-    public function getOrdersJoinOrderProductProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getOrderProductOrdersJoinOrderProductIdProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildOrderProductQuery::create(null, $criteria);
-        $query->joinWith('OrderProductProduct', $joinBehavior);
+        $query->joinWith('OrderProductIdProduct', $joinBehavior);
 
-        return $this->getOrders($query, $con);
+        return $this->getOrderProductOrders($query, $con);
     }
 
     /**
@@ -1853,10 +1853,10 @@ abstract class Order implements ActiveRecordInterface
     public function clear()
     {
         if (null !== $this->aOrderIdClient) {
-            $this->aOrderIdClient->removeClient($this);
+            $this->aOrderIdClient->removeOrderClient($this);
         }
         if (null !== $this->aOrderIdSeller) {
-            $this->aOrderIdSeller->removeSeller($this);
+            $this->aOrderIdSeller->removeOrderSeller($this);
         }
         $this->id = null;
         $this->id_client = null;
@@ -1886,14 +1886,14 @@ abstract class Order implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collOrders) {
-                foreach ($this->collOrders as $o) {
+            if ($this->collOrderProductOrders) {
+                foreach ($this->collOrderProductOrders as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collOrders = null;
+        $this->collOrderProductOrders = null;
         $this->aOrderIdClient = null;
         $this->aOrderIdSeller = null;
         return $this;

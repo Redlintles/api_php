@@ -88,15 +88,15 @@ abstract class Category implements ActiveRecordInterface
      * @var        ObjectCollection|ChildDiscount[] Collection to store aggregation of ChildDiscount objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildDiscount> Collection to store aggregation of ChildDiscount objects.
      */
-    protected $collCategories;
-    protected $collCategoriesPartial;
+    protected $collDiscountCategories;
+    protected $collDiscountCategoriesPartial;
 
     /**
      * @var        ObjectCollection|ChildProductCategory[] Collection to store aggregation of ChildProductCategory objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildProductCategory> Collection to store aggregation of ChildProductCategory objects.
      */
-    protected $collCategories;
-    protected $collCategoriesPartial;
+    protected $collProductCategoryCategories;
+    protected $collProductCategoryCategoriesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -111,14 +111,14 @@ abstract class Category implements ActiveRecordInterface
      * @var ObjectCollection|ChildDiscount[]
      * @phpstan-var ObjectCollection&\Traversable<ChildDiscount>
      */
-    protected $categoriesScheduledForDeletion = null;
+    protected $discountCategoriesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildProductCategory[]
      * @phpstan-var ObjectCollection&\Traversable<ChildProductCategory>
      */
-    protected $categoriesScheduledForDeletion = null;
+    protected $productCategoryCategoriesScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -534,9 +534,9 @@ abstract class Category implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collCategories = null;
+            $this->collDiscountCategories = null;
 
-            $this->collCategories = null;
+            $this->collProductCategoryCategories = null;
 
         } // if (deep)
     }
@@ -652,34 +652,34 @@ abstract class Category implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->categoriesScheduledForDeletion !== null) {
-                if (!$this->categoriesScheduledForDeletion->isEmpty()) {
+            if ($this->discountCategoriesScheduledForDeletion !== null) {
+                if (!$this->discountCategoriesScheduledForDeletion->isEmpty()) {
                     \Buildings\DiscountQuery::create()
-                        ->filterByPrimaryKeys($this->categoriesScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->discountCategoriesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->categoriesScheduledForDeletion = null;
+                    $this->discountCategoriesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCategories !== null) {
-                foreach ($this->collCategories as $referrerFK) {
+            if ($this->collDiscountCategories !== null) {
+                foreach ($this->collDiscountCategories as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->categoriesScheduledForDeletion !== null) {
-                if (!$this->categoriesScheduledForDeletion->isEmpty()) {
+            if ($this->productCategoryCategoriesScheduledForDeletion !== null) {
+                if (!$this->productCategoryCategoriesScheduledForDeletion->isEmpty()) {
                     \Buildings\ProductCategoryQuery::create()
-                        ->filterByPrimaryKeys($this->categoriesScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->productCategoryCategoriesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->categoriesScheduledForDeletion = null;
+                    $this->productCategoryCategoriesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCategories !== null) {
-                foreach ($this->collCategories as $referrerFK) {
+            if ($this->collProductCategoryCategories !== null) {
+                foreach ($this->collProductCategoryCategories as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -842,7 +842,7 @@ abstract class Category implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collCategories) {
+            if (null !== $this->collDiscountCategories) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -852,12 +852,12 @@ abstract class Category implements ActiveRecordInterface
                         $key = 'discounts';
                         break;
                     default:
-                        $key = 'Categories';
+                        $key = 'DiscountCategories';
                 }
 
-                $result[$key] = $this->collCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collDiscountCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collCategories) {
+            if (null !== $this->collProductCategoryCategories) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -867,10 +867,10 @@ abstract class Category implements ActiveRecordInterface
                         $key = 'product_categories';
                         break;
                     default:
-                        $key = 'Categories';
+                        $key = 'ProductCategoryCategories';
                 }
 
-                $result[$key] = $this->collCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collProductCategoryCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1090,15 +1090,15 @@ abstract class Category implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getCategories() as $relObj) {
+            foreach ($this->getDiscountCategories() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCategory($relObj->copy($deepCopy));
+                    $copyObj->addDiscountCategory($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getCategories() as $relObj) {
+            foreach ($this->getProductCategoryCategories() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCategory($relObj->copy($deepCopy));
+                    $copyObj->addProductCategoryCategory($relObj->copy($deepCopy));
                 }
             }
 
@@ -1143,46 +1143,46 @@ abstract class Category implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Category' === $relationName) {
-            $this->initCategories();
+        if ('DiscountCategory' === $relationName) {
+            $this->initDiscountCategories();
             return;
         }
-        if ('Category' === $relationName) {
-            $this->initCategories();
+        if ('ProductCategoryCategory' === $relationName) {
+            $this->initProductCategoryCategories();
             return;
         }
     }
 
     /**
-     * Clears out the collCategories collection
+     * Clears out the collDiscountCategories collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addCategories()
+     * @see addDiscountCategories()
      */
-    public function clearCategories()
+    public function clearDiscountCategories()
     {
-        $this->collCategories = null; // important to set this to NULL since that means it is uninitialized
+        $this->collDiscountCategories = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collCategories collection loaded partially.
+     * Reset is the collDiscountCategories collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialCategories($v = true): void
+    public function resetPartialDiscountCategories($v = true): void
     {
-        $this->collCategoriesPartial = $v;
+        $this->collDiscountCategoriesPartial = $v;
     }
 
     /**
-     * Initializes the collCategories collection.
+     * Initializes the collDiscountCategories collection.
      *
-     * By default this just sets the collCategories collection to an empty array (like clearcollCategories());
+     * By default this just sets the collDiscountCategories collection to an empty array (like clearcollDiscountCategories());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1191,16 +1191,16 @@ abstract class Category implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCategories(bool $overrideExisting = true): void
+    public function initDiscountCategories(bool $overrideExisting = true): void
     {
-        if (null !== $this->collCategories && !$overrideExisting) {
+        if (null !== $this->collDiscountCategories && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = DiscountTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collCategories = new $collectionClassName;
-        $this->collCategories->setModel('\Buildings\Discount');
+        $this->collDiscountCategories = new $collectionClassName;
+        $this->collDiscountCategories->setModel('\Buildings\Discount');
     }
 
     /**
@@ -1218,57 +1218,57 @@ abstract class Category implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildDiscount> List of ChildDiscount objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getCategories(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getDiscountCategories(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collCategoriesPartial && !$this->isNew();
-        if (null === $this->collCategories || null !== $criteria || $partial) {
+        $partial = $this->collDiscountCategoriesPartial && !$this->isNew();
+        if (null === $this->collDiscountCategories || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collCategories) {
-                    $this->initCategories();
+                if (null === $this->collDiscountCategories) {
+                    $this->initDiscountCategories();
                 } else {
                     $collectionClassName = DiscountTableMap::getTableMap()->getCollectionClassName();
 
-                    $collCategories = new $collectionClassName;
-                    $collCategories->setModel('\Buildings\Discount');
+                    $collDiscountCategories = new $collectionClassName;
+                    $collDiscountCategories->setModel('\Buildings\Discount');
 
-                    return $collCategories;
+                    return $collDiscountCategories;
                 }
             } else {
-                $collCategories = ChildDiscountQuery::create(null, $criteria)
-                    ->filterByDiscountCategory($this)
+                $collDiscountCategories = ChildDiscountQuery::create(null, $criteria)
+                    ->filterByDiscountIdCategory($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCategoriesPartial && count($collCategories)) {
-                        $this->initCategories(false);
+                    if (false !== $this->collDiscountCategoriesPartial && count($collDiscountCategories)) {
+                        $this->initDiscountCategories(false);
 
-                        foreach ($collCategories as $obj) {
-                            if (false == $this->collCategories->contains($obj)) {
-                                $this->collCategories->append($obj);
+                        foreach ($collDiscountCategories as $obj) {
+                            if (false == $this->collDiscountCategories->contains($obj)) {
+                                $this->collDiscountCategories->append($obj);
                             }
                         }
 
-                        $this->collCategoriesPartial = true;
+                        $this->collDiscountCategoriesPartial = true;
                     }
 
-                    return $collCategories;
+                    return $collDiscountCategories;
                 }
 
-                if ($partial && $this->collCategories) {
-                    foreach ($this->collCategories as $obj) {
+                if ($partial && $this->collDiscountCategories) {
+                    foreach ($this->collDiscountCategories as $obj) {
                         if ($obj->isNew()) {
-                            $collCategories[] = $obj;
+                            $collDiscountCategories[] = $obj;
                         }
                     }
                 }
 
-                $this->collCategories = $collCategories;
-                $this->collCategoriesPartial = false;
+                $this->collDiscountCategories = $collDiscountCategories;
+                $this->collDiscountCategoriesPartial = false;
             }
         }
 
-        return $this->collCategories;
+        return $this->collDiscountCategories;
     }
 
     /**
@@ -1277,29 +1277,29 @@ abstract class Category implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $categories A Propel collection.
+     * @param Collection $discountCategories A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setCategories(Collection $categories, ?ConnectionInterface $con = null)
+    public function setDiscountCategories(Collection $discountCategories, ?ConnectionInterface $con = null)
     {
-        /** @var ChildDiscount[] $categoriesToDelete */
-        $categoriesToDelete = $this->getCategories(new Criteria(), $con)->diff($categories);
+        /** @var ChildDiscount[] $discountCategoriesToDelete */
+        $discountCategoriesToDelete = $this->getDiscountCategories(new Criteria(), $con)->diff($discountCategories);
 
 
-        $this->categoriesScheduledForDeletion = $categoriesToDelete;
+        $this->discountCategoriesScheduledForDeletion = $discountCategoriesToDelete;
 
-        foreach ($categoriesToDelete as $categoryRemoved) {
-            $categoryRemoved->setDiscountCategory(null);
+        foreach ($discountCategoriesToDelete as $discountCategoryRemoved) {
+            $discountCategoryRemoved->setDiscountIdCategory(null);
         }
 
-        $this->collCategories = null;
-        foreach ($categories as $category) {
-            $this->addCategory($category);
+        $this->collDiscountCategories = null;
+        foreach ($discountCategories as $discountCategory) {
+            $this->addDiscountCategory($discountCategory);
         }
 
-        $this->collCategories = $categories;
-        $this->collCategoriesPartial = false;
+        $this->collDiscountCategories = $discountCategories;
+        $this->collDiscountCategoriesPartial = false;
 
         return $this;
     }
@@ -1313,16 +1313,16 @@ abstract class Category implements ActiveRecordInterface
      * @return int Count of related Discount objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countCategories(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countDiscountCategories(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collCategoriesPartial && !$this->isNew();
-        if (null === $this->collCategories || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCategories) {
+        $partial = $this->collDiscountCategoriesPartial && !$this->isNew();
+        if (null === $this->collDiscountCategories || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collDiscountCategories) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCategories());
+                return count($this->getDiscountCategories());
             }
 
             $query = ChildDiscountQuery::create(null, $criteria);
@@ -1331,11 +1331,11 @@ abstract class Category implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByDiscountCategory($this)
+                ->filterByDiscountIdCategory($this)
                 ->count($con);
         }
 
-        return count($this->collCategories);
+        return count($this->collDiscountCategories);
     }
 
     /**
@@ -1345,18 +1345,18 @@ abstract class Category implements ActiveRecordInterface
      * @param ChildDiscount $l ChildDiscount
      * @return $this The current object (for fluent API support)
      */
-    public function addCategory(ChildDiscount $l)
+    public function addDiscountCategory(ChildDiscount $l)
     {
-        if ($this->collCategories === null) {
-            $this->initCategories();
-            $this->collCategoriesPartial = true;
+        if ($this->collDiscountCategories === null) {
+            $this->initDiscountCategories();
+            $this->collDiscountCategoriesPartial = true;
         }
 
-        if (!$this->collCategories->contains($l)) {
-            $this->doAddCategory($l);
+        if (!$this->collDiscountCategories->contains($l)) {
+            $this->doAddDiscountCategory($l);
 
-            if ($this->categoriesScheduledForDeletion and $this->categoriesScheduledForDeletion->contains($l)) {
-                $this->categoriesScheduledForDeletion->remove($this->categoriesScheduledForDeletion->search($l));
+            if ($this->discountCategoriesScheduledForDeletion and $this->discountCategoriesScheduledForDeletion->contains($l)) {
+                $this->discountCategoriesScheduledForDeletion->remove($this->discountCategoriesScheduledForDeletion->search($l));
             }
         }
 
@@ -1364,29 +1364,29 @@ abstract class Category implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildDiscount $category The ChildDiscount object to add.
+     * @param ChildDiscount $discountCategory The ChildDiscount object to add.
      */
-    protected function doAddCategory(ChildDiscount $category): void
+    protected function doAddDiscountCategory(ChildDiscount $discountCategory): void
     {
-        $this->collCategories[]= $category;
-        $category->setDiscountCategory($this);
+        $this->collDiscountCategories[]= $discountCategory;
+        $discountCategory->setDiscountIdCategory($this);
     }
 
     /**
-     * @param ChildDiscount $category The ChildDiscount object to remove.
+     * @param ChildDiscount $discountCategory The ChildDiscount object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeCategory(ChildDiscount $category)
+    public function removeDiscountCategory(ChildDiscount $discountCategory)
     {
-        if ($this->getCategories()->contains($category)) {
-            $pos = $this->collCategories->search($category);
-            $this->collCategories->remove($pos);
-            if (null === $this->categoriesScheduledForDeletion) {
-                $this->categoriesScheduledForDeletion = clone $this->collCategories;
-                $this->categoriesScheduledForDeletion->clear();
+        if ($this->getDiscountCategories()->contains($discountCategory)) {
+            $pos = $this->collDiscountCategories->search($discountCategory);
+            $this->collDiscountCategories->remove($pos);
+            if (null === $this->discountCategoriesScheduledForDeletion) {
+                $this->discountCategoriesScheduledForDeletion = clone $this->collDiscountCategories;
+                $this->discountCategoriesScheduledForDeletion->clear();
             }
-            $this->categoriesScheduledForDeletion[]= $category;
-            $category->setDiscountCategory(null);
+            $this->discountCategoriesScheduledForDeletion[]= $discountCategory;
+            $discountCategory->setDiscountIdCategory(null);
         }
 
         return $this;
@@ -1398,7 +1398,7 @@ abstract class Category implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Category is new, it will return
      * an empty collection; or if this Category has previously
-     * been saved, it will retrieve related Categories from storage.
+     * been saved, it will retrieve related DiscountCategories from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1410,44 +1410,44 @@ abstract class Category implements ActiveRecordInterface
      * @return ObjectCollection|ChildDiscount[] List of ChildDiscount objects
      * @phpstan-return ObjectCollection&\Traversable<ChildDiscount}> List of ChildDiscount objects
      */
-    public function getCategoriesJoinDiscountProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getDiscountCategoriesJoinDiscountIdProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildDiscountQuery::create(null, $criteria);
-        $query->joinWith('DiscountProduct', $joinBehavior);
+        $query->joinWith('DiscountIdProduct', $joinBehavior);
 
-        return $this->getCategories($query, $con);
+        return $this->getDiscountCategories($query, $con);
     }
 
     /**
-     * Clears out the collCategories collection
+     * Clears out the collProductCategoryCategories collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addCategories()
+     * @see addProductCategoryCategories()
      */
-    public function clearCategories()
+    public function clearProductCategoryCategories()
     {
-        $this->collCategories = null; // important to set this to NULL since that means it is uninitialized
+        $this->collProductCategoryCategories = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collCategories collection loaded partially.
+     * Reset is the collProductCategoryCategories collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialCategories($v = true): void
+    public function resetPartialProductCategoryCategories($v = true): void
     {
-        $this->collCategoriesPartial = $v;
+        $this->collProductCategoryCategoriesPartial = $v;
     }
 
     /**
-     * Initializes the collCategories collection.
+     * Initializes the collProductCategoryCategories collection.
      *
-     * By default this just sets the collCategories collection to an empty array (like clearcollCategories());
+     * By default this just sets the collProductCategoryCategories collection to an empty array (like clearcollProductCategoryCategories());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1456,16 +1456,16 @@ abstract class Category implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCategories(bool $overrideExisting = true): void
+    public function initProductCategoryCategories(bool $overrideExisting = true): void
     {
-        if (null !== $this->collCategories && !$overrideExisting) {
+        if (null !== $this->collProductCategoryCategories && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = ProductCategoryTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collCategories = new $collectionClassName;
-        $this->collCategories->setModel('\Buildings\ProductCategory');
+        $this->collProductCategoryCategories = new $collectionClassName;
+        $this->collProductCategoryCategories->setModel('\Buildings\ProductCategory');
     }
 
     /**
@@ -1483,57 +1483,57 @@ abstract class Category implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildProductCategory> List of ChildProductCategory objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getCategories(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getProductCategoryCategories(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collCategoriesPartial && !$this->isNew();
-        if (null === $this->collCategories || null !== $criteria || $partial) {
+        $partial = $this->collProductCategoryCategoriesPartial && !$this->isNew();
+        if (null === $this->collProductCategoryCategories || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collCategories) {
-                    $this->initCategories();
+                if (null === $this->collProductCategoryCategories) {
+                    $this->initProductCategoryCategories();
                 } else {
                     $collectionClassName = ProductCategoryTableMap::getTableMap()->getCollectionClassName();
 
-                    $collCategories = new $collectionClassName;
-                    $collCategories->setModel('\Buildings\ProductCategory');
+                    $collProductCategoryCategories = new $collectionClassName;
+                    $collProductCategoryCategories->setModel('\Buildings\ProductCategory');
 
-                    return $collCategories;
+                    return $collProductCategoryCategories;
                 }
             } else {
-                $collCategories = ChildProductCategoryQuery::create(null, $criteria)
-                    ->filterByProductCategoryCategory($this)
+                $collProductCategoryCategories = ChildProductCategoryQuery::create(null, $criteria)
+                    ->filterByProductCategoryIdCategory($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCategoriesPartial && count($collCategories)) {
-                        $this->initCategories(false);
+                    if (false !== $this->collProductCategoryCategoriesPartial && count($collProductCategoryCategories)) {
+                        $this->initProductCategoryCategories(false);
 
-                        foreach ($collCategories as $obj) {
-                            if (false == $this->collCategories->contains($obj)) {
-                                $this->collCategories->append($obj);
+                        foreach ($collProductCategoryCategories as $obj) {
+                            if (false == $this->collProductCategoryCategories->contains($obj)) {
+                                $this->collProductCategoryCategories->append($obj);
                             }
                         }
 
-                        $this->collCategoriesPartial = true;
+                        $this->collProductCategoryCategoriesPartial = true;
                     }
 
-                    return $collCategories;
+                    return $collProductCategoryCategories;
                 }
 
-                if ($partial && $this->collCategories) {
-                    foreach ($this->collCategories as $obj) {
+                if ($partial && $this->collProductCategoryCategories) {
+                    foreach ($this->collProductCategoryCategories as $obj) {
                         if ($obj->isNew()) {
-                            $collCategories[] = $obj;
+                            $collProductCategoryCategories[] = $obj;
                         }
                     }
                 }
 
-                $this->collCategories = $collCategories;
-                $this->collCategoriesPartial = false;
+                $this->collProductCategoryCategories = $collProductCategoryCategories;
+                $this->collProductCategoryCategoriesPartial = false;
             }
         }
 
-        return $this->collCategories;
+        return $this->collProductCategoryCategories;
     }
 
     /**
@@ -1542,29 +1542,29 @@ abstract class Category implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $categories A Propel collection.
+     * @param Collection $productCategoryCategories A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setCategories(Collection $categories, ?ConnectionInterface $con = null)
+    public function setProductCategoryCategories(Collection $productCategoryCategories, ?ConnectionInterface $con = null)
     {
-        /** @var ChildProductCategory[] $categoriesToDelete */
-        $categoriesToDelete = $this->getCategories(new Criteria(), $con)->diff($categories);
+        /** @var ChildProductCategory[] $productCategoryCategoriesToDelete */
+        $productCategoryCategoriesToDelete = $this->getProductCategoryCategories(new Criteria(), $con)->diff($productCategoryCategories);
 
 
-        $this->categoriesScheduledForDeletion = $categoriesToDelete;
+        $this->productCategoryCategoriesScheduledForDeletion = $productCategoryCategoriesToDelete;
 
-        foreach ($categoriesToDelete as $categoryRemoved) {
-            $categoryRemoved->setProductCategoryCategory(null);
+        foreach ($productCategoryCategoriesToDelete as $productCategoryCategoryRemoved) {
+            $productCategoryCategoryRemoved->setProductCategoryIdCategory(null);
         }
 
-        $this->collCategories = null;
-        foreach ($categories as $category) {
-            $this->addCategory($category);
+        $this->collProductCategoryCategories = null;
+        foreach ($productCategoryCategories as $productCategoryCategory) {
+            $this->addProductCategoryCategory($productCategoryCategory);
         }
 
-        $this->collCategories = $categories;
-        $this->collCategoriesPartial = false;
+        $this->collProductCategoryCategories = $productCategoryCategories;
+        $this->collProductCategoryCategoriesPartial = false;
 
         return $this;
     }
@@ -1578,16 +1578,16 @@ abstract class Category implements ActiveRecordInterface
      * @return int Count of related ProductCategory objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countCategories(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countProductCategoryCategories(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collCategoriesPartial && !$this->isNew();
-        if (null === $this->collCategories || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCategories) {
+        $partial = $this->collProductCategoryCategoriesPartial && !$this->isNew();
+        if (null === $this->collProductCategoryCategories || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collProductCategoryCategories) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCategories());
+                return count($this->getProductCategoryCategories());
             }
 
             $query = ChildProductCategoryQuery::create(null, $criteria);
@@ -1596,11 +1596,11 @@ abstract class Category implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByProductCategoryCategory($this)
+                ->filterByProductCategoryIdCategory($this)
                 ->count($con);
         }
 
-        return count($this->collCategories);
+        return count($this->collProductCategoryCategories);
     }
 
     /**
@@ -1610,18 +1610,18 @@ abstract class Category implements ActiveRecordInterface
      * @param ChildProductCategory $l ChildProductCategory
      * @return $this The current object (for fluent API support)
      */
-    public function addCategory(ChildProductCategory $l)
+    public function addProductCategoryCategory(ChildProductCategory $l)
     {
-        if ($this->collCategories === null) {
-            $this->initCategories();
-            $this->collCategoriesPartial = true;
+        if ($this->collProductCategoryCategories === null) {
+            $this->initProductCategoryCategories();
+            $this->collProductCategoryCategoriesPartial = true;
         }
 
-        if (!$this->collCategories->contains($l)) {
-            $this->doAddCategory($l);
+        if (!$this->collProductCategoryCategories->contains($l)) {
+            $this->doAddProductCategoryCategory($l);
 
-            if ($this->categoriesScheduledForDeletion and $this->categoriesScheduledForDeletion->contains($l)) {
-                $this->categoriesScheduledForDeletion->remove($this->categoriesScheduledForDeletion->search($l));
+            if ($this->productCategoryCategoriesScheduledForDeletion and $this->productCategoryCategoriesScheduledForDeletion->contains($l)) {
+                $this->productCategoryCategoriesScheduledForDeletion->remove($this->productCategoryCategoriesScheduledForDeletion->search($l));
             }
         }
 
@@ -1629,29 +1629,29 @@ abstract class Category implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildProductCategory $category The ChildProductCategory object to add.
+     * @param ChildProductCategory $productCategoryCategory The ChildProductCategory object to add.
      */
-    protected function doAddCategory(ChildProductCategory $category): void
+    protected function doAddProductCategoryCategory(ChildProductCategory $productCategoryCategory): void
     {
-        $this->collCategories[]= $category;
-        $category->setProductCategoryCategory($this);
+        $this->collProductCategoryCategories[]= $productCategoryCategory;
+        $productCategoryCategory->setProductCategoryIdCategory($this);
     }
 
     /**
-     * @param ChildProductCategory $category The ChildProductCategory object to remove.
+     * @param ChildProductCategory $productCategoryCategory The ChildProductCategory object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeCategory(ChildProductCategory $category)
+    public function removeProductCategoryCategory(ChildProductCategory $productCategoryCategory)
     {
-        if ($this->getCategories()->contains($category)) {
-            $pos = $this->collCategories->search($category);
-            $this->collCategories->remove($pos);
-            if (null === $this->categoriesScheduledForDeletion) {
-                $this->categoriesScheduledForDeletion = clone $this->collCategories;
-                $this->categoriesScheduledForDeletion->clear();
+        if ($this->getProductCategoryCategories()->contains($productCategoryCategory)) {
+            $pos = $this->collProductCategoryCategories->search($productCategoryCategory);
+            $this->collProductCategoryCategories->remove($pos);
+            if (null === $this->productCategoryCategoriesScheduledForDeletion) {
+                $this->productCategoryCategoriesScheduledForDeletion = clone $this->collProductCategoryCategories;
+                $this->productCategoryCategoriesScheduledForDeletion->clear();
             }
-            $this->categoriesScheduledForDeletion[]= clone $category;
-            $category->setProductCategoryCategory(null);
+            $this->productCategoryCategoriesScheduledForDeletion[]= clone $productCategoryCategory;
+            $productCategoryCategory->setProductCategoryIdCategory(null);
         }
 
         return $this;
@@ -1663,7 +1663,7 @@ abstract class Category implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Category is new, it will return
      * an empty collection; or if this Category has previously
-     * been saved, it will retrieve related Categories from storage.
+     * been saved, it will retrieve related ProductCategoryCategories from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1675,12 +1675,12 @@ abstract class Category implements ActiveRecordInterface
      * @return ObjectCollection|ChildProductCategory[] List of ChildProductCategory objects
      * @phpstan-return ObjectCollection&\Traversable<ChildProductCategory}> List of ChildProductCategory objects
      */
-    public function getCategoriesJoinProductCategoryProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getProductCategoryCategoriesJoinProductCategoryIdProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildProductCategoryQuery::create(null, $criteria);
-        $query->joinWith('ProductCategoryProduct', $joinBehavior);
+        $query->joinWith('ProductCategoryIdProduct', $joinBehavior);
 
-        return $this->getCategories($query, $con);
+        return $this->getProductCategoryCategories($query, $con);
     }
 
     /**
@@ -1716,20 +1716,20 @@ abstract class Category implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collCategories) {
-                foreach ($this->collCategories as $o) {
+            if ($this->collDiscountCategories) {
+                foreach ($this->collDiscountCategories as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collCategories) {
-                foreach ($this->collCategories as $o) {
+            if ($this->collProductCategoryCategories) {
+                foreach ($this->collProductCategoryCategories as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collCategories = null;
-        $this->collCategories = null;
+        $this->collDiscountCategories = null;
+        $this->collProductCategoryCategories = null;
         return $this;
     }
 

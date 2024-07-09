@@ -33,25 +33,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSellerProductQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildSellerProductQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildSellerProductQuery leftJoinSellerProductId($relationAlias = null) Adds a LEFT JOIN clause to the query using the SellerProductId relation
- * @method     ChildSellerProductQuery rightJoinSellerProductId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SellerProductId relation
- * @method     ChildSellerProductQuery innerJoinSellerProductId($relationAlias = null) Adds a INNER JOIN clause to the query using the SellerProductId relation
+ * @method     ChildSellerProductQuery leftJoinSellerProductIdSeller($relationAlias = null) Adds a LEFT JOIN clause to the query using the SellerProductIdSeller relation
+ * @method     ChildSellerProductQuery rightJoinSellerProductIdSeller($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SellerProductIdSeller relation
+ * @method     ChildSellerProductQuery innerJoinSellerProductIdSeller($relationAlias = null) Adds a INNER JOIN clause to the query using the SellerProductIdSeller relation
  *
- * @method     ChildSellerProductQuery joinWithSellerProductId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SellerProductId relation
+ * @method     ChildSellerProductQuery joinWithSellerProductIdSeller($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SellerProductIdSeller relation
  *
- * @method     ChildSellerProductQuery leftJoinWithSellerProductId() Adds a LEFT JOIN clause and with to the query using the SellerProductId relation
- * @method     ChildSellerProductQuery rightJoinWithSellerProductId() Adds a RIGHT JOIN clause and with to the query using the SellerProductId relation
- * @method     ChildSellerProductQuery innerJoinWithSellerProductId() Adds a INNER JOIN clause and with to the query using the SellerProductId relation
+ * @method     ChildSellerProductQuery leftJoinWithSellerProductIdSeller() Adds a LEFT JOIN clause and with to the query using the SellerProductIdSeller relation
+ * @method     ChildSellerProductQuery rightJoinWithSellerProductIdSeller() Adds a RIGHT JOIN clause and with to the query using the SellerProductIdSeller relation
+ * @method     ChildSellerProductQuery innerJoinWithSellerProductIdSeller() Adds a INNER JOIN clause and with to the query using the SellerProductIdSeller relation
  *
- * @method     ChildSellerProductQuery leftJoinSellerProductProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the SellerProductProduct relation
- * @method     ChildSellerProductQuery rightJoinSellerProductProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SellerProductProduct relation
- * @method     ChildSellerProductQuery innerJoinSellerProductProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the SellerProductProduct relation
+ * @method     ChildSellerProductQuery leftJoinSellerProductIdProduct($relationAlias = null) Adds a LEFT JOIN clause to the query using the SellerProductIdProduct relation
+ * @method     ChildSellerProductQuery rightJoinSellerProductIdProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SellerProductIdProduct relation
+ * @method     ChildSellerProductQuery innerJoinSellerProductIdProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the SellerProductIdProduct relation
  *
- * @method     ChildSellerProductQuery joinWithSellerProductProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SellerProductProduct relation
+ * @method     ChildSellerProductQuery joinWithSellerProductIdProduct($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the SellerProductIdProduct relation
  *
- * @method     ChildSellerProductQuery leftJoinWithSellerProductProduct() Adds a LEFT JOIN clause and with to the query using the SellerProductProduct relation
- * @method     ChildSellerProductQuery rightJoinWithSellerProductProduct() Adds a RIGHT JOIN clause and with to the query using the SellerProductProduct relation
- * @method     ChildSellerProductQuery innerJoinWithSellerProductProduct() Adds a INNER JOIN clause and with to the query using the SellerProductProduct relation
+ * @method     ChildSellerProductQuery leftJoinWithSellerProductIdProduct() Adds a LEFT JOIN clause and with to the query using the SellerProductIdProduct relation
+ * @method     ChildSellerProductQuery rightJoinWithSellerProductIdProduct() Adds a RIGHT JOIN clause and with to the query using the SellerProductIdProduct relation
+ * @method     ChildSellerProductQuery innerJoinWithSellerProductIdProduct() Adds a INNER JOIN clause and with to the query using the SellerProductIdProduct relation
  *
  * @method     \Buildings\SellerQuery|\Buildings\ProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -186,7 +186,7 @@ abstract class SellerProductQuery extends ModelCriteria
      * $query->filterByIdSeller(array('min' => 12)); // WHERE id_seller > 12
      * </code>
      *
-     * @see       filterBySellerProductId()
+     * @see       filterBySellerProductIdSeller()
      *
      * @param mixed $idSeller The value to use as filter.
      *              Use scalar values for equality.
@@ -231,7 +231,7 @@ abstract class SellerProductQuery extends ModelCriteria
      * $query->filterByIdProduct(array('min' => 12)); // WHERE id_product > 12
      * </code>
      *
-     * @see       filterBySellerProductProduct()
+     * @see       filterBySellerProductIdProduct()
      *
      * @param mixed $idProduct The value to use as filter.
      *              Use scalar values for equality.
@@ -276,7 +276,7 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterBySellerProductId($seller, ?string $comparison = null)
+    public function filterBySellerProductIdSeller($seller, ?string $comparison = null)
     {
         if ($seller instanceof \Buildings\Seller) {
             return $this
@@ -291,22 +291,22 @@ abstract class SellerProductQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterBySellerProductId() only accepts arguments of type \Buildings\Seller or Collection');
+            throw new PropelException('filterBySellerProductIdSeller() only accepts arguments of type \Buildings\Seller or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the SellerProductId relation
+     * Adds a JOIN clause to the query using the SellerProductIdSeller relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinSellerProductId(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinSellerProductIdSeller(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SellerProductId');
+        $relationMap = $tableMap->getRelation('SellerProductIdSeller');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -321,14 +321,14 @@ abstract class SellerProductQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'SellerProductId');
+            $this->addJoinObject($join, 'SellerProductIdSeller');
         }
 
         return $this;
     }
 
     /**
-     * Use the SellerProductId relation Seller object
+     * Use the SellerProductIdSeller relation Seller object
      *
      * @see useQuery()
      *
@@ -338,15 +338,15 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery A secondary query class using the current class as primary query
      */
-    public function useSellerProductIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSellerProductIdSellerQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinSellerProductId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SellerProductId', '\Buildings\SellerQuery');
+            ->joinSellerProductIdSeller($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SellerProductIdSeller', '\Buildings\SellerQuery');
     }
 
     /**
-     * Use the SellerProductId relation Seller object
+     * Use the SellerProductIdSeller relation Seller object
      *
      * @param callable(\Buildings\SellerQuery):\Buildings\SellerQuery $callable A function working on the related query
      *
@@ -356,12 +356,12 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withSellerProductIdQuery(
+    public function withSellerProductIdSellerQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useSellerProductIdQuery(
+        $relatedQuery = $this->useSellerProductIdSellerQuery(
             $relationAlias,
             $joinType
         );
@@ -372,7 +372,7 @@ abstract class SellerProductQuery extends ModelCriteria
     }
 
     /**
-     * Use the SellerProductId relation to the Seller table for an EXISTS query.
+     * Use the SellerProductIdSeller relation to the Seller table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -382,32 +382,32 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery The inner query object of the EXISTS statement
      */
-    public function useSellerProductIdExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useSellerProductIdSellerExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useExistsQuery('SellerProductId', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('SellerProductIdSeller', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the SellerProductId relation to the Seller table for a NOT EXISTS query.
+     * Use the SellerProductIdSeller relation to the Seller table for a NOT EXISTS query.
      *
-     * @see useSellerProductIdExistsQuery()
+     * @see useSellerProductIdSellerExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\SellerQuery The inner query object of the NOT EXISTS statement
      */
-    public function useSellerProductIdNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useSellerProductIdSellerNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useExistsQuery('SellerProductId', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('SellerProductIdSeller', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the SellerProductId relation to the Seller table for an IN query.
+     * Use the SellerProductIdSeller relation to the Seller table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -417,27 +417,27 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\SellerQuery The inner query object of the IN statement
      */
-    public function useInSellerProductIdQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInSellerProductIdSellerQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useInQuery('SellerProductId', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('SellerProductIdSeller', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the SellerProductId relation to the Seller table for a NOT IN query.
+     * Use the SellerProductIdSeller relation to the Seller table for a NOT IN query.
      *
-     * @see useSellerProductIdInQuery()
+     * @see useSellerProductIdSellerInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\SellerQuery The inner query object of the NOT IN statement
      */
-    public function useNotInSellerProductIdQuery($modelAlias = null, $queryClass = null)
+    public function useNotInSellerProductIdSellerQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\SellerQuery */
-        $q = $this->useInQuery('SellerProductId', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('SellerProductIdSeller', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -451,7 +451,7 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterBySellerProductProduct($product, ?string $comparison = null)
+    public function filterBySellerProductIdProduct($product, ?string $comparison = null)
     {
         if ($product instanceof \Buildings\Product) {
             return $this
@@ -466,22 +466,22 @@ abstract class SellerProductQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterBySellerProductProduct() only accepts arguments of type \Buildings\Product or Collection');
+            throw new PropelException('filterBySellerProductIdProduct() only accepts arguments of type \Buildings\Product or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the SellerProductProduct relation
+     * Adds a JOIN clause to the query using the SellerProductIdProduct relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinSellerProductProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinSellerProductIdProduct(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('SellerProductProduct');
+        $relationMap = $tableMap->getRelation('SellerProductIdProduct');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -496,14 +496,14 @@ abstract class SellerProductQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'SellerProductProduct');
+            $this->addJoinObject($join, 'SellerProductIdProduct');
         }
 
         return $this;
     }
 
     /**
-     * Use the SellerProductProduct relation Product object
+     * Use the SellerProductIdProduct relation Product object
      *
      * @see useQuery()
      *
@@ -513,15 +513,15 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery A secondary query class using the current class as primary query
      */
-    public function useSellerProductProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSellerProductIdProductQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinSellerProductProduct($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'SellerProductProduct', '\Buildings\ProductQuery');
+            ->joinSellerProductIdProduct($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SellerProductIdProduct', '\Buildings\ProductQuery');
     }
 
     /**
-     * Use the SellerProductProduct relation Product object
+     * Use the SellerProductIdProduct relation Product object
      *
      * @param callable(\Buildings\ProductQuery):\Buildings\ProductQuery $callable A function working on the related query
      *
@@ -531,12 +531,12 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withSellerProductProductQuery(
+    public function withSellerProductIdProductQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useSellerProductProductQuery(
+        $relatedQuery = $this->useSellerProductIdProductQuery(
             $relationAlias,
             $joinType
         );
@@ -547,7 +547,7 @@ abstract class SellerProductQuery extends ModelCriteria
     }
 
     /**
-     * Use the SellerProductProduct relation to the Product table for an EXISTS query.
+     * Use the SellerProductIdProduct relation to the Product table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -557,32 +557,32 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the EXISTS statement
      */
-    public function useSellerProductProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useSellerProductIdProductExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('SellerProductProduct', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('SellerProductIdProduct', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the SellerProductProduct relation to the Product table for a NOT EXISTS query.
+     * Use the SellerProductIdProduct relation to the Product table for a NOT EXISTS query.
      *
-     * @see useSellerProductProductExistsQuery()
+     * @see useSellerProductIdProductExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT EXISTS statement
      */
-    public function useSellerProductProductNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useSellerProductIdProductNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useExistsQuery('SellerProductProduct', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('SellerProductIdProduct', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the SellerProductProduct relation to the Product table for an IN query.
+     * Use the SellerProductIdProduct relation to the Product table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -592,27 +592,27 @@ abstract class SellerProductQuery extends ModelCriteria
      *
      * @return \Buildings\ProductQuery The inner query object of the IN statement
      */
-    public function useInSellerProductProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInSellerProductIdProductQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('SellerProductProduct', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('SellerProductIdProduct', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the SellerProductProduct relation to the Product table for a NOT IN query.
+     * Use the SellerProductIdProduct relation to the Product table for a NOT IN query.
      *
-     * @see useSellerProductProductInQuery()
+     * @see useSellerProductIdProductInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\ProductQuery The inner query object of the NOT IN statement
      */
-    public function useNotInSellerProductProductQuery($modelAlias = null, $queryClass = null)
+    public function useNotInSellerProductIdProductQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\ProductQuery */
-        $q = $this->useInQuery('SellerProductProduct', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('SellerProductIdProduct', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

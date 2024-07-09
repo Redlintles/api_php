@@ -37,15 +37,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAdminQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildAdminQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildAdminQuery leftJoinAdmin($relationAlias = null) Adds a LEFT JOIN clause to the query using the Admin relation
- * @method     ChildAdminQuery rightJoinAdmin($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Admin relation
- * @method     ChildAdminQuery innerJoinAdmin($relationAlias = null) Adds a INNER JOIN clause to the query using the Admin relation
+ * @method     ChildAdminQuery leftJoinPermissionAdminAdmin($relationAlias = null) Adds a LEFT JOIN clause to the query using the PermissionAdminAdmin relation
+ * @method     ChildAdminQuery rightJoinPermissionAdminAdmin($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PermissionAdminAdmin relation
+ * @method     ChildAdminQuery innerJoinPermissionAdminAdmin($relationAlias = null) Adds a INNER JOIN clause to the query using the PermissionAdminAdmin relation
  *
- * @method     ChildAdminQuery joinWithAdmin($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Admin relation
+ * @method     ChildAdminQuery joinWithPermissionAdminAdmin($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the PermissionAdminAdmin relation
  *
- * @method     ChildAdminQuery leftJoinWithAdmin() Adds a LEFT JOIN clause and with to the query using the Admin relation
- * @method     ChildAdminQuery rightJoinWithAdmin() Adds a RIGHT JOIN clause and with to the query using the Admin relation
- * @method     ChildAdminQuery innerJoinWithAdmin() Adds a INNER JOIN clause and with to the query using the Admin relation
+ * @method     ChildAdminQuery leftJoinWithPermissionAdminAdmin() Adds a LEFT JOIN clause and with to the query using the PermissionAdminAdmin relation
+ * @method     ChildAdminQuery rightJoinWithPermissionAdminAdmin() Adds a RIGHT JOIN clause and with to the query using the PermissionAdminAdmin relation
+ * @method     ChildAdminQuery innerJoinWithPermissionAdminAdmin() Adds a INNER JOIN clause and with to the query using the PermissionAdminAdmin relation
  *
  * @method     \Buildings\PermissionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -404,7 +404,7 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByAdmin($permission, ?string $comparison = null)
+    public function filterByPermissionAdminAdmin($permission, ?string $comparison = null)
     {
         if ($permission instanceof \Buildings\Permission) {
             $this
@@ -413,28 +413,28 @@ abstract class AdminQuery extends ModelCriteria
             return $this;
         } elseif ($permission instanceof ObjectCollection) {
             $this
-                ->useAdminQuery()
+                ->usePermissionAdminAdminQuery()
                 ->filterByPrimaryKeys($permission->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByAdmin() only accepts arguments of type \Buildings\Permission or Collection');
+            throw new PropelException('filterByPermissionAdminAdmin() only accepts arguments of type \Buildings\Permission or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Admin relation
+     * Adds a JOIN clause to the query using the PermissionAdminAdmin relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinAdmin(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinPermissionAdminAdmin(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Admin');
+        $relationMap = $tableMap->getRelation('PermissionAdminAdmin');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -449,14 +449,14 @@ abstract class AdminQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Admin');
+            $this->addJoinObject($join, 'PermissionAdminAdmin');
         }
 
         return $this;
     }
 
     /**
-     * Use the Admin relation Permission object
+     * Use the PermissionAdminAdmin relation Permission object
      *
      * @see useQuery()
      *
@@ -466,15 +466,15 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return \Buildings\PermissionQuery A secondary query class using the current class as primary query
      */
-    public function useAdminQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function usePermissionAdminAdminQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinAdmin($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Admin', '\Buildings\PermissionQuery');
+            ->joinPermissionAdminAdmin($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PermissionAdminAdmin', '\Buildings\PermissionQuery');
     }
 
     /**
-     * Use the Admin relation Permission object
+     * Use the PermissionAdminAdmin relation Permission object
      *
      * @param callable(\Buildings\PermissionQuery):\Buildings\PermissionQuery $callable A function working on the related query
      *
@@ -484,12 +484,12 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withAdminQuery(
+    public function withPermissionAdminAdminQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useAdminQuery(
+        $relatedQuery = $this->usePermissionAdminAdminQuery(
             $relationAlias,
             $joinType
         );
@@ -500,7 +500,7 @@ abstract class AdminQuery extends ModelCriteria
     }
 
     /**
-     * Use the Admin relation to the Permission table for an EXISTS query.
+     * Use the PermissionAdminAdmin relation to the Permission table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -510,32 +510,32 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return \Buildings\PermissionQuery The inner query object of the EXISTS statement
      */
-    public function useAdminExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function usePermissionAdminAdminExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\PermissionQuery */
-        $q = $this->useExistsQuery('Admin', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('PermissionAdminAdmin', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the Admin relation to the Permission table for a NOT EXISTS query.
+     * Use the PermissionAdminAdmin relation to the Permission table for a NOT EXISTS query.
      *
-     * @see useAdminExistsQuery()
+     * @see usePermissionAdminAdminExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\PermissionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useAdminNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function usePermissionAdminAdminNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\PermissionQuery */
-        $q = $this->useExistsQuery('Admin', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('PermissionAdminAdmin', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the Admin relation to the Permission table for an IN query.
+     * Use the PermissionAdminAdmin relation to the Permission table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -545,27 +545,27 @@ abstract class AdminQuery extends ModelCriteria
      *
      * @return \Buildings\PermissionQuery The inner query object of the IN statement
      */
-    public function useInAdminQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInPermissionAdminAdminQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\PermissionQuery */
-        $q = $this->useInQuery('Admin', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('PermissionAdminAdmin', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the Admin relation to the Permission table for a NOT IN query.
+     * Use the PermissionAdminAdmin relation to the Permission table for a NOT IN query.
      *
-     * @see useAdminInQuery()
+     * @see usePermissionAdminAdminInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\PermissionQuery The inner query object of the NOT IN statement
      */
-    public function useNotInAdminQuery($modelAlias = null, $queryClass = null)
+    public function useNotInPermissionAdminAdminQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\PermissionQuery */
-        $q = $this->useInQuery('Admin', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('PermissionAdminAdmin', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

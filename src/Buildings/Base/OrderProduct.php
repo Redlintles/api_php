@@ -92,12 +92,12 @@ abstract class OrderProduct implements ActiveRecordInterface
     /**
      * @var        ChildOrder
      */
-    protected $aOrderProductOrder;
+    protected $aOrderProductIdOrder;
 
     /**
      * @var        ChildProduct
      */
-    protected $aOrderProductProduct;
+    protected $aOrderProductIdProduct;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -395,8 +395,8 @@ abstract class OrderProduct implements ActiveRecordInterface
             $this->modifiedColumns[OrderProductTableMap::COL_ID_ORDER] = true;
         }
 
-        if ($this->aOrderProductOrder !== null && $this->aOrderProductOrder->getId() !== $v) {
-            $this->aOrderProductOrder = null;
+        if ($this->aOrderProductIdOrder !== null && $this->aOrderProductIdOrder->getId() !== $v) {
+            $this->aOrderProductIdOrder = null;
         }
 
         return $this;
@@ -419,8 +419,8 @@ abstract class OrderProduct implements ActiveRecordInterface
             $this->modifiedColumns[OrderProductTableMap::COL_ID_PRODUCT] = true;
         }
 
-        if ($this->aOrderProductProduct !== null && $this->aOrderProductProduct->getId() !== $v) {
-            $this->aOrderProductProduct = null;
+        if ($this->aOrderProductIdProduct !== null && $this->aOrderProductIdProduct->getId() !== $v) {
+            $this->aOrderProductIdProduct = null;
         }
 
         return $this;
@@ -533,11 +533,11 @@ abstract class OrderProduct implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aOrderProductOrder !== null && $this->id_order !== $this->aOrderProductOrder->getId()) {
-            $this->aOrderProductOrder = null;
+        if ($this->aOrderProductIdOrder !== null && $this->id_order !== $this->aOrderProductIdOrder->getId()) {
+            $this->aOrderProductIdOrder = null;
         }
-        if ($this->aOrderProductProduct !== null && $this->id_product !== $this->aOrderProductProduct->getId()) {
-            $this->aOrderProductProduct = null;
+        if ($this->aOrderProductIdProduct !== null && $this->id_product !== $this->aOrderProductIdProduct->getId()) {
+            $this->aOrderProductIdProduct = null;
         }
     }
 
@@ -578,8 +578,8 @@ abstract class OrderProduct implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aOrderProductOrder = null;
-            $this->aOrderProductProduct = null;
+            $this->aOrderProductIdOrder = null;
+            $this->aOrderProductIdProduct = null;
         } // if (deep)
     }
 
@@ -688,18 +688,18 @@ abstract class OrderProduct implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aOrderProductOrder !== null) {
-                if ($this->aOrderProductOrder->isModified() || $this->aOrderProductOrder->isNew()) {
-                    $affectedRows += $this->aOrderProductOrder->save($con);
+            if ($this->aOrderProductIdOrder !== null) {
+                if ($this->aOrderProductIdOrder->isModified() || $this->aOrderProductIdOrder->isNew()) {
+                    $affectedRows += $this->aOrderProductIdOrder->save($con);
                 }
-                $this->setOrderProductOrder($this->aOrderProductOrder);
+                $this->setOrderProductIdOrder($this->aOrderProductIdOrder);
             }
 
-            if ($this->aOrderProductProduct !== null) {
-                if ($this->aOrderProductProduct->isModified() || $this->aOrderProductProduct->isNew()) {
-                    $affectedRows += $this->aOrderProductProduct->save($con);
+            if ($this->aOrderProductIdProduct !== null) {
+                if ($this->aOrderProductIdProduct->isModified() || $this->aOrderProductIdProduct->isNew()) {
+                    $affectedRows += $this->aOrderProductIdProduct->save($con);
                 }
-                $this->setOrderProductProduct($this->aOrderProductProduct);
+                $this->setOrderProductIdProduct($this->aOrderProductIdProduct);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -869,7 +869,7 @@ abstract class OrderProduct implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aOrderProductOrder) {
+            if (null !== $this->aOrderProductIdOrder) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -879,12 +879,12 @@ abstract class OrderProduct implements ActiveRecordInterface
                         $key = 'order';
                         break;
                     default:
-                        $key = 'OrderProductOrder';
+                        $key = 'OrderProductIdOrder';
                 }
 
-                $result[$key] = $this->aOrderProductOrder->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aOrderProductIdOrder->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aOrderProductProduct) {
+            if (null !== $this->aOrderProductIdProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -894,10 +894,10 @@ abstract class OrderProduct implements ActiveRecordInterface
                         $key = 'product';
                         break;
                     default:
-                        $key = 'OrderProductProduct';
+                        $key = 'OrderProductIdProduct';
                 }
 
-                $result[$key] = $this->aOrderProductProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aOrderProductIdProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1145,7 +1145,7 @@ abstract class OrderProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setOrderProductOrder(ChildOrder $v = null)
+    public function setOrderProductIdOrder(ChildOrder $v = null)
     {
         if ($v === null) {
             $this->setIdOrder(1);
@@ -1153,12 +1153,12 @@ abstract class OrderProduct implements ActiveRecordInterface
             $this->setIdOrder($v->getId());
         }
 
-        $this->aOrderProductOrder = $v;
+        $this->aOrderProductIdOrder = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildOrder object, it will not be re-added.
         if ($v !== null) {
-            $v->addOrder($this);
+            $v->addOrderProductOrder($this);
         }
 
 
@@ -1173,20 +1173,20 @@ abstract class OrderProduct implements ActiveRecordInterface
      * @return ChildOrder The associated ChildOrder object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getOrderProductOrder(?ConnectionInterface $con = null)
+    public function getOrderProductIdOrder(?ConnectionInterface $con = null)
     {
-        if ($this->aOrderProductOrder === null && ($this->id_order != 0)) {
-            $this->aOrderProductOrder = ChildOrderQuery::create()->findPk($this->id_order, $con);
+        if ($this->aOrderProductIdOrder === null && ($this->id_order != 0)) {
+            $this->aOrderProductIdOrder = ChildOrderQuery::create()->findPk($this->id_order, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aOrderProductOrder->addOrders($this);
+                $this->aOrderProductIdOrder->addOrderProductOrders($this);
              */
         }
 
-        return $this->aOrderProductOrder;
+        return $this->aOrderProductIdOrder;
     }
 
     /**
@@ -1196,7 +1196,7 @@ abstract class OrderProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setOrderProductProduct(ChildProduct $v = null)
+    public function setOrderProductIdProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setIdProduct(1);
@@ -1204,12 +1204,12 @@ abstract class OrderProduct implements ActiveRecordInterface
             $this->setIdProduct($v->getId());
         }
 
-        $this->aOrderProductProduct = $v;
+        $this->aOrderProductIdProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addProduct($this);
+            $v->addOrderProductProduct($this);
         }
 
 
@@ -1224,20 +1224,20 @@ abstract class OrderProduct implements ActiveRecordInterface
      * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getOrderProductProduct(?ConnectionInterface $con = null)
+    public function getOrderProductIdProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aOrderProductProduct === null && ($this->id_product != 0)) {
-            $this->aOrderProductProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
+        if ($this->aOrderProductIdProduct === null && ($this->id_product != 0)) {
+            $this->aOrderProductIdProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aOrderProductProduct->addProducts($this);
+                $this->aOrderProductIdProduct->addOrderProductProducts($this);
              */
         }
 
-        return $this->aOrderProductProduct;
+        return $this->aOrderProductIdProduct;
     }
 
     /**
@@ -1249,11 +1249,11 @@ abstract class OrderProduct implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aOrderProductOrder) {
-            $this->aOrderProductOrder->removeOrder($this);
+        if (null !== $this->aOrderProductIdOrder) {
+            $this->aOrderProductIdOrder->removeOrderProductOrder($this);
         }
-        if (null !== $this->aOrderProductProduct) {
-            $this->aOrderProductProduct->removeProduct($this);
+        if (null !== $this->aOrderProductIdProduct) {
+            $this->aOrderProductIdProduct->removeOrderProductProduct($this);
         }
         $this->id_order = null;
         $this->id_product = null;
@@ -1282,8 +1282,8 @@ abstract class OrderProduct implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aOrderProductOrder = null;
-        $this->aOrderProductProduct = null;
+        $this->aOrderProductIdOrder = null;
+        $this->aOrderProductIdProduct = null;
         return $this;
     }
 

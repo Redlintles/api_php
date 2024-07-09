@@ -209,14 +209,14 @@ class AddressOwnerTableMap extends TableMap
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('AddressOwnerClient', '\\Buildings\\Client', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('AddressOwnerIdClient', '\\Buildings\\Client', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_client',
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('AddressOwnerSeller', '\\Buildings\\Seller', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('AddressOwnerIdSeller', '\\Buildings\\Seller', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_seller',

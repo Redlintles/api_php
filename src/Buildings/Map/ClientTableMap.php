@@ -208,27 +208,27 @@ class ClientTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Client', '\\Buildings\\Order', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('OrderClient', '\\Buildings\\Order', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_client',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Clients', false);
-        $this->addRelation('Client', '\\Buildings\\Cart', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'OrderClients', false);
+        $this->addRelation('CartClient', '\\Buildings\\Cart', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_client',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Clients', false);
-        $this->addRelation('Client', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'CartClients', false);
+        $this->addRelation('AddressOwnerClient', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_client',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Clients', false);
+), 'CASCADE', null, 'AddressOwnerClients', false);
     }
 
     /**

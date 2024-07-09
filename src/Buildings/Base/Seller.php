@@ -115,22 +115,22 @@ abstract class Seller implements ActiveRecordInterface
      * @var        ObjectCollection|ChildOrder[] Collection to store aggregation of ChildOrder objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildOrder> Collection to store aggregation of ChildOrder objects.
      */
-    protected $collSellers;
-    protected $collSellersPartial;
+    protected $collOrderSellers;
+    protected $collOrderSellersPartial;
 
     /**
      * @var        ObjectCollection|ChildSellerProduct[] Collection to store aggregation of ChildSellerProduct objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildSellerProduct> Collection to store aggregation of ChildSellerProduct objects.
      */
-    protected $collSellers;
-    protected $collSellersPartial;
+    protected $collSellerProductSellers;
+    protected $collSellerProductSellersPartial;
 
     /**
      * @var        ObjectCollection|ChildAddressOwner[] Collection to store aggregation of ChildAddressOwner objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner> Collection to store aggregation of ChildAddressOwner objects.
      */
-    protected $collSellers;
-    protected $collSellersPartial;
+    protected $collAddressOwnerSellers;
+    protected $collAddressOwnerSellersPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -145,21 +145,21 @@ abstract class Seller implements ActiveRecordInterface
      * @var ObjectCollection|ChildOrder[]
      * @phpstan-var ObjectCollection&\Traversable<ChildOrder>
      */
-    protected $sellersScheduledForDeletion = null;
+    protected $orderSellersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildSellerProduct[]
      * @phpstan-var ObjectCollection&\Traversable<ChildSellerProduct>
      */
-    protected $sellersScheduledForDeletion = null;
+    protected $sellerProductSellersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildAddressOwner[]
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner>
      */
-    protected $sellersScheduledForDeletion = null;
+    protected $addressOwnerSellersScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -689,11 +689,11 @@ abstract class Seller implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collSellers = null;
+            $this->collOrderSellers = null;
 
-            $this->collSellers = null;
+            $this->collSellerProductSellers = null;
 
-            $this->collSellers = null;
+            $this->collAddressOwnerSellers = null;
 
         } // if (deep)
     }
@@ -809,51 +809,51 @@ abstract class Seller implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->sellersScheduledForDeletion !== null) {
-                if (!$this->sellersScheduledForDeletion->isEmpty()) {
+            if ($this->orderSellersScheduledForDeletion !== null) {
+                if (!$this->orderSellersScheduledForDeletion->isEmpty()) {
                     \Buildings\OrderQuery::create()
-                        ->filterByPrimaryKeys($this->sellersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->orderSellersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->sellersScheduledForDeletion = null;
+                    $this->orderSellersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collSellers !== null) {
-                foreach ($this->collSellers as $referrerFK) {
+            if ($this->collOrderSellers !== null) {
+                foreach ($this->collOrderSellers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->sellersScheduledForDeletion !== null) {
-                if (!$this->sellersScheduledForDeletion->isEmpty()) {
+            if ($this->sellerProductSellersScheduledForDeletion !== null) {
+                if (!$this->sellerProductSellersScheduledForDeletion->isEmpty()) {
                     \Buildings\SellerProductQuery::create()
-                        ->filterByPrimaryKeys($this->sellersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->sellerProductSellersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->sellersScheduledForDeletion = null;
+                    $this->sellerProductSellersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collSellers !== null) {
-                foreach ($this->collSellers as $referrerFK) {
+            if ($this->collSellerProductSellers !== null) {
+                foreach ($this->collSellerProductSellers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->sellersScheduledForDeletion !== null) {
-                if (!$this->sellersScheduledForDeletion->isEmpty()) {
+            if ($this->addressOwnerSellersScheduledForDeletion !== null) {
+                if (!$this->addressOwnerSellersScheduledForDeletion->isEmpty()) {
                     \Buildings\AddressOwnerQuery::create()
-                        ->filterByPrimaryKeys($this->sellersScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->addressOwnerSellersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->sellersScheduledForDeletion = null;
+                    $this->addressOwnerSellersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collSellers !== null) {
-                foreach ($this->collSellers as $referrerFK) {
+            if ($this->collAddressOwnerSellers !== null) {
+                foreach ($this->collAddressOwnerSellers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1049,7 +1049,7 @@ abstract class Seller implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collSellers) {
+            if (null !== $this->collOrderSellers) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1059,12 +1059,12 @@ abstract class Seller implements ActiveRecordInterface
                         $key = 'orders';
                         break;
                     default:
-                        $key = 'Sellers';
+                        $key = 'OrderSellers';
                 }
 
-                $result[$key] = $this->collSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collOrderSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collSellers) {
+            if (null !== $this->collSellerProductSellers) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1074,12 +1074,12 @@ abstract class Seller implements ActiveRecordInterface
                         $key = 'seller_productss';
                         break;
                     default:
-                        $key = 'Sellers';
+                        $key = 'SellerProductSellers';
                 }
 
-                $result[$key] = $this->collSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collSellerProductSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collSellers) {
+            if (null !== $this->collAddressOwnerSellers) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1089,10 +1089,10 @@ abstract class Seller implements ActiveRecordInterface
                         $key = 'address_owners';
                         break;
                     default:
-                        $key = 'Sellers';
+                        $key = 'AddressOwnerSellers';
                 }
 
-                $result[$key] = $this->collSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collAddressOwnerSellers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1342,21 +1342,21 @@ abstract class Seller implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getSellers() as $relObj) {
+            foreach ($this->getOrderSellers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSeller($relObj->copy($deepCopy));
+                    $copyObj->addOrderSeller($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getSellers() as $relObj) {
+            foreach ($this->getSellerProductSellers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSeller($relObj->copy($deepCopy));
+                    $copyObj->addSellerProductSeller($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getSellers() as $relObj) {
+            foreach ($this->getAddressOwnerSellers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSeller($relObj->copy($deepCopy));
+                    $copyObj->addAddressOwnerSeller($relObj->copy($deepCopy));
                 }
             }
 
@@ -1401,50 +1401,50 @@ abstract class Seller implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Seller' === $relationName) {
-            $this->initSellers();
+        if ('OrderSeller' === $relationName) {
+            $this->initOrderSellers();
             return;
         }
-        if ('Seller' === $relationName) {
-            $this->initSellers();
+        if ('SellerProductSeller' === $relationName) {
+            $this->initSellerProductSellers();
             return;
         }
-        if ('Seller' === $relationName) {
-            $this->initSellers();
+        if ('AddressOwnerSeller' === $relationName) {
+            $this->initAddressOwnerSellers();
             return;
         }
     }
 
     /**
-     * Clears out the collSellers collection
+     * Clears out the collOrderSellers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addSellers()
+     * @see addOrderSellers()
      */
-    public function clearSellers()
+    public function clearOrderSellers()
     {
-        $this->collSellers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collOrderSellers = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collSellers collection loaded partially.
+     * Reset is the collOrderSellers collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialSellers($v = true): void
+    public function resetPartialOrderSellers($v = true): void
     {
-        $this->collSellersPartial = $v;
+        $this->collOrderSellersPartial = $v;
     }
 
     /**
-     * Initializes the collSellers collection.
+     * Initializes the collOrderSellers collection.
      *
-     * By default this just sets the collSellers collection to an empty array (like clearcollSellers());
+     * By default this just sets the collOrderSellers collection to an empty array (like clearcollOrderSellers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1453,16 +1453,16 @@ abstract class Seller implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initSellers(bool $overrideExisting = true): void
+    public function initOrderSellers(bool $overrideExisting = true): void
     {
-        if (null !== $this->collSellers && !$overrideExisting) {
+        if (null !== $this->collOrderSellers && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = OrderTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collSellers = new $collectionClassName;
-        $this->collSellers->setModel('\Buildings\Order');
+        $this->collOrderSellers = new $collectionClassName;
+        $this->collOrderSellers->setModel('\Buildings\Order');
     }
 
     /**
@@ -1480,57 +1480,57 @@ abstract class Seller implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildOrder> List of ChildOrder objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getOrderSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
+        $partial = $this->collOrderSellersPartial && !$this->isNew();
+        if (null === $this->collOrderSellers || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collSellers) {
-                    $this->initSellers();
+                if (null === $this->collOrderSellers) {
+                    $this->initOrderSellers();
                 } else {
                     $collectionClassName = OrderTableMap::getTableMap()->getCollectionClassName();
 
-                    $collSellers = new $collectionClassName;
-                    $collSellers->setModel('\Buildings\Order');
+                    $collOrderSellers = new $collectionClassName;
+                    $collOrderSellers->setModel('\Buildings\Order');
 
-                    return $collSellers;
+                    return $collOrderSellers;
                 }
             } else {
-                $collSellers = ChildOrderQuery::create(null, $criteria)
+                $collOrderSellers = ChildOrderQuery::create(null, $criteria)
                     ->filterByOrderIdSeller($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collSellersPartial && count($collSellers)) {
-                        $this->initSellers(false);
+                    if (false !== $this->collOrderSellersPartial && count($collOrderSellers)) {
+                        $this->initOrderSellers(false);
 
-                        foreach ($collSellers as $obj) {
-                            if (false == $this->collSellers->contains($obj)) {
-                                $this->collSellers->append($obj);
+                        foreach ($collOrderSellers as $obj) {
+                            if (false == $this->collOrderSellers->contains($obj)) {
+                                $this->collOrderSellers->append($obj);
                             }
                         }
 
-                        $this->collSellersPartial = true;
+                        $this->collOrderSellersPartial = true;
                     }
 
-                    return $collSellers;
+                    return $collOrderSellers;
                 }
 
-                if ($partial && $this->collSellers) {
-                    foreach ($this->collSellers as $obj) {
+                if ($partial && $this->collOrderSellers) {
+                    foreach ($this->collOrderSellers as $obj) {
                         if ($obj->isNew()) {
-                            $collSellers[] = $obj;
+                            $collOrderSellers[] = $obj;
                         }
                     }
                 }
 
-                $this->collSellers = $collSellers;
-                $this->collSellersPartial = false;
+                $this->collOrderSellers = $collOrderSellers;
+                $this->collOrderSellersPartial = false;
             }
         }
 
-        return $this->collSellers;
+        return $this->collOrderSellers;
     }
 
     /**
@@ -1539,29 +1539,29 @@ abstract class Seller implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $sellers A Propel collection.
+     * @param Collection $orderSellers A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setSellers(Collection $sellers, ?ConnectionInterface $con = null)
+    public function setOrderSellers(Collection $orderSellers, ?ConnectionInterface $con = null)
     {
-        /** @var ChildOrder[] $sellersToDelete */
-        $sellersToDelete = $this->getSellers(new Criteria(), $con)->diff($sellers);
+        /** @var ChildOrder[] $orderSellersToDelete */
+        $orderSellersToDelete = $this->getOrderSellers(new Criteria(), $con)->diff($orderSellers);
 
 
-        $this->sellersScheduledForDeletion = $sellersToDelete;
+        $this->orderSellersScheduledForDeletion = $orderSellersToDelete;
 
-        foreach ($sellersToDelete as $sellerRemoved) {
-            $sellerRemoved->setOrderIdSeller(null);
+        foreach ($orderSellersToDelete as $orderSellerRemoved) {
+            $orderSellerRemoved->setOrderIdSeller(null);
         }
 
-        $this->collSellers = null;
-        foreach ($sellers as $seller) {
-            $this->addSeller($seller);
+        $this->collOrderSellers = null;
+        foreach ($orderSellers as $orderSeller) {
+            $this->addOrderSeller($orderSeller);
         }
 
-        $this->collSellers = $sellers;
-        $this->collSellersPartial = false;
+        $this->collOrderSellers = $orderSellers;
+        $this->collOrderSellersPartial = false;
 
         return $this;
     }
@@ -1575,16 +1575,16 @@ abstract class Seller implements ActiveRecordInterface
      * @return int Count of related Order objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countOrderSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSellers) {
+        $partial = $this->collOrderSellersPartial && !$this->isNew();
+        if (null === $this->collOrderSellers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collOrderSellers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getSellers());
+                return count($this->getOrderSellers());
             }
 
             $query = ChildOrderQuery::create(null, $criteria);
@@ -1597,7 +1597,7 @@ abstract class Seller implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collSellers);
+        return count($this->collOrderSellers);
     }
 
     /**
@@ -1607,18 +1607,18 @@ abstract class Seller implements ActiveRecordInterface
      * @param ChildOrder $l ChildOrder
      * @return $this The current object (for fluent API support)
      */
-    public function addSeller(ChildOrder $l)
+    public function addOrderSeller(ChildOrder $l)
     {
-        if ($this->collSellers === null) {
-            $this->initSellers();
-            $this->collSellersPartial = true;
+        if ($this->collOrderSellers === null) {
+            $this->initOrderSellers();
+            $this->collOrderSellersPartial = true;
         }
 
-        if (!$this->collSellers->contains($l)) {
-            $this->doAddSeller($l);
+        if (!$this->collOrderSellers->contains($l)) {
+            $this->doAddOrderSeller($l);
 
-            if ($this->sellersScheduledForDeletion and $this->sellersScheduledForDeletion->contains($l)) {
-                $this->sellersScheduledForDeletion->remove($this->sellersScheduledForDeletion->search($l));
+            if ($this->orderSellersScheduledForDeletion and $this->orderSellersScheduledForDeletion->contains($l)) {
+                $this->orderSellersScheduledForDeletion->remove($this->orderSellersScheduledForDeletion->search($l));
             }
         }
 
@@ -1626,29 +1626,29 @@ abstract class Seller implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildOrder $seller The ChildOrder object to add.
+     * @param ChildOrder $orderSeller The ChildOrder object to add.
      */
-    protected function doAddSeller(ChildOrder $seller): void
+    protected function doAddOrderSeller(ChildOrder $orderSeller): void
     {
-        $this->collSellers[]= $seller;
-        $seller->setOrderIdSeller($this);
+        $this->collOrderSellers[]= $orderSeller;
+        $orderSeller->setOrderIdSeller($this);
     }
 
     /**
-     * @param ChildOrder $seller The ChildOrder object to remove.
+     * @param ChildOrder $orderSeller The ChildOrder object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeSeller(ChildOrder $seller)
+    public function removeOrderSeller(ChildOrder $orderSeller)
     {
-        if ($this->getSellers()->contains($seller)) {
-            $pos = $this->collSellers->search($seller);
-            $this->collSellers->remove($pos);
-            if (null === $this->sellersScheduledForDeletion) {
-                $this->sellersScheduledForDeletion = clone $this->collSellers;
-                $this->sellersScheduledForDeletion->clear();
+        if ($this->getOrderSellers()->contains($orderSeller)) {
+            $pos = $this->collOrderSellers->search($orderSeller);
+            $this->collOrderSellers->remove($pos);
+            if (null === $this->orderSellersScheduledForDeletion) {
+                $this->orderSellersScheduledForDeletion = clone $this->collOrderSellers;
+                $this->orderSellersScheduledForDeletion->clear();
             }
-            $this->sellersScheduledForDeletion[]= $seller;
-            $seller->setOrderIdSeller(null);
+            $this->orderSellersScheduledForDeletion[]= $orderSeller;
+            $orderSeller->setOrderIdSeller(null);
         }
 
         return $this;
@@ -1660,7 +1660,7 @@ abstract class Seller implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Seller is new, it will return
      * an empty collection; or if this Seller has previously
-     * been saved, it will retrieve related Sellers from storage.
+     * been saved, it will retrieve related OrderSellers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1672,44 +1672,44 @@ abstract class Seller implements ActiveRecordInterface
      * @return ObjectCollection|ChildOrder[] List of ChildOrder objects
      * @phpstan-return ObjectCollection&\Traversable<ChildOrder}> List of ChildOrder objects
      */
-    public function getSellersJoinOrderIdClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getOrderSellersJoinOrderIdClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildOrderQuery::create(null, $criteria);
         $query->joinWith('OrderIdClient', $joinBehavior);
 
-        return $this->getSellers($query, $con);
+        return $this->getOrderSellers($query, $con);
     }
 
     /**
-     * Clears out the collSellers collection
+     * Clears out the collSellerProductSellers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addSellers()
+     * @see addSellerProductSellers()
      */
-    public function clearSellers()
+    public function clearSellerProductSellers()
     {
-        $this->collSellers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collSellerProductSellers = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collSellers collection loaded partially.
+     * Reset is the collSellerProductSellers collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialSellers($v = true): void
+    public function resetPartialSellerProductSellers($v = true): void
     {
-        $this->collSellersPartial = $v;
+        $this->collSellerProductSellersPartial = $v;
     }
 
     /**
-     * Initializes the collSellers collection.
+     * Initializes the collSellerProductSellers collection.
      *
-     * By default this just sets the collSellers collection to an empty array (like clearcollSellers());
+     * By default this just sets the collSellerProductSellers collection to an empty array (like clearcollSellerProductSellers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1718,16 +1718,16 @@ abstract class Seller implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initSellers(bool $overrideExisting = true): void
+    public function initSellerProductSellers(bool $overrideExisting = true): void
     {
-        if (null !== $this->collSellers && !$overrideExisting) {
+        if (null !== $this->collSellerProductSellers && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = SellerProductTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collSellers = new $collectionClassName;
-        $this->collSellers->setModel('\Buildings\SellerProduct');
+        $this->collSellerProductSellers = new $collectionClassName;
+        $this->collSellerProductSellers->setModel('\Buildings\SellerProduct');
     }
 
     /**
@@ -1745,57 +1745,57 @@ abstract class Seller implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildSellerProduct> List of ChildSellerProduct objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getSellerProductSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
+        $partial = $this->collSellerProductSellersPartial && !$this->isNew();
+        if (null === $this->collSellerProductSellers || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collSellers) {
-                    $this->initSellers();
+                if (null === $this->collSellerProductSellers) {
+                    $this->initSellerProductSellers();
                 } else {
                     $collectionClassName = SellerProductTableMap::getTableMap()->getCollectionClassName();
 
-                    $collSellers = new $collectionClassName;
-                    $collSellers->setModel('\Buildings\SellerProduct');
+                    $collSellerProductSellers = new $collectionClassName;
+                    $collSellerProductSellers->setModel('\Buildings\SellerProduct');
 
-                    return $collSellers;
+                    return $collSellerProductSellers;
                 }
             } else {
-                $collSellers = ChildSellerProductQuery::create(null, $criteria)
-                    ->filterBySellerProductId($this)
+                $collSellerProductSellers = ChildSellerProductQuery::create(null, $criteria)
+                    ->filterBySellerProductIdSeller($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collSellersPartial && count($collSellers)) {
-                        $this->initSellers(false);
+                    if (false !== $this->collSellerProductSellersPartial && count($collSellerProductSellers)) {
+                        $this->initSellerProductSellers(false);
 
-                        foreach ($collSellers as $obj) {
-                            if (false == $this->collSellers->contains($obj)) {
-                                $this->collSellers->append($obj);
+                        foreach ($collSellerProductSellers as $obj) {
+                            if (false == $this->collSellerProductSellers->contains($obj)) {
+                                $this->collSellerProductSellers->append($obj);
                             }
                         }
 
-                        $this->collSellersPartial = true;
+                        $this->collSellerProductSellersPartial = true;
                     }
 
-                    return $collSellers;
+                    return $collSellerProductSellers;
                 }
 
-                if ($partial && $this->collSellers) {
-                    foreach ($this->collSellers as $obj) {
+                if ($partial && $this->collSellerProductSellers) {
+                    foreach ($this->collSellerProductSellers as $obj) {
                         if ($obj->isNew()) {
-                            $collSellers[] = $obj;
+                            $collSellerProductSellers[] = $obj;
                         }
                     }
                 }
 
-                $this->collSellers = $collSellers;
-                $this->collSellersPartial = false;
+                $this->collSellerProductSellers = $collSellerProductSellers;
+                $this->collSellerProductSellersPartial = false;
             }
         }
 
-        return $this->collSellers;
+        return $this->collSellerProductSellers;
     }
 
     /**
@@ -1804,29 +1804,29 @@ abstract class Seller implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $sellers A Propel collection.
+     * @param Collection $sellerProductSellers A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setSellers(Collection $sellers, ?ConnectionInterface $con = null)
+    public function setSellerProductSellers(Collection $sellerProductSellers, ?ConnectionInterface $con = null)
     {
-        /** @var ChildSellerProduct[] $sellersToDelete */
-        $sellersToDelete = $this->getSellers(new Criteria(), $con)->diff($sellers);
+        /** @var ChildSellerProduct[] $sellerProductSellersToDelete */
+        $sellerProductSellersToDelete = $this->getSellerProductSellers(new Criteria(), $con)->diff($sellerProductSellers);
 
 
-        $this->sellersScheduledForDeletion = $sellersToDelete;
+        $this->sellerProductSellersScheduledForDeletion = $sellerProductSellersToDelete;
 
-        foreach ($sellersToDelete as $sellerRemoved) {
-            $sellerRemoved->setSellerProductId(null);
+        foreach ($sellerProductSellersToDelete as $sellerProductSellerRemoved) {
+            $sellerProductSellerRemoved->setSellerProductIdSeller(null);
         }
 
-        $this->collSellers = null;
-        foreach ($sellers as $seller) {
-            $this->addSeller($seller);
+        $this->collSellerProductSellers = null;
+        foreach ($sellerProductSellers as $sellerProductSeller) {
+            $this->addSellerProductSeller($sellerProductSeller);
         }
 
-        $this->collSellers = $sellers;
-        $this->collSellersPartial = false;
+        $this->collSellerProductSellers = $sellerProductSellers;
+        $this->collSellerProductSellersPartial = false;
 
         return $this;
     }
@@ -1840,16 +1840,16 @@ abstract class Seller implements ActiveRecordInterface
      * @return int Count of related SellerProduct objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countSellerProductSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSellers) {
+        $partial = $this->collSellerProductSellersPartial && !$this->isNew();
+        if (null === $this->collSellerProductSellers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSellerProductSellers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getSellers());
+                return count($this->getSellerProductSellers());
             }
 
             $query = ChildSellerProductQuery::create(null, $criteria);
@@ -1858,11 +1858,11 @@ abstract class Seller implements ActiveRecordInterface
             }
 
             return $query
-                ->filterBySellerProductId($this)
+                ->filterBySellerProductIdSeller($this)
                 ->count($con);
         }
 
-        return count($this->collSellers);
+        return count($this->collSellerProductSellers);
     }
 
     /**
@@ -1872,18 +1872,18 @@ abstract class Seller implements ActiveRecordInterface
      * @param ChildSellerProduct $l ChildSellerProduct
      * @return $this The current object (for fluent API support)
      */
-    public function addSeller(ChildSellerProduct $l)
+    public function addSellerProductSeller(ChildSellerProduct $l)
     {
-        if ($this->collSellers === null) {
-            $this->initSellers();
-            $this->collSellersPartial = true;
+        if ($this->collSellerProductSellers === null) {
+            $this->initSellerProductSellers();
+            $this->collSellerProductSellersPartial = true;
         }
 
-        if (!$this->collSellers->contains($l)) {
-            $this->doAddSeller($l);
+        if (!$this->collSellerProductSellers->contains($l)) {
+            $this->doAddSellerProductSeller($l);
 
-            if ($this->sellersScheduledForDeletion and $this->sellersScheduledForDeletion->contains($l)) {
-                $this->sellersScheduledForDeletion->remove($this->sellersScheduledForDeletion->search($l));
+            if ($this->sellerProductSellersScheduledForDeletion and $this->sellerProductSellersScheduledForDeletion->contains($l)) {
+                $this->sellerProductSellersScheduledForDeletion->remove($this->sellerProductSellersScheduledForDeletion->search($l));
             }
         }
 
@@ -1891,29 +1891,29 @@ abstract class Seller implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildSellerProduct $seller The ChildSellerProduct object to add.
+     * @param ChildSellerProduct $sellerProductSeller The ChildSellerProduct object to add.
      */
-    protected function doAddSeller(ChildSellerProduct $seller): void
+    protected function doAddSellerProductSeller(ChildSellerProduct $sellerProductSeller): void
     {
-        $this->collSellers[]= $seller;
-        $seller->setSellerProductId($this);
+        $this->collSellerProductSellers[]= $sellerProductSeller;
+        $sellerProductSeller->setSellerProductIdSeller($this);
     }
 
     /**
-     * @param ChildSellerProduct $seller The ChildSellerProduct object to remove.
+     * @param ChildSellerProduct $sellerProductSeller The ChildSellerProduct object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeSeller(ChildSellerProduct $seller)
+    public function removeSellerProductSeller(ChildSellerProduct $sellerProductSeller)
     {
-        if ($this->getSellers()->contains($seller)) {
-            $pos = $this->collSellers->search($seller);
-            $this->collSellers->remove($pos);
-            if (null === $this->sellersScheduledForDeletion) {
-                $this->sellersScheduledForDeletion = clone $this->collSellers;
-                $this->sellersScheduledForDeletion->clear();
+        if ($this->getSellerProductSellers()->contains($sellerProductSeller)) {
+            $pos = $this->collSellerProductSellers->search($sellerProductSeller);
+            $this->collSellerProductSellers->remove($pos);
+            if (null === $this->sellerProductSellersScheduledForDeletion) {
+                $this->sellerProductSellersScheduledForDeletion = clone $this->collSellerProductSellers;
+                $this->sellerProductSellersScheduledForDeletion->clear();
             }
-            $this->sellersScheduledForDeletion[]= clone $seller;
-            $seller->setSellerProductId(null);
+            $this->sellerProductSellersScheduledForDeletion[]= clone $sellerProductSeller;
+            $sellerProductSeller->setSellerProductIdSeller(null);
         }
 
         return $this;
@@ -1925,7 +1925,7 @@ abstract class Seller implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Seller is new, it will return
      * an empty collection; or if this Seller has previously
-     * been saved, it will retrieve related Sellers from storage.
+     * been saved, it will retrieve related SellerProductSellers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1937,44 +1937,44 @@ abstract class Seller implements ActiveRecordInterface
      * @return ObjectCollection|ChildSellerProduct[] List of ChildSellerProduct objects
      * @phpstan-return ObjectCollection&\Traversable<ChildSellerProduct}> List of ChildSellerProduct objects
      */
-    public function getSellersJoinSellerProductProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getSellerProductSellersJoinSellerProductIdProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildSellerProductQuery::create(null, $criteria);
-        $query->joinWith('SellerProductProduct', $joinBehavior);
+        $query->joinWith('SellerProductIdProduct', $joinBehavior);
 
-        return $this->getSellers($query, $con);
+        return $this->getSellerProductSellers($query, $con);
     }
 
     /**
-     * Clears out the collSellers collection
+     * Clears out the collAddressOwnerSellers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addSellers()
+     * @see addAddressOwnerSellers()
      */
-    public function clearSellers()
+    public function clearAddressOwnerSellers()
     {
-        $this->collSellers = null; // important to set this to NULL since that means it is uninitialized
+        $this->collAddressOwnerSellers = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collSellers collection loaded partially.
+     * Reset is the collAddressOwnerSellers collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialSellers($v = true): void
+    public function resetPartialAddressOwnerSellers($v = true): void
     {
-        $this->collSellersPartial = $v;
+        $this->collAddressOwnerSellersPartial = $v;
     }
 
     /**
-     * Initializes the collSellers collection.
+     * Initializes the collAddressOwnerSellers collection.
      *
-     * By default this just sets the collSellers collection to an empty array (like clearcollSellers());
+     * By default this just sets the collAddressOwnerSellers collection to an empty array (like clearcollAddressOwnerSellers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1983,16 +1983,16 @@ abstract class Seller implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initSellers(bool $overrideExisting = true): void
+    public function initAddressOwnerSellers(bool $overrideExisting = true): void
     {
-        if (null !== $this->collSellers && !$overrideExisting) {
+        if (null !== $this->collAddressOwnerSellers && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collSellers = new $collectionClassName;
-        $this->collSellers->setModel('\Buildings\AddressOwner');
+        $this->collAddressOwnerSellers = new $collectionClassName;
+        $this->collAddressOwnerSellers->setModel('\Buildings\AddressOwner');
     }
 
     /**
@@ -2010,57 +2010,57 @@ abstract class Seller implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner> List of ChildAddressOwner objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getAddressOwnerSellers(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
+        $partial = $this->collAddressOwnerSellersPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerSellers || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collSellers) {
-                    $this->initSellers();
+                if (null === $this->collAddressOwnerSellers) {
+                    $this->initAddressOwnerSellers();
                 } else {
                     $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-                    $collSellers = new $collectionClassName;
-                    $collSellers->setModel('\Buildings\AddressOwner');
+                    $collAddressOwnerSellers = new $collectionClassName;
+                    $collAddressOwnerSellers->setModel('\Buildings\AddressOwner');
 
-                    return $collSellers;
+                    return $collAddressOwnerSellers;
                 }
             } else {
-                $collSellers = ChildAddressOwnerQuery::create(null, $criteria)
-                    ->filterByAddressOwnerSeller($this)
+                $collAddressOwnerSellers = ChildAddressOwnerQuery::create(null, $criteria)
+                    ->filterByAddressOwnerIdSeller($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collSellersPartial && count($collSellers)) {
-                        $this->initSellers(false);
+                    if (false !== $this->collAddressOwnerSellersPartial && count($collAddressOwnerSellers)) {
+                        $this->initAddressOwnerSellers(false);
 
-                        foreach ($collSellers as $obj) {
-                            if (false == $this->collSellers->contains($obj)) {
-                                $this->collSellers->append($obj);
+                        foreach ($collAddressOwnerSellers as $obj) {
+                            if (false == $this->collAddressOwnerSellers->contains($obj)) {
+                                $this->collAddressOwnerSellers->append($obj);
                             }
                         }
 
-                        $this->collSellersPartial = true;
+                        $this->collAddressOwnerSellersPartial = true;
                     }
 
-                    return $collSellers;
+                    return $collAddressOwnerSellers;
                 }
 
-                if ($partial && $this->collSellers) {
-                    foreach ($this->collSellers as $obj) {
+                if ($partial && $this->collAddressOwnerSellers) {
+                    foreach ($this->collAddressOwnerSellers as $obj) {
                         if ($obj->isNew()) {
-                            $collSellers[] = $obj;
+                            $collAddressOwnerSellers[] = $obj;
                         }
                     }
                 }
 
-                $this->collSellers = $collSellers;
-                $this->collSellersPartial = false;
+                $this->collAddressOwnerSellers = $collAddressOwnerSellers;
+                $this->collAddressOwnerSellersPartial = false;
             }
         }
 
-        return $this->collSellers;
+        return $this->collAddressOwnerSellers;
     }
 
     /**
@@ -2069,29 +2069,29 @@ abstract class Seller implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $sellers A Propel collection.
+     * @param Collection $addressOwnerSellers A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setSellers(Collection $sellers, ?ConnectionInterface $con = null)
+    public function setAddressOwnerSellers(Collection $addressOwnerSellers, ?ConnectionInterface $con = null)
     {
-        /** @var ChildAddressOwner[] $sellersToDelete */
-        $sellersToDelete = $this->getSellers(new Criteria(), $con)->diff($sellers);
+        /** @var ChildAddressOwner[] $addressOwnerSellersToDelete */
+        $addressOwnerSellersToDelete = $this->getAddressOwnerSellers(new Criteria(), $con)->diff($addressOwnerSellers);
 
 
-        $this->sellersScheduledForDeletion = $sellersToDelete;
+        $this->addressOwnerSellersScheduledForDeletion = $addressOwnerSellersToDelete;
 
-        foreach ($sellersToDelete as $sellerRemoved) {
-            $sellerRemoved->setAddressOwnerSeller(null);
+        foreach ($addressOwnerSellersToDelete as $addressOwnerSellerRemoved) {
+            $addressOwnerSellerRemoved->setAddressOwnerIdSeller(null);
         }
 
-        $this->collSellers = null;
-        foreach ($sellers as $seller) {
-            $this->addSeller($seller);
+        $this->collAddressOwnerSellers = null;
+        foreach ($addressOwnerSellers as $addressOwnerSeller) {
+            $this->addAddressOwnerSeller($addressOwnerSeller);
         }
 
-        $this->collSellers = $sellers;
-        $this->collSellersPartial = false;
+        $this->collAddressOwnerSellers = $addressOwnerSellers;
+        $this->collAddressOwnerSellersPartial = false;
 
         return $this;
     }
@@ -2105,16 +2105,16 @@ abstract class Seller implements ActiveRecordInterface
      * @return int Count of related AddressOwner objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countAddressOwnerSellers(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collSellersPartial && !$this->isNew();
-        if (null === $this->collSellers || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSellers) {
+        $partial = $this->collAddressOwnerSellersPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerSellers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAddressOwnerSellers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getSellers());
+                return count($this->getAddressOwnerSellers());
             }
 
             $query = ChildAddressOwnerQuery::create(null, $criteria);
@@ -2123,11 +2123,11 @@ abstract class Seller implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByAddressOwnerSeller($this)
+                ->filterByAddressOwnerIdSeller($this)
                 ->count($con);
         }
 
-        return count($this->collSellers);
+        return count($this->collAddressOwnerSellers);
     }
 
     /**
@@ -2137,18 +2137,18 @@ abstract class Seller implements ActiveRecordInterface
      * @param ChildAddressOwner $l ChildAddressOwner
      * @return $this The current object (for fluent API support)
      */
-    public function addSeller(ChildAddressOwner $l)
+    public function addAddressOwnerSeller(ChildAddressOwner $l)
     {
-        if ($this->collSellers === null) {
-            $this->initSellers();
-            $this->collSellersPartial = true;
+        if ($this->collAddressOwnerSellers === null) {
+            $this->initAddressOwnerSellers();
+            $this->collAddressOwnerSellersPartial = true;
         }
 
-        if (!$this->collSellers->contains($l)) {
-            $this->doAddSeller($l);
+        if (!$this->collAddressOwnerSellers->contains($l)) {
+            $this->doAddAddressOwnerSeller($l);
 
-            if ($this->sellersScheduledForDeletion and $this->sellersScheduledForDeletion->contains($l)) {
-                $this->sellersScheduledForDeletion->remove($this->sellersScheduledForDeletion->search($l));
+            if ($this->addressOwnerSellersScheduledForDeletion and $this->addressOwnerSellersScheduledForDeletion->contains($l)) {
+                $this->addressOwnerSellersScheduledForDeletion->remove($this->addressOwnerSellersScheduledForDeletion->search($l));
             }
         }
 
@@ -2156,29 +2156,29 @@ abstract class Seller implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildAddressOwner $seller The ChildAddressOwner object to add.
+     * @param ChildAddressOwner $addressOwnerSeller The ChildAddressOwner object to add.
      */
-    protected function doAddSeller(ChildAddressOwner $seller): void
+    protected function doAddAddressOwnerSeller(ChildAddressOwner $addressOwnerSeller): void
     {
-        $this->collSellers[]= $seller;
-        $seller->setAddressOwnerSeller($this);
+        $this->collAddressOwnerSellers[]= $addressOwnerSeller;
+        $addressOwnerSeller->setAddressOwnerIdSeller($this);
     }
 
     /**
-     * @param ChildAddressOwner $seller The ChildAddressOwner object to remove.
+     * @param ChildAddressOwner $addressOwnerSeller The ChildAddressOwner object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeSeller(ChildAddressOwner $seller)
+    public function removeAddressOwnerSeller(ChildAddressOwner $addressOwnerSeller)
     {
-        if ($this->getSellers()->contains($seller)) {
-            $pos = $this->collSellers->search($seller);
-            $this->collSellers->remove($pos);
-            if (null === $this->sellersScheduledForDeletion) {
-                $this->sellersScheduledForDeletion = clone $this->collSellers;
-                $this->sellersScheduledForDeletion->clear();
+        if ($this->getAddressOwnerSellers()->contains($addressOwnerSeller)) {
+            $pos = $this->collAddressOwnerSellers->search($addressOwnerSeller);
+            $this->collAddressOwnerSellers->remove($pos);
+            if (null === $this->addressOwnerSellersScheduledForDeletion) {
+                $this->addressOwnerSellersScheduledForDeletion = clone $this->collAddressOwnerSellers;
+                $this->addressOwnerSellersScheduledForDeletion->clear();
             }
-            $this->sellersScheduledForDeletion[]= $seller;
-            $seller->setAddressOwnerSeller(null);
+            $this->addressOwnerSellersScheduledForDeletion[]= $addressOwnerSeller;
+            $addressOwnerSeller->setAddressOwnerIdSeller(null);
         }
 
         return $this;
@@ -2190,7 +2190,7 @@ abstract class Seller implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Seller is new, it will return
      * an empty collection; or if this Seller has previously
-     * been saved, it will retrieve related Sellers from storage.
+     * been saved, it will retrieve related AddressOwnerSellers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2202,12 +2202,12 @@ abstract class Seller implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getSellersJoinAddressOwnerId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerSellersJoinAddressOwnerId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
         $query->joinWith('AddressOwnerId', $joinBehavior);
 
-        return $this->getSellers($query, $con);
+        return $this->getAddressOwnerSellers($query, $con);
     }
 
 
@@ -2216,7 +2216,7 @@ abstract class Seller implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Seller is new, it will return
      * an empty collection; or if this Seller has previously
-     * been saved, it will retrieve related Sellers from storage.
+     * been saved, it will retrieve related AddressOwnerSellers from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -2228,12 +2228,12 @@ abstract class Seller implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getSellersJoinAddressOwnerClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerSellersJoinAddressOwnerIdClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
-        $query->joinWith('AddressOwnerClient', $joinBehavior);
+        $query->joinWith('AddressOwnerIdClient', $joinBehavior);
 
-        return $this->getSellers($query, $con);
+        return $this->getAddressOwnerSellers($query, $con);
     }
 
     /**
@@ -2272,26 +2272,26 @@ abstract class Seller implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collSellers) {
-                foreach ($this->collSellers as $o) {
+            if ($this->collOrderSellers) {
+                foreach ($this->collOrderSellers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSellers) {
-                foreach ($this->collSellers as $o) {
+            if ($this->collSellerProductSellers) {
+                foreach ($this->collSellerProductSellers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collSellers) {
-                foreach ($this->collSellers as $o) {
+            if ($this->collAddressOwnerSellers) {
+                foreach ($this->collAddressOwnerSellers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collSellers = null;
-        $this->collSellers = null;
-        $this->collSellers = null;
+        $this->collOrderSellers = null;
+        $this->collSellerProductSellers = null;
+        $this->collAddressOwnerSellers = null;
         return $this;
     }
 

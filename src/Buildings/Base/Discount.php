@@ -123,12 +123,12 @@ abstract class Discount implements ActiveRecordInterface
     /**
      * @var        ChildProduct
      */
-    protected $aDiscountProduct;
+    protected $aDiscountIdProduct;
 
     /**
      * @var        ChildCategory
      */
-    protected $aDiscountCategory;
+    protected $aDiscountIdCategory;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -531,8 +531,8 @@ abstract class Discount implements ActiveRecordInterface
             $this->modifiedColumns[DiscountTableMap::COL_ID_PRODUCT] = true;
         }
 
-        if ($this->aDiscountProduct !== null && $this->aDiscountProduct->getId() !== $v) {
-            $this->aDiscountProduct = null;
+        if ($this->aDiscountIdProduct !== null && $this->aDiscountIdProduct->getId() !== $v) {
+            $this->aDiscountIdProduct = null;
         }
 
         return $this;
@@ -555,8 +555,8 @@ abstract class Discount implements ActiveRecordInterface
             $this->modifiedColumns[DiscountTableMap::COL_ID_CATEGORY] = true;
         }
 
-        if ($this->aDiscountCategory !== null && $this->aDiscountCategory->getId() !== $v) {
-            $this->aDiscountCategory = null;
+        if ($this->aDiscountIdCategory !== null && $this->aDiscountIdCategory->getId() !== $v) {
+            $this->aDiscountIdCategory = null;
         }
 
         return $this;
@@ -735,11 +735,11 @@ abstract class Discount implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aDiscountProduct !== null && $this->id_product !== $this->aDiscountProduct->getId()) {
-            $this->aDiscountProduct = null;
+        if ($this->aDiscountIdProduct !== null && $this->id_product !== $this->aDiscountIdProduct->getId()) {
+            $this->aDiscountIdProduct = null;
         }
-        if ($this->aDiscountCategory !== null && $this->id_category !== $this->aDiscountCategory->getId()) {
-            $this->aDiscountCategory = null;
+        if ($this->aDiscountIdCategory !== null && $this->id_category !== $this->aDiscountIdCategory->getId()) {
+            $this->aDiscountIdCategory = null;
         }
     }
 
@@ -780,8 +780,8 @@ abstract class Discount implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aDiscountProduct = null;
-            $this->aDiscountCategory = null;
+            $this->aDiscountIdProduct = null;
+            $this->aDiscountIdCategory = null;
         } // if (deep)
     }
 
@@ -890,18 +890,18 @@ abstract class Discount implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aDiscountProduct !== null) {
-                if ($this->aDiscountProduct->isModified() || $this->aDiscountProduct->isNew()) {
-                    $affectedRows += $this->aDiscountProduct->save($con);
+            if ($this->aDiscountIdProduct !== null) {
+                if ($this->aDiscountIdProduct->isModified() || $this->aDiscountIdProduct->isNew()) {
+                    $affectedRows += $this->aDiscountIdProduct->save($con);
                 }
-                $this->setDiscountProduct($this->aDiscountProduct);
+                $this->setDiscountIdProduct($this->aDiscountIdProduct);
             }
 
-            if ($this->aDiscountCategory !== null) {
-                if ($this->aDiscountCategory->isModified() || $this->aDiscountCategory->isNew()) {
-                    $affectedRows += $this->aDiscountCategory->save($con);
+            if ($this->aDiscountIdCategory !== null) {
+                if ($this->aDiscountIdCategory->isModified() || $this->aDiscountIdCategory->isNew()) {
+                    $affectedRows += $this->aDiscountIdCategory->save($con);
                 }
-                $this->setDiscountCategory($this->aDiscountCategory);
+                $this->setDiscountIdCategory($this->aDiscountIdCategory);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1134,7 +1134,7 @@ abstract class Discount implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aDiscountProduct) {
+            if (null !== $this->aDiscountIdProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1144,12 +1144,12 @@ abstract class Discount implements ActiveRecordInterface
                         $key = 'product';
                         break;
                     default:
-                        $key = 'DiscountProduct';
+                        $key = 'DiscountIdProduct';
                 }
 
-                $result[$key] = $this->aDiscountProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aDiscountIdProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aDiscountCategory) {
+            if (null !== $this->aDiscountIdCategory) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1159,10 +1159,10 @@ abstract class Discount implements ActiveRecordInterface
                         $key = 'category';
                         break;
                     default:
-                        $key = 'DiscountCategory';
+                        $key = 'DiscountIdCategory';
                 }
 
-                $result[$key] = $this->aDiscountCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aDiscountIdCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1461,7 +1461,7 @@ abstract class Discount implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setDiscountProduct(ChildProduct $v = null)
+    public function setDiscountIdProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setIdProduct(NULL);
@@ -1469,12 +1469,12 @@ abstract class Discount implements ActiveRecordInterface
             $this->setIdProduct($v->getId());
         }
 
-        $this->aDiscountProduct = $v;
+        $this->aDiscountIdProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addProduct($this);
+            $v->addDiscountProductProduct($this);
         }
 
 
@@ -1489,20 +1489,20 @@ abstract class Discount implements ActiveRecordInterface
      * @return ChildProduct|null The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getDiscountProduct(?ConnectionInterface $con = null)
+    public function getDiscountIdProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aDiscountProduct === null && ($this->id_product != 0)) {
-            $this->aDiscountProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
+        if ($this->aDiscountIdProduct === null && ($this->id_product != 0)) {
+            $this->aDiscountIdProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aDiscountProduct->addProducts($this);
+                $this->aDiscountIdProduct->addDiscountProductProducts($this);
              */
         }
 
-        return $this->aDiscountProduct;
+        return $this->aDiscountIdProduct;
     }
 
     /**
@@ -1512,7 +1512,7 @@ abstract class Discount implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setDiscountCategory(ChildCategory $v = null)
+    public function setDiscountIdCategory(ChildCategory $v = null)
     {
         if ($v === null) {
             $this->setIdCategory(NULL);
@@ -1520,12 +1520,12 @@ abstract class Discount implements ActiveRecordInterface
             $this->setIdCategory($v->getId());
         }
 
-        $this->aDiscountCategory = $v;
+        $this->aDiscountIdCategory = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildCategory object, it will not be re-added.
         if ($v !== null) {
-            $v->addCategory($this);
+            $v->addDiscountCategory($this);
         }
 
 
@@ -1540,20 +1540,20 @@ abstract class Discount implements ActiveRecordInterface
      * @return ChildCategory|null The associated ChildCategory object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getDiscountCategory(?ConnectionInterface $con = null)
+    public function getDiscountIdCategory(?ConnectionInterface $con = null)
     {
-        if ($this->aDiscountCategory === null && ($this->id_category != 0)) {
-            $this->aDiscountCategory = ChildCategoryQuery::create()->findPk($this->id_category, $con);
+        if ($this->aDiscountIdCategory === null && ($this->id_category != 0)) {
+            $this->aDiscountIdCategory = ChildCategoryQuery::create()->findPk($this->id_category, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aDiscountCategory->addCategories($this);
+                $this->aDiscountIdCategory->addDiscountCategories($this);
              */
         }
 
-        return $this->aDiscountCategory;
+        return $this->aDiscountIdCategory;
     }
 
     /**
@@ -1565,11 +1565,11 @@ abstract class Discount implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aDiscountProduct) {
-            $this->aDiscountProduct->removeProduct($this);
+        if (null !== $this->aDiscountIdProduct) {
+            $this->aDiscountIdProduct->removeDiscountProductProduct($this);
         }
-        if (null !== $this->aDiscountCategory) {
-            $this->aDiscountCategory->removeCategory($this);
+        if (null !== $this->aDiscountIdCategory) {
+            $this->aDiscountIdCategory->removeDiscountCategory($this);
         }
         $this->id = null;
         $this->type = null;
@@ -1602,8 +1602,8 @@ abstract class Discount implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aDiscountProduct = null;
-        $this->aDiscountCategory = null;
+        $this->aDiscountIdProduct = null;
+        $this->aDiscountIdCategory = null;
         return $this;
     }
 

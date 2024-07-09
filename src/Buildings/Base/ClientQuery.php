@@ -39,35 +39,35 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildClientQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildClientQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildClientQuery leftJoinClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery rightJoinClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery innerJoinClient($relationAlias = null) Adds a INNER JOIN clause to the query using the Client relation
+ * @method     ChildClientQuery leftJoinOrderClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the OrderClient relation
+ * @method     ChildClientQuery rightJoinOrderClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the OrderClient relation
+ * @method     ChildClientQuery innerJoinOrderClient($relationAlias = null) Adds a INNER JOIN clause to the query using the OrderClient relation
  *
- * @method     ChildClientQuery joinWithClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Client relation
+ * @method     ChildClientQuery joinWithOrderClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the OrderClient relation
  *
- * @method     ChildClientQuery leftJoinWithClient() Adds a LEFT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery rightJoinWithClient() Adds a RIGHT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery innerJoinWithClient() Adds a INNER JOIN clause and with to the query using the Client relation
+ * @method     ChildClientQuery leftJoinWithOrderClient() Adds a LEFT JOIN clause and with to the query using the OrderClient relation
+ * @method     ChildClientQuery rightJoinWithOrderClient() Adds a RIGHT JOIN clause and with to the query using the OrderClient relation
+ * @method     ChildClientQuery innerJoinWithOrderClient() Adds a INNER JOIN clause and with to the query using the OrderClient relation
  *
- * @method     ChildClientQuery leftJoinClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery rightJoinClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery innerJoinClient($relationAlias = null) Adds a INNER JOIN clause to the query using the Client relation
+ * @method     ChildClientQuery leftJoinCartClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the CartClient relation
+ * @method     ChildClientQuery rightJoinCartClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CartClient relation
+ * @method     ChildClientQuery innerJoinCartClient($relationAlias = null) Adds a INNER JOIN clause to the query using the CartClient relation
  *
- * @method     ChildClientQuery joinWithClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Client relation
+ * @method     ChildClientQuery joinWithCartClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the CartClient relation
  *
- * @method     ChildClientQuery leftJoinWithClient() Adds a LEFT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery rightJoinWithClient() Adds a RIGHT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery innerJoinWithClient() Adds a INNER JOIN clause and with to the query using the Client relation
+ * @method     ChildClientQuery leftJoinWithCartClient() Adds a LEFT JOIN clause and with to the query using the CartClient relation
+ * @method     ChildClientQuery rightJoinWithCartClient() Adds a RIGHT JOIN clause and with to the query using the CartClient relation
+ * @method     ChildClientQuery innerJoinWithCartClient() Adds a INNER JOIN clause and with to the query using the CartClient relation
  *
- * @method     ChildClientQuery leftJoinClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery rightJoinClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Client relation
- * @method     ChildClientQuery innerJoinClient($relationAlias = null) Adds a INNER JOIN clause to the query using the Client relation
+ * @method     ChildClientQuery leftJoinAddressOwnerClient($relationAlias = null) Adds a LEFT JOIN clause to the query using the AddressOwnerClient relation
+ * @method     ChildClientQuery rightJoinAddressOwnerClient($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AddressOwnerClient relation
+ * @method     ChildClientQuery innerJoinAddressOwnerClient($relationAlias = null) Adds a INNER JOIN clause to the query using the AddressOwnerClient relation
  *
- * @method     ChildClientQuery joinWithClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Client relation
+ * @method     ChildClientQuery joinWithAddressOwnerClient($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AddressOwnerClient relation
  *
- * @method     ChildClientQuery leftJoinWithClient() Adds a LEFT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery rightJoinWithClient() Adds a RIGHT JOIN clause and with to the query using the Client relation
- * @method     ChildClientQuery innerJoinWithClient() Adds a INNER JOIN clause and with to the query using the Client relation
+ * @method     ChildClientQuery leftJoinWithAddressOwnerClient() Adds a LEFT JOIN clause and with to the query using the AddressOwnerClient relation
+ * @method     ChildClientQuery rightJoinWithAddressOwnerClient() Adds a RIGHT JOIN clause and with to the query using the AddressOwnerClient relation
+ * @method     ChildClientQuery innerJoinWithAddressOwnerClient() Adds a INNER JOIN clause and with to the query using the AddressOwnerClient relation
  *
  * @method     \Buildings\OrderQuery|\Buildings\CartQuery|\Buildings\AddressOwnerQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -458,7 +458,7 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByClient($order, ?string $comparison = null)
+    public function filterByOrderClient($order, ?string $comparison = null)
     {
         if ($order instanceof \Buildings\Order) {
             $this
@@ -467,28 +467,28 @@ abstract class ClientQuery extends ModelCriteria
             return $this;
         } elseif ($order instanceof ObjectCollection) {
             $this
-                ->useClientQuery()
+                ->useOrderClientQuery()
                 ->filterByPrimaryKeys($order->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByClient() only accepts arguments of type \Buildings\Order or Collection');
+            throw new PropelException('filterByOrderClient() only accepts arguments of type \Buildings\Order or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Client relation
+     * Adds a JOIN clause to the query using the OrderClient relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinOrderClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Client');
+        $relationMap = $tableMap->getRelation('OrderClient');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -503,14 +503,14 @@ abstract class ClientQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Client');
+            $this->addJoinObject($join, 'OrderClient');
         }
 
         return $this;
     }
 
     /**
-     * Use the Client relation Order object
+     * Use the OrderClient relation Order object
      *
      * @see useQuery()
      *
@@ -520,15 +520,15 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\OrderQuery A secondary query class using the current class as primary query
      */
-    public function useClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useOrderClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinClient($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Client', '\Buildings\OrderQuery');
+            ->joinOrderClient($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'OrderClient', '\Buildings\OrderQuery');
     }
 
     /**
-     * Use the Client relation Order object
+     * Use the OrderClient relation Order object
      *
      * @param callable(\Buildings\OrderQuery):\Buildings\OrderQuery $callable A function working on the related query
      *
@@ -538,12 +538,12 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withClientQuery(
+    public function withOrderClientQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useClientQuery(
+        $relatedQuery = $this->useOrderClientQuery(
             $relationAlias,
             $joinType
         );
@@ -554,7 +554,7 @@ abstract class ClientQuery extends ModelCriteria
     }
 
     /**
-     * Use the Client relation to the Order table for an EXISTS query.
+     * Use the OrderClient relation to the Order table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -564,32 +564,32 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\OrderQuery The inner query object of the EXISTS statement
      */
-    public function useClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useOrderClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\OrderQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('OrderClient', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the Client relation to the Order table for a NOT EXISTS query.
+     * Use the OrderClient relation to the Order table for a NOT EXISTS query.
      *
-     * @see useClientExistsQuery()
+     * @see useOrderClientExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\OrderQuery The inner query object of the NOT EXISTS statement
      */
-    public function useClientNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useOrderClientNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\OrderQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('OrderClient', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the Client relation to the Order table for an IN query.
+     * Use the OrderClient relation to the Order table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -599,27 +599,27 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\OrderQuery The inner query object of the IN statement
      */
-    public function useInClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInOrderClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\OrderQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('OrderClient', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the Client relation to the Order table for a NOT IN query.
+     * Use the OrderClient relation to the Order table for a NOT IN query.
      *
-     * @see useClientInQuery()
+     * @see useOrderClientInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\OrderQuery The inner query object of the NOT IN statement
      */
-    public function useNotInClientQuery($modelAlias = null, $queryClass = null)
+    public function useNotInOrderClientQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\OrderQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('OrderClient', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -631,7 +631,7 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByClient($cart, ?string $comparison = null)
+    public function filterByCartClient($cart, ?string $comparison = null)
     {
         if ($cart instanceof \Buildings\Cart) {
             $this
@@ -640,28 +640,28 @@ abstract class ClientQuery extends ModelCriteria
             return $this;
         } elseif ($cart instanceof ObjectCollection) {
             $this
-                ->useClientQuery()
+                ->useCartClientQuery()
                 ->filterByPrimaryKeys($cart->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByClient() only accepts arguments of type \Buildings\Cart or Collection');
+            throw new PropelException('filterByCartClient() only accepts arguments of type \Buildings\Cart or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Client relation
+     * Adds a JOIN clause to the query using the CartClient relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinClient(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinCartClient(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Client');
+        $relationMap = $tableMap->getRelation('CartClient');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -676,14 +676,14 @@ abstract class ClientQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Client');
+            $this->addJoinObject($join, 'CartClient');
         }
 
         return $this;
     }
 
     /**
-     * Use the Client relation Cart object
+     * Use the CartClient relation Cart object
      *
      * @see useQuery()
      *
@@ -693,15 +693,15 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery A secondary query class using the current class as primary query
      */
-    public function useClientQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCartClientQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinClient($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Client', '\Buildings\CartQuery');
+            ->joinCartClient($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CartClient', '\Buildings\CartQuery');
     }
 
     /**
-     * Use the Client relation Cart object
+     * Use the CartClient relation Cart object
      *
      * @param callable(\Buildings\CartQuery):\Buildings\CartQuery $callable A function working on the related query
      *
@@ -711,12 +711,12 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withClientQuery(
+    public function withCartClientQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useClientQuery(
+        $relatedQuery = $this->useCartClientQuery(
             $relationAlias,
             $joinType
         );
@@ -727,7 +727,7 @@ abstract class ClientQuery extends ModelCriteria
     }
 
     /**
-     * Use the Client relation to the Cart table for an EXISTS query.
+     * Use the CartClient relation to the Cart table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -737,32 +737,32 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery The inner query object of the EXISTS statement
      */
-    public function useClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useCartClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('CartClient', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the Client relation to the Cart table for a NOT EXISTS query.
+     * Use the CartClient relation to the Cart table for a NOT EXISTS query.
      *
-     * @see useClientExistsQuery()
+     * @see useCartClientExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CartQuery The inner query object of the NOT EXISTS statement
      */
-    public function useClientNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useCartClientNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('CartClient', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the Client relation to the Cart table for an IN query.
+     * Use the CartClient relation to the Cart table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -772,27 +772,27 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\CartQuery The inner query object of the IN statement
      */
-    public function useInClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInCartClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('CartClient', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the Client relation to the Cart table for a NOT IN query.
+     * Use the CartClient relation to the Cart table for a NOT IN query.
      *
-     * @see useClientInQuery()
+     * @see useCartClientInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\CartQuery The inner query object of the NOT IN statement
      */
-    public function useNotInClientQuery($modelAlias = null, $queryClass = null)
+    public function useNotInCartClientQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\CartQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('CartClient', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -804,7 +804,7 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByClient($addressOwner, ?string $comparison = null)
+    public function filterByAddressOwnerClient($addressOwner, ?string $comparison = null)
     {
         if ($addressOwner instanceof \Buildings\AddressOwner) {
             $this
@@ -813,28 +813,28 @@ abstract class ClientQuery extends ModelCriteria
             return $this;
         } elseif ($addressOwner instanceof ObjectCollection) {
             $this
-                ->useClientQuery()
+                ->useAddressOwnerClientQuery()
                 ->filterByPrimaryKeys($addressOwner->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByClient() only accepts arguments of type \Buildings\AddressOwner or Collection');
+            throw new PropelException('filterByAddressOwnerClient() only accepts arguments of type \Buildings\AddressOwner or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Client relation
+     * Adds a JOIN clause to the query using the AddressOwnerClient relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinAddressOwnerClient(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Client');
+        $relationMap = $tableMap->getRelation('AddressOwnerClient');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -849,14 +849,14 @@ abstract class ClientQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Client');
+            $this->addJoinObject($join, 'AddressOwnerClient');
         }
 
         return $this;
     }
 
     /**
-     * Use the Client relation AddressOwner object
+     * Use the AddressOwnerClient relation AddressOwner object
      *
      * @see useQuery()
      *
@@ -866,15 +866,15 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\AddressOwnerQuery A secondary query class using the current class as primary query
      */
-    public function useClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useAddressOwnerClientQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinClient($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Client', '\Buildings\AddressOwnerQuery');
+            ->joinAddressOwnerClient($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AddressOwnerClient', '\Buildings\AddressOwnerQuery');
     }
 
     /**
-     * Use the Client relation AddressOwner object
+     * Use the AddressOwnerClient relation AddressOwner object
      *
      * @param callable(\Buildings\AddressOwnerQuery):\Buildings\AddressOwnerQuery $callable A function working on the related query
      *
@@ -884,12 +884,12 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withClientQuery(
+    public function withAddressOwnerClientQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useClientQuery(
+        $relatedQuery = $this->useAddressOwnerClientQuery(
             $relationAlias,
             $joinType
         );
@@ -900,7 +900,7 @@ abstract class ClientQuery extends ModelCriteria
     }
 
     /**
-     * Use the Client relation to the AddressOwner table for an EXISTS query.
+     * Use the AddressOwnerClient relation to the AddressOwner table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -910,32 +910,32 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\AddressOwnerQuery The inner query object of the EXISTS statement
      */
-    public function useClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useAddressOwnerClientExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
         /** @var $q \Buildings\AddressOwnerQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, $typeOfExists);
+        $q = $this->useExistsQuery('AddressOwnerClient', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the Client relation to the AddressOwner table for a NOT EXISTS query.
+     * Use the AddressOwnerClient relation to the AddressOwner table for a NOT EXISTS query.
      *
-     * @see useClientExistsQuery()
+     * @see useAddressOwnerClientExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \Buildings\AddressOwnerQuery The inner query object of the NOT EXISTS statement
      */
-    public function useClientNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useAddressOwnerClientNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\AddressOwnerQuery */
-        $q = $this->useExistsQuery('Client', $modelAlias, $queryClass, 'NOT EXISTS');
+        $q = $this->useExistsQuery('AddressOwnerClient', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the Client relation to the AddressOwner table for an IN query.
+     * Use the AddressOwnerClient relation to the AddressOwner table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -945,27 +945,27 @@ abstract class ClientQuery extends ModelCriteria
      *
      * @return \Buildings\AddressOwnerQuery The inner query object of the IN statement
      */
-    public function useInClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInAddressOwnerClientQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
         /** @var $q \Buildings\AddressOwnerQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, $typeOfIn);
+        $q = $this->useInQuery('AddressOwnerClient', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the Client relation to the AddressOwner table for a NOT IN query.
+     * Use the AddressOwnerClient relation to the AddressOwner table for a NOT IN query.
      *
-     * @see useClientInQuery()
+     * @see useAddressOwnerClientInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
      * @return \Buildings\AddressOwnerQuery The inner query object of the NOT IN statement
      */
-    public function useNotInClientQuery($modelAlias = null, $queryClass = null)
+    public function useNotInAddressOwnerClientQuery($modelAlias = null, $queryClass = null)
     {
         /** @var $q \Buildings\AddressOwnerQuery */
-        $q = $this->useInQuery('Client', $modelAlias, $queryClass, 'NOT IN');
+        $q = $this->useInQuery('AddressOwnerClient', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

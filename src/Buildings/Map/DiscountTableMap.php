@@ -238,14 +238,14 @@ class DiscountTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('DiscountProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('DiscountIdProduct', '\\Buildings\\Product', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_product',
     1 => ':id',
   ),
 ), 'CASCADE', null, null, false);
-        $this->addRelation('DiscountCategory', '\\Buildings\\Category', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('DiscountIdCategory', '\\Buildings\\Category', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':id_category',

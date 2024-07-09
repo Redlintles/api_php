@@ -208,27 +208,27 @@ class SellerTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Seller', '\\Buildings\\Order', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('OrderSeller', '\\Buildings\\Order', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_seller',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Sellers', false);
-        $this->addRelation('Seller', '\\Buildings\\SellerProduct', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'OrderSellers', false);
+        $this->addRelation('SellerProductSeller', '\\Buildings\\SellerProduct', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_seller',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Sellers', false);
-        $this->addRelation('Seller', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
+), 'CASCADE', null, 'SellerProductSellers', false);
+        $this->addRelation('AddressOwnerSeller', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_seller',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Sellers', false);
+), 'CASCADE', null, 'AddressOwnerSellers', false);
     }
 
     /**

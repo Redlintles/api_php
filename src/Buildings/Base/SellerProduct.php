@@ -84,12 +84,12 @@ abstract class SellerProduct implements ActiveRecordInterface
     /**
      * @var        ChildSeller
      */
-    protected $aSellerProductId;
+    protected $aSellerProductIdSeller;
 
     /**
      * @var        ChildProduct
      */
-    protected $aSellerProductProduct;
+    protected $aSellerProductIdProduct;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -376,8 +376,8 @@ abstract class SellerProduct implements ActiveRecordInterface
             $this->modifiedColumns[SellerProductTableMap::COL_ID_SELLER] = true;
         }
 
-        if ($this->aSellerProductId !== null && $this->aSellerProductId->getId() !== $v) {
-            $this->aSellerProductId = null;
+        if ($this->aSellerProductIdSeller !== null && $this->aSellerProductIdSeller->getId() !== $v) {
+            $this->aSellerProductIdSeller = null;
         }
 
         return $this;
@@ -400,8 +400,8 @@ abstract class SellerProduct implements ActiveRecordInterface
             $this->modifiedColumns[SellerProductTableMap::COL_ID_PRODUCT] = true;
         }
 
-        if ($this->aSellerProductProduct !== null && $this->aSellerProductProduct->getId() !== $v) {
-            $this->aSellerProductProduct = null;
+        if ($this->aSellerProductIdProduct !== null && $this->aSellerProductIdProduct->getId() !== $v) {
+            $this->aSellerProductIdProduct = null;
         }
 
         return $this;
@@ -487,11 +487,11 @@ abstract class SellerProduct implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aSellerProductId !== null && $this->id_seller !== $this->aSellerProductId->getId()) {
-            $this->aSellerProductId = null;
+        if ($this->aSellerProductIdSeller !== null && $this->id_seller !== $this->aSellerProductIdSeller->getId()) {
+            $this->aSellerProductIdSeller = null;
         }
-        if ($this->aSellerProductProduct !== null && $this->id_product !== $this->aSellerProductProduct->getId()) {
-            $this->aSellerProductProduct = null;
+        if ($this->aSellerProductIdProduct !== null && $this->id_product !== $this->aSellerProductIdProduct->getId()) {
+            $this->aSellerProductIdProduct = null;
         }
     }
 
@@ -532,8 +532,8 @@ abstract class SellerProduct implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aSellerProductId = null;
-            $this->aSellerProductProduct = null;
+            $this->aSellerProductIdSeller = null;
+            $this->aSellerProductIdProduct = null;
         } // if (deep)
     }
 
@@ -642,18 +642,18 @@ abstract class SellerProduct implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aSellerProductId !== null) {
-                if ($this->aSellerProductId->isModified() || $this->aSellerProductId->isNew()) {
-                    $affectedRows += $this->aSellerProductId->save($con);
+            if ($this->aSellerProductIdSeller !== null) {
+                if ($this->aSellerProductIdSeller->isModified() || $this->aSellerProductIdSeller->isNew()) {
+                    $affectedRows += $this->aSellerProductIdSeller->save($con);
                 }
-                $this->setSellerProductId($this->aSellerProductId);
+                $this->setSellerProductIdSeller($this->aSellerProductIdSeller);
             }
 
-            if ($this->aSellerProductProduct !== null) {
-                if ($this->aSellerProductProduct->isModified() || $this->aSellerProductProduct->isNew()) {
-                    $affectedRows += $this->aSellerProductProduct->save($con);
+            if ($this->aSellerProductIdProduct !== null) {
+                if ($this->aSellerProductIdProduct->isModified() || $this->aSellerProductIdProduct->isNew()) {
+                    $affectedRows += $this->aSellerProductIdProduct->save($con);
                 }
-                $this->setSellerProductProduct($this->aSellerProductProduct);
+                $this->setSellerProductIdProduct($this->aSellerProductIdProduct);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -812,7 +812,7 @@ abstract class SellerProduct implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aSellerProductId) {
+            if (null !== $this->aSellerProductIdSeller) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -822,12 +822,12 @@ abstract class SellerProduct implements ActiveRecordInterface
                         $key = 'seller';
                         break;
                     default:
-                        $key = 'SellerProductId';
+                        $key = 'SellerProductIdSeller';
                 }
 
-                $result[$key] = $this->aSellerProductId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aSellerProductIdSeller->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aSellerProductProduct) {
+            if (null !== $this->aSellerProductIdProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -837,10 +837,10 @@ abstract class SellerProduct implements ActiveRecordInterface
                         $key = 'product';
                         break;
                     default:
-                        $key = 'SellerProductProduct';
+                        $key = 'SellerProductIdProduct';
                 }
 
-                $result[$key] = $this->aSellerProductProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aSellerProductIdProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1078,7 +1078,7 @@ abstract class SellerProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setSellerProductId(ChildSeller $v = null)
+    public function setSellerProductIdSeller(ChildSeller $v = null)
     {
         if ($v === null) {
             $this->setIdSeller(1);
@@ -1086,12 +1086,12 @@ abstract class SellerProduct implements ActiveRecordInterface
             $this->setIdSeller($v->getId());
         }
 
-        $this->aSellerProductId = $v;
+        $this->aSellerProductIdSeller = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildSeller object, it will not be re-added.
         if ($v !== null) {
-            $v->addSeller($this);
+            $v->addSellerProductSeller($this);
         }
 
 
@@ -1106,20 +1106,20 @@ abstract class SellerProduct implements ActiveRecordInterface
      * @return ChildSeller The associated ChildSeller object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getSellerProductId(?ConnectionInterface $con = null)
+    public function getSellerProductIdSeller(?ConnectionInterface $con = null)
     {
-        if ($this->aSellerProductId === null && ($this->id_seller != 0)) {
-            $this->aSellerProductId = ChildSellerQuery::create()->findPk($this->id_seller, $con);
+        if ($this->aSellerProductIdSeller === null && ($this->id_seller != 0)) {
+            $this->aSellerProductIdSeller = ChildSellerQuery::create()->findPk($this->id_seller, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aSellerProductId->addSellers($this);
+                $this->aSellerProductIdSeller->addSellerProductSellers($this);
              */
         }
 
-        return $this->aSellerProductId;
+        return $this->aSellerProductIdSeller;
     }
 
     /**
@@ -1129,7 +1129,7 @@ abstract class SellerProduct implements ActiveRecordInterface
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setSellerProductProduct(ChildProduct $v = null)
+    public function setSellerProductIdProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setIdProduct(1);
@@ -1137,12 +1137,12 @@ abstract class SellerProduct implements ActiveRecordInterface
             $this->setIdProduct($v->getId());
         }
 
-        $this->aSellerProductProduct = $v;
+        $this->aSellerProductIdProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addProduct($this);
+            $v->addSellerProductProduct($this);
         }
 
 
@@ -1157,20 +1157,20 @@ abstract class SellerProduct implements ActiveRecordInterface
      * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getSellerProductProduct(?ConnectionInterface $con = null)
+    public function getSellerProductIdProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aSellerProductProduct === null && ($this->id_product != 0)) {
-            $this->aSellerProductProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
+        if ($this->aSellerProductIdProduct === null && ($this->id_product != 0)) {
+            $this->aSellerProductIdProduct = ChildProductQuery::create()->findPk($this->id_product, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aSellerProductProduct->addProducts($this);
+                $this->aSellerProductIdProduct->addSellerProductProducts($this);
              */
         }
 
-        return $this->aSellerProductProduct;
+        return $this->aSellerProductIdProduct;
     }
 
     /**
@@ -1182,11 +1182,11 @@ abstract class SellerProduct implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aSellerProductId) {
-            $this->aSellerProductId->removeSeller($this);
+        if (null !== $this->aSellerProductIdSeller) {
+            $this->aSellerProductIdSeller->removeSellerProductSeller($this);
         }
-        if (null !== $this->aSellerProductProduct) {
-            $this->aSellerProductProduct->removeProduct($this);
+        if (null !== $this->aSellerProductIdProduct) {
+            $this->aSellerProductIdProduct->removeSellerProductProduct($this);
         }
         $this->id_seller = null;
         $this->id_product = null;
@@ -1214,8 +1214,8 @@ abstract class SellerProduct implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aSellerProductId = null;
-        $this->aSellerProductProduct = null;
+        $this->aSellerProductIdSeller = null;
+        $this->aSellerProductIdProduct = null;
         return $this;
     }
 

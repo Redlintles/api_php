@@ -230,13 +230,13 @@ class AddressTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Address', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('AddressOwnerAddress', '\\Buildings\\AddressOwner', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':id_address',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Addresses', false);
+), 'CASCADE', null, 'AddressOwnerAddresses', false);
     }
 
     /**

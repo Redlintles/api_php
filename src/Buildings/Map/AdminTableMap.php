@@ -196,13 +196,13 @@ class AdminTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Admin', '\\Buildings\\Permission', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('PermissionAdminAdmin', '\\Buildings\\Permission', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':admin_id',
     1 => ':id',
   ),
-), 'CASCADE', null, 'Admins', false);
+), 'CASCADE', null, 'PermissionAdminAdmins', false);
     }
 
     /**

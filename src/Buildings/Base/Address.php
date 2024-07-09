@@ -125,8 +125,8 @@ abstract class Address implements ActiveRecordInterface
      * @var        ObjectCollection|ChildAddressOwner[] Collection to store aggregation of ChildAddressOwner objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner> Collection to store aggregation of ChildAddressOwner objects.
      */
-    protected $collAddresses;
-    protected $collAddressesPartial;
+    protected $collAddressOwnerAddresses;
+    protected $collAddressOwnerAddressesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -141,7 +141,7 @@ abstract class Address implements ActiveRecordInterface
      * @var ObjectCollection|ChildAddressOwner[]
      * @phpstan-var ObjectCollection&\Traversable<ChildAddressOwner>
      */
-    protected $addressesScheduledForDeletion = null;
+    protected $addressOwnerAddressesScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -747,7 +747,7 @@ abstract class Address implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collAddresses = null;
+            $this->collAddressOwnerAddresses = null;
 
         } // if (deep)
     }
@@ -863,17 +863,17 @@ abstract class Address implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->addressesScheduledForDeletion !== null) {
-                if (!$this->addressesScheduledForDeletion->isEmpty()) {
+            if ($this->addressOwnerAddressesScheduledForDeletion !== null) {
+                if (!$this->addressOwnerAddressesScheduledForDeletion->isEmpty()) {
                     \Buildings\AddressOwnerQuery::create()
-                        ->filterByPrimaryKeys($this->addressesScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->addressOwnerAddressesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->addressesScheduledForDeletion = null;
+                    $this->addressOwnerAddressesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collAddresses !== null) {
-                foreach ($this->collAddresses as $referrerFK) {
+            if ($this->collAddressOwnerAddresses !== null) {
+                foreach ($this->collAddressOwnerAddresses as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1091,7 +1091,7 @@ abstract class Address implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collAddresses) {
+            if (null !== $this->collAddressOwnerAddresses) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1101,10 +1101,10 @@ abstract class Address implements ActiveRecordInterface
                         $key = 'address_owners';
                         break;
                     default:
-                        $key = 'Addresses';
+                        $key = 'AddressOwnerAddresses';
                 }
 
-                $result[$key] = $this->collAddresses->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collAddressOwnerAddresses->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1374,9 +1374,9 @@ abstract class Address implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getAddresses() as $relObj) {
+            foreach ($this->getAddressOwnerAddresses() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAddress($relObj->copy($deepCopy));
+                    $copyObj->addAddressOwnerAddress($relObj->copy($deepCopy));
                 }
             }
 
@@ -1421,42 +1421,42 @@ abstract class Address implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('Address' === $relationName) {
-            $this->initAddresses();
+        if ('AddressOwnerAddress' === $relationName) {
+            $this->initAddressOwnerAddresses();
             return;
         }
     }
 
     /**
-     * Clears out the collAddresses collection
+     * Clears out the collAddressOwnerAddresses collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addAddresses()
+     * @see addAddressOwnerAddresses()
      */
-    public function clearAddresses()
+    public function clearAddressOwnerAddresses()
     {
-        $this->collAddresses = null; // important to set this to NULL since that means it is uninitialized
+        $this->collAddressOwnerAddresses = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collAddresses collection loaded partially.
+     * Reset is the collAddressOwnerAddresses collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialAddresses($v = true): void
+    public function resetPartialAddressOwnerAddresses($v = true): void
     {
-        $this->collAddressesPartial = $v;
+        $this->collAddressOwnerAddressesPartial = $v;
     }
 
     /**
-     * Initializes the collAddresses collection.
+     * Initializes the collAddressOwnerAddresses collection.
      *
-     * By default this just sets the collAddresses collection to an empty array (like clearcollAddresses());
+     * By default this just sets the collAddressOwnerAddresses collection to an empty array (like clearcollAddressOwnerAddresses());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1465,16 +1465,16 @@ abstract class Address implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initAddresses(bool $overrideExisting = true): void
+    public function initAddressOwnerAddresses(bool $overrideExisting = true): void
     {
-        if (null !== $this->collAddresses && !$overrideExisting) {
+        if (null !== $this->collAddressOwnerAddresses && !$overrideExisting) {
             return;
         }
 
         $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collAddresses = new $collectionClassName;
-        $this->collAddresses->setModel('\Buildings\AddressOwner');
+        $this->collAddressOwnerAddresses = new $collectionClassName;
+        $this->collAddressOwnerAddresses->setModel('\Buildings\AddressOwner');
     }
 
     /**
@@ -1492,57 +1492,57 @@ abstract class Address implements ActiveRecordInterface
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner> List of ChildAddressOwner objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getAddresses(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getAddressOwnerAddresses(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collAddressesPartial && !$this->isNew();
-        if (null === $this->collAddresses || null !== $criteria || $partial) {
+        $partial = $this->collAddressOwnerAddressesPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerAddresses || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collAddresses) {
-                    $this->initAddresses();
+                if (null === $this->collAddressOwnerAddresses) {
+                    $this->initAddressOwnerAddresses();
                 } else {
                     $collectionClassName = AddressOwnerTableMap::getTableMap()->getCollectionClassName();
 
-                    $collAddresses = new $collectionClassName;
-                    $collAddresses->setModel('\Buildings\AddressOwner');
+                    $collAddressOwnerAddresses = new $collectionClassName;
+                    $collAddressOwnerAddresses->setModel('\Buildings\AddressOwner');
 
-                    return $collAddresses;
+                    return $collAddressOwnerAddresses;
                 }
             } else {
-                $collAddresses = ChildAddressOwnerQuery::create(null, $criteria)
+                $collAddressOwnerAddresses = ChildAddressOwnerQuery::create(null, $criteria)
                     ->filterByAddressOwnerId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collAddressesPartial && count($collAddresses)) {
-                        $this->initAddresses(false);
+                    if (false !== $this->collAddressOwnerAddressesPartial && count($collAddressOwnerAddresses)) {
+                        $this->initAddressOwnerAddresses(false);
 
-                        foreach ($collAddresses as $obj) {
-                            if (false == $this->collAddresses->contains($obj)) {
-                                $this->collAddresses->append($obj);
+                        foreach ($collAddressOwnerAddresses as $obj) {
+                            if (false == $this->collAddressOwnerAddresses->contains($obj)) {
+                                $this->collAddressOwnerAddresses->append($obj);
                             }
                         }
 
-                        $this->collAddressesPartial = true;
+                        $this->collAddressOwnerAddressesPartial = true;
                     }
 
-                    return $collAddresses;
+                    return $collAddressOwnerAddresses;
                 }
 
-                if ($partial && $this->collAddresses) {
-                    foreach ($this->collAddresses as $obj) {
+                if ($partial && $this->collAddressOwnerAddresses) {
+                    foreach ($this->collAddressOwnerAddresses as $obj) {
                         if ($obj->isNew()) {
-                            $collAddresses[] = $obj;
+                            $collAddressOwnerAddresses[] = $obj;
                         }
                     }
                 }
 
-                $this->collAddresses = $collAddresses;
-                $this->collAddressesPartial = false;
+                $this->collAddressOwnerAddresses = $collAddressOwnerAddresses;
+                $this->collAddressOwnerAddressesPartial = false;
             }
         }
 
-        return $this->collAddresses;
+        return $this->collAddressOwnerAddresses;
     }
 
     /**
@@ -1551,29 +1551,29 @@ abstract class Address implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $addresses A Propel collection.
+     * @param Collection $addressOwnerAddresses A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setAddresses(Collection $addresses, ?ConnectionInterface $con = null)
+    public function setAddressOwnerAddresses(Collection $addressOwnerAddresses, ?ConnectionInterface $con = null)
     {
-        /** @var ChildAddressOwner[] $addressesToDelete */
-        $addressesToDelete = $this->getAddresses(new Criteria(), $con)->diff($addresses);
+        /** @var ChildAddressOwner[] $addressOwnerAddressesToDelete */
+        $addressOwnerAddressesToDelete = $this->getAddressOwnerAddresses(new Criteria(), $con)->diff($addressOwnerAddresses);
 
 
-        $this->addressesScheduledForDeletion = $addressesToDelete;
+        $this->addressOwnerAddressesScheduledForDeletion = $addressOwnerAddressesToDelete;
 
-        foreach ($addressesToDelete as $addressRemoved) {
-            $addressRemoved->setAddressOwnerId(null);
+        foreach ($addressOwnerAddressesToDelete as $addressOwnerAddressRemoved) {
+            $addressOwnerAddressRemoved->setAddressOwnerId(null);
         }
 
-        $this->collAddresses = null;
-        foreach ($addresses as $address) {
-            $this->addAddress($address);
+        $this->collAddressOwnerAddresses = null;
+        foreach ($addressOwnerAddresses as $addressOwnerAddress) {
+            $this->addAddressOwnerAddress($addressOwnerAddress);
         }
 
-        $this->collAddresses = $addresses;
-        $this->collAddressesPartial = false;
+        $this->collAddressOwnerAddresses = $addressOwnerAddresses;
+        $this->collAddressOwnerAddressesPartial = false;
 
         return $this;
     }
@@ -1587,16 +1587,16 @@ abstract class Address implements ActiveRecordInterface
      * @return int Count of related AddressOwner objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countAddresses(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countAddressOwnerAddresses(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collAddressesPartial && !$this->isNew();
-        if (null === $this->collAddresses || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAddresses) {
+        $partial = $this->collAddressOwnerAddressesPartial && !$this->isNew();
+        if (null === $this->collAddressOwnerAddresses || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAddressOwnerAddresses) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getAddresses());
+                return count($this->getAddressOwnerAddresses());
             }
 
             $query = ChildAddressOwnerQuery::create(null, $criteria);
@@ -1609,7 +1609,7 @@ abstract class Address implements ActiveRecordInterface
                 ->count($con);
         }
 
-        return count($this->collAddresses);
+        return count($this->collAddressOwnerAddresses);
     }
 
     /**
@@ -1619,18 +1619,18 @@ abstract class Address implements ActiveRecordInterface
      * @param ChildAddressOwner $l ChildAddressOwner
      * @return $this The current object (for fluent API support)
      */
-    public function addAddress(ChildAddressOwner $l)
+    public function addAddressOwnerAddress(ChildAddressOwner $l)
     {
-        if ($this->collAddresses === null) {
-            $this->initAddresses();
-            $this->collAddressesPartial = true;
+        if ($this->collAddressOwnerAddresses === null) {
+            $this->initAddressOwnerAddresses();
+            $this->collAddressOwnerAddressesPartial = true;
         }
 
-        if (!$this->collAddresses->contains($l)) {
-            $this->doAddAddress($l);
+        if (!$this->collAddressOwnerAddresses->contains($l)) {
+            $this->doAddAddressOwnerAddress($l);
 
-            if ($this->addressesScheduledForDeletion and $this->addressesScheduledForDeletion->contains($l)) {
-                $this->addressesScheduledForDeletion->remove($this->addressesScheduledForDeletion->search($l));
+            if ($this->addressOwnerAddressesScheduledForDeletion and $this->addressOwnerAddressesScheduledForDeletion->contains($l)) {
+                $this->addressOwnerAddressesScheduledForDeletion->remove($this->addressOwnerAddressesScheduledForDeletion->search($l));
             }
         }
 
@@ -1638,29 +1638,29 @@ abstract class Address implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildAddressOwner $address The ChildAddressOwner object to add.
+     * @param ChildAddressOwner $addressOwnerAddress The ChildAddressOwner object to add.
      */
-    protected function doAddAddress(ChildAddressOwner $address): void
+    protected function doAddAddressOwnerAddress(ChildAddressOwner $addressOwnerAddress): void
     {
-        $this->collAddresses[]= $address;
-        $address->setAddressOwnerId($this);
+        $this->collAddressOwnerAddresses[]= $addressOwnerAddress;
+        $addressOwnerAddress->setAddressOwnerId($this);
     }
 
     /**
-     * @param ChildAddressOwner $address The ChildAddressOwner object to remove.
+     * @param ChildAddressOwner $addressOwnerAddress The ChildAddressOwner object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeAddress(ChildAddressOwner $address)
+    public function removeAddressOwnerAddress(ChildAddressOwner $addressOwnerAddress)
     {
-        if ($this->getAddresses()->contains($address)) {
-            $pos = $this->collAddresses->search($address);
-            $this->collAddresses->remove($pos);
-            if (null === $this->addressesScheduledForDeletion) {
-                $this->addressesScheduledForDeletion = clone $this->collAddresses;
-                $this->addressesScheduledForDeletion->clear();
+        if ($this->getAddressOwnerAddresses()->contains($addressOwnerAddress)) {
+            $pos = $this->collAddressOwnerAddresses->search($addressOwnerAddress);
+            $this->collAddressOwnerAddresses->remove($pos);
+            if (null === $this->addressOwnerAddressesScheduledForDeletion) {
+                $this->addressOwnerAddressesScheduledForDeletion = clone $this->collAddressOwnerAddresses;
+                $this->addressOwnerAddressesScheduledForDeletion->clear();
             }
-            $this->addressesScheduledForDeletion[]= clone $address;
-            $address->setAddressOwnerId(null);
+            $this->addressOwnerAddressesScheduledForDeletion[]= clone $addressOwnerAddress;
+            $addressOwnerAddress->setAddressOwnerId(null);
         }
 
         return $this;
@@ -1672,7 +1672,7 @@ abstract class Address implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Address is new, it will return
      * an empty collection; or if this Address has previously
-     * been saved, it will retrieve related Addresses from storage.
+     * been saved, it will retrieve related AddressOwnerAddresses from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1684,12 +1684,12 @@ abstract class Address implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getAddressesJoinAddressOwnerClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerAddressesJoinAddressOwnerIdClient(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
-        $query->joinWith('AddressOwnerClient', $joinBehavior);
+        $query->joinWith('AddressOwnerIdClient', $joinBehavior);
 
-        return $this->getAddresses($query, $con);
+        return $this->getAddressOwnerAddresses($query, $con);
     }
 
 
@@ -1698,7 +1698,7 @@ abstract class Address implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Address is new, it will return
      * an empty collection; or if this Address has previously
-     * been saved, it will retrieve related Addresses from storage.
+     * been saved, it will retrieve related AddressOwnerAddresses from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1710,12 +1710,12 @@ abstract class Address implements ActiveRecordInterface
      * @return ObjectCollection|ChildAddressOwner[] List of ChildAddressOwner objects
      * @phpstan-return ObjectCollection&\Traversable<ChildAddressOwner}> List of ChildAddressOwner objects
      */
-    public function getAddressesJoinAddressOwnerSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getAddressOwnerAddressesJoinAddressOwnerIdSeller(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildAddressOwnerQuery::create(null, $criteria);
-        $query->joinWith('AddressOwnerSeller', $joinBehavior);
+        $query->joinWith('AddressOwnerIdSeller', $joinBehavior);
 
-        return $this->getAddresses($query, $con);
+        return $this->getAddressOwnerAddresses($query, $con);
     }
 
     /**
@@ -1756,14 +1756,14 @@ abstract class Address implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collAddresses) {
-                foreach ($this->collAddresses as $o) {
+            if ($this->collAddressOwnerAddresses) {
+                foreach ($this->collAddressOwnerAddresses as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collAddresses = null;
+        $this->collAddressOwnerAddresses = null;
         return $this;
     }
 
