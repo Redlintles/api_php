@@ -30,6 +30,9 @@
     <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
     <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
     <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
+    <unique name="client_username_unique">
+      <unique-column name="username" />
+    </unique>
   </table>
   <table name="seller" phpName="Seller">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />

@@ -55,7 +55,8 @@ CREATE TABLE `client`
     `password` VARCHAR(30) DEFAULT '' NOT NULL,
     `email` VARCHAR(30) DEFAULT '' NOT NULL,
     `phone_number` VARCHAR(15) DEFAULT '' NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `client_username_unique` (`username`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
