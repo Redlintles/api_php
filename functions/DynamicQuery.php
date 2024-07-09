@@ -4,11 +4,13 @@
 function dynamicQuery($queryObj, $params)
 {
     foreach($params as $key => $value) {
+        $methodName = "filterBy" . ucfirst($key);
         if(is_array($value)) {
-            $queryObj->filterBy($key, $value, \Propel\Runtime\ActiveQuery\Criteria::IN);
+            $queryObj->$methodName($value, \Propel\Runtime\ActiveQuery\Criteria::IN);
         } else {
-            $queryObj->filterBy($key, $value);
+            $queryObj->$methodName($value);
         }
+
     }
     return $queryObj->find();
 }
