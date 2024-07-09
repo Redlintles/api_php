@@ -1,52 +1,52 @@
 <?php
 
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 
-
-function validateUsername(string $username)
+function validationFactory(string $regex, string $message)
 {
-    $regex = "/^[a-zA-Z]{8,46}(?:\d{0,4}?)$/";
-
-    if(!preg_match($regex, $username)) {
-        sendResponse(400, true, "Invalid Username, length must be in range(8,50) and it should not start with a number");
-    }
+    return function (string $toValidate) use ($regex, $message) {
+        if(!preg_match($regex, $toValidate)) {
+            sendResponse(400, true, $message);
+        }
+    };
 }
 
-function validatePassword($password)
-{
-    $regex = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/";
-    if(!preg_match($regex, $password)) {
+$validateUsername = validationFactory(
+    "/^[a-zA-Z]{8,46}(?:\d{0,4}?)$/",
+    "Invalid Username, length must be in range(8,50) and it should not start with a number"
+);
 
-        sendResponse(400, true, "Invalid Password, length must be in range(8,30) and it should contain at least one uppercase letter, one lowercase, one number and one special character");
-    }
+$validatePassword = validationFactory(
+    "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/",
+    "Invalid Password, length must be in range(8,30) and it should contain at least one uppercase letter, one lowercase, one number and one special character"
+);
 
-}
+$validateEmail = validationFactory(
+    "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/",
+    "Invalid Email(banana@gmail.com"
+);
 
-function validateEmail($email)
-{
-    $regex = "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/";
-    if(!preg_match($regex, $email)) {
-        sendResponse(400, true, "Invalid Email(banana@gmail.com");
+$validatePermissionString = validationFactory(
+    "/^[0-1]{4}$/",
+    "Invalid permission string, it should look like as '1010'"
+);
 
-    }
-}
+$validateId = validationFactory(
+    "/^\d+$/",
+    "Invalid ID(must be a number)"
+);
 
-function validatePermissionString(string $permissionString)
-{
-    $regex = "/^[0-1]{4}$/";
-    if(!preg_match($regex, $permissionString)) {
-        sendResponse(400, true, "Invalid permission string(1010");
-        exit;
-    }
-}
+$validateState = validationFactory(
+    "/^[A-Z]{2}$/",
+    "Invalid state(must be a capitalized string"
+);
 
-function validateId(string $id)
-{
-    $regex = "/^\d+$/";
+$validateLocation = validationFactory(
+    "/^(?:[A-Z][a-z]+\s?)+$/",
+    "Invalid location(must be a capitalized string"
+);
 
-    if(!preg_match($regex, $id)) {
-        sendResponse(400, true, "Invalid ID(must be a number)");
-        exit;
-    }
-}
+$validateHouseNumber = validationFactory(
+    "/^[A-Za-z0-9\-\/\s]{1,10}$/",
+    "Invalid houseNumber(must be a capitalized string"
+);
