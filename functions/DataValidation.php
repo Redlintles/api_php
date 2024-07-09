@@ -30,8 +30,8 @@ $validatePassword = validationFactory(
 );
 
 $validateEmail = validationFactory(
-    "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/",
-    "Invalid Email(banana@gmail.com"
+    "/^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+$/",
+    "Invalid Email(banana@gmail.com)"
 );
 
 $validatePermissionString = validationFactory(
@@ -57,4 +57,8 @@ $validateLocation = validationFactory(
 $validateHouseNumber = validationFactory(
     "/^[A-Za-z0-9\-\/\s]{1,10}$/",
     "Invalid houseNumber(must be a capitalized string"
+);
+$validatePhoneNumber = validationFactory(
+    "/^[0-9]{11,15}$/",
+    "Invalid Phone Number, min is 11 digits and max is 15"
 );
