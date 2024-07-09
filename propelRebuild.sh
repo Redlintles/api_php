@@ -18,4 +18,6 @@ mv ./generated-conf ./conf;
 
 git add ./src ./conf ./generated-sql;
 
+
+echo "Commiting with message $1";
 git commit -m "$1";
