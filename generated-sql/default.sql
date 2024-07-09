@@ -76,12 +76,12 @@ CREATE TABLE `seller`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- order
+-- orders
 -- ---------------------------------------------------------------------
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `orders`;
 
-CREATE TABLE `order`
+CREATE TABLE `orders`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_client` INTEGER,
@@ -196,7 +196,7 @@ CREATE TABLE `order_products`
     INDEX `fi_er_product_product` (`id_product`),
     CONSTRAINT `order_product_cart`
         FOREIGN KEY (`id_order`)
-        REFERENCES `order` (`id`)
+        REFERENCES `orders` (`id`)
         ON DELETE CASCADE,
     CONSTRAINT `order_product_product`
         FOREIGN KEY (`id_product`)

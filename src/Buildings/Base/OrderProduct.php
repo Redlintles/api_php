@@ -876,7 +876,7 @@ abstract class OrderProduct implements ActiveRecordInterface
                         $key = 'order';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'order';
+                        $key = 'orders';
                         break;
                     default:
                         $key = 'OrderProductIdOrder';

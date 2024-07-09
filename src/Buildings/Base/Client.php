@@ -1056,7 +1056,7 @@ abstract class Client implements ActiveRecordInterface
                         $key = 'orders';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'orders';
+                        $key = 'orderss';
                         break;
                     default:
                         $key = 'OrderClients';

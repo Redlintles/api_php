@@ -5,7 +5,7 @@ namespace Buildings;
 use Buildings\Base\OrderQuery as BaseOrderQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'order' table.
+ * Skeleton subclass for performing query and update operations on the 'orders' table.
  *
  *
  *

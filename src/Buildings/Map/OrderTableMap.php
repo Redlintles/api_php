@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'order' table.
+ * This class defines the structure of the 'orders' table.
  *
  *
  *
@@ -43,7 +43,7 @@ class OrderTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'order';
+    public const TABLE_NAME = 'orders';
 
     /**
      * The PHP name of this class (PascalCase)
@@ -78,32 +78,32 @@ class OrderTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'order.id';
+    public const COL_ID = 'orders.id';
 
     /**
      * the column name for the id_client field
      */
-    public const COL_ID_CLIENT = 'order.id_client';
+    public const COL_ID_CLIENT = 'orders.id_client';
 
     /**
      * the column name for the id_seller field
      */
-    public const COL_ID_SELLER = 'order.id_seller';
+    public const COL_ID_SELLER = 'orders.id_seller';
 
     /**
      * the column name for the expires_at field
      */
-    public const COL_EXPIRES_AT = 'order.expires_at';
+    public const COL_EXPIRES_AT = 'orders.expires_at';
 
     /**
      * the column name for the type field
      */
-    public const COL_TYPE = 'order.type';
+    public const COL_TYPE = 'orders.type';
 
     /**
      * the column name for the updated_at field
      */
-    public const COL_UPDATED_AT = 'order.updated_at';
+    public const COL_UPDATED_AT = 'orders.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -154,6 +154,7 @@ class OrderTableMap extends TableMap
         'order.id' => 'ID',
         'OrderTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
+        'orders.id' => 'ID',
         'IdClient' => 'ID_CLIENT',
         'Order.IdClient' => 'ID_CLIENT',
         'idClient' => 'ID_CLIENT',
@@ -161,7 +162,7 @@ class OrderTableMap extends TableMap
         'OrderTableMap::COL_ID_CLIENT' => 'ID_CLIENT',
         'COL_ID_CLIENT' => 'ID_CLIENT',
         'id_client' => 'ID_CLIENT',
-        'order.id_client' => 'ID_CLIENT',
+        'orders.id_client' => 'ID_CLIENT',
         'IdSeller' => 'ID_SELLER',
         'Order.IdSeller' => 'ID_SELLER',
         'idSeller' => 'ID_SELLER',
@@ -169,7 +170,7 @@ class OrderTableMap extends TableMap
         'OrderTableMap::COL_ID_SELLER' => 'ID_SELLER',
         'COL_ID_SELLER' => 'ID_SELLER',
         'id_seller' => 'ID_SELLER',
-        'order.id_seller' => 'ID_SELLER',
+        'orders.id_seller' => 'ID_SELLER',
         'ExpiresAt' => 'EXPIRES_AT',
         'Order.ExpiresAt' => 'EXPIRES_AT',
         'expiresAt' => 'EXPIRES_AT',
@@ -177,13 +178,14 @@ class OrderTableMap extends TableMap
         'OrderTableMap::COL_EXPIRES_AT' => 'EXPIRES_AT',
         'COL_EXPIRES_AT' => 'EXPIRES_AT',
         'expires_at' => 'EXPIRES_AT',
-        'order.expires_at' => 'EXPIRES_AT',
+        'orders.expires_at' => 'EXPIRES_AT',
         'Type' => 'TYPE',
         'Order.Type' => 'TYPE',
         'type' => 'TYPE',
         'order.type' => 'TYPE',
         'OrderTableMap::COL_TYPE' => 'TYPE',
         'COL_TYPE' => 'TYPE',
+        'orders.type' => 'TYPE',
         'UpdatedAt' => 'UPDATED_AT',
         'Order.UpdatedAt' => 'UPDATED_AT',
         'updatedAt' => 'UPDATED_AT',
@@ -191,7 +193,7 @@ class OrderTableMap extends TableMap
         'OrderTableMap::COL_UPDATED_AT' => 'UPDATED_AT',
         'COL_UPDATED_AT' => 'UPDATED_AT',
         'updated_at' => 'UPDATED_AT',
-        'order.updated_at' => 'UPDATED_AT',
+        'orders.updated_at' => 'UPDATED_AT',
     ];
 
     /**
@@ -204,7 +206,7 @@ class OrderTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('order');
+        $this->setName('orders');
         $this->setPhpName('Order');
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Buildings\\Order');
@@ -263,7 +265,7 @@ class OrderTableMap extends TableMap
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to order     * by a foreign key with ON DELETE CASCADE
+     * Method to invalidate the instance pool of all tables related to orders     * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool(): void
     {
@@ -515,7 +517,7 @@ class OrderTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the order table.
+     * Deletes all rows from the orders table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).

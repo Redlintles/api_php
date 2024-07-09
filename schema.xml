@@ -41,7 +41,7 @@
     <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
     <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
   </table>
-  <table name="order" phpName="Order">
+  <table name="orders" phpName="Order">
     <column name="id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true" />
     <column name="id_client" type="INTEGER" />
     <column name="id_seller" type="INTEGER" />
@@ -100,7 +100,7 @@
     <column name="id_order" type="INTEGER" required="true" defaultValue="1"/>
     <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
     <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>
-    <foreign-key foreignTable="order" phpName="OrderProductIdOrder" refPhpName="OrderProductOrder" onDelete="cascade" name="order_product_cart">
+    <foreign-key foreignTable="orders" phpName="OrderProductIdOrder" refPhpName="OrderProductOrder" onDelete="cascade" name="order_product_cart">
       <reference local="id_order" foreign="id"/>
     </foreign-key>
     <foreign-key foreignTable="product" phpName="OrderProductIdProduct" refPhpName="OrderProductProduct" onDelete="cascade" name="order_product_product">
