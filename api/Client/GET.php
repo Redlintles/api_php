@@ -20,7 +20,7 @@ function fetchClientData(\Buildings\Client $targetClient)
 
     $cart = \Buildings\CartQuery::create()->findOneByIdClient($targetClient->getId());
     $cart_products = \Buildings\CartProductQuery::create()->findByIdCart($cart->getId());
-    $orders = \Buildings\OrderQuery::create()->filterByType("client")->findByIdClient($targetClient->getId());
+    $orders = \Buildings\OrderQuery::create()->findByIdClient($targetClient->getId());
     $addrs = \Buildings\AddressOwnerQuery::create()->filterByIdClient($targetClient->getId())->find();
 
 
@@ -34,9 +34,9 @@ function fetchClientData(\Buildings\Client $targetClient)
     }
 
     $result = [
-        "client" => $targetClient,
+        "client" => $targetClient->toArray(),
         "cart" => [
-            "cart" => $cart,
+            "cart" => $cart->toArray(),
             "products" => collectionToArray($cart_products)
         ],
         "addresses" => collectionToArray($addrs),
