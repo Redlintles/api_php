@@ -4,6 +4,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 
 use Ramsey\Uuid\Uuid;
 use Propel\Runtime\Propel;
@@ -70,6 +71,8 @@ if($user->getUsername() === "root") {
 
         $transaction->commit();
 
+
+        audit($apiKey, "CREATE", "/api/admin", "Admin/Insert/" . $userQuery->getUsername());
         sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray()]);
 
     } else {
