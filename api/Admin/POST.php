@@ -6,6 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 
 use Ramsey\Uuid\Uuid;
+use Propel\Runtime\Propel;
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -41,12 +42,19 @@ if($user->getUsername() === "root") {
         sendResponse(400, true, "Username already exists");
     }
 
+    $transaction = Propel::getConnection(\Buildings\Map\AdminTableMap::DATABASE_NAME);
+
+    $transaction->beginTransaction();
 
     $user = new \Buildings\Admin();
     $user->setUsername($data["username"]);
     $user->setPassword($data["password"]);
     $user->setApiKey($data["api_key"]);
-    $user->save();
+    if(!(bool)$user->save()) {
+        $transaction->rollBack();
+        sendResponse(500, true, "An unexpected error ocurred, try again later");
+    }
+
 
     $userQuery = \Buildings\AdminQuery::create()->findOneByUsername($data["username"]);
 
@@ -60,9 +68,12 @@ if($user->getUsername() === "root") {
         $permissionObj->setDeletePermission($permissionString[3]);
         $permissionObj->save();
 
+        $transaction->commit();
+
         sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray()]);
 
     } else {
+        $transaction->rollBack();
         sendResponse(500, true, "An unexpected Error Ocurred, try again later");
     }
 
