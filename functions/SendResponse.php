@@ -1,9 +1,13 @@
 <?php
 
 
-function sendResponse(int $statusCode, $err, $message, $additionalData = [])
+require_once "./Audit.php";
+
+function sendResponse(int $statusCode, bool $err, string $message, array $additionalData = [], array $auditData = [])
 {
 
+
+    audit($auditData["api_key"], $auditData["operation"], $auditData["route"], $statusCode, $auditData["operation_info"], !$err, $message);
     ob_start();
     header("Content-Type: application/json");
     http_response_code($statusCode);
