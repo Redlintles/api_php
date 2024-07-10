@@ -40,7 +40,7 @@ function addToProduct()
     $oldQuantity = $targetProduct->getInStock();
     $targetProduct->setInStock($oldQuantity + (int)$body["quantity"]);
     if($targetProduct->save()) {
-        sendResponse(200, false, $body["quantity"] . " units added to product " . $targetProduct->getTitle() . "(total=" . $targetProduct->getInStock() . ")");
+        sendResponse(200, false, $body["quantity"] . " units added to product " . $targetProduct->getTitle() . "(total=" . $targetProduct->getInStock() . ")", $targetProduct->toArray());
     } else {
         sendResponse(500, true, "An unexpected error ocurred, try again later");
     }
