@@ -6,6 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/CollectionToArray.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -13,7 +14,8 @@ permissionValidator($apiKey, "READ");
 
 $body = bodyParser();
 
-
+$auditObj = new AuditObj($apiKey, "READ", $request);
+$auditObj->setOperation("GetClient");
 function fetchClientData(\Buildings\Client $targetClient)
 {
     $result = [];
@@ -57,13 +59,19 @@ if(isset($body["client_id"])) {
 }
 
 if(!isset($targetClient)) {
-    sendResponse(400, true, "Client not found, is criteria(client_id,username) specified?");
+    sendResponse(400, true, "Client not found, is criteria(client_id,username) specified?", [], [
+        "audit" => $auditObj
+    ]);
 }
 
 $result = fetchClientData($targetClient);
 
 if(isset($result)) {
-    sendResponse(200, false, "Client Data fetched successfully", $result);
+    sendResponse(200, false, "Client Data fetched successfully", $result, [
+        "audit" => $auditObj
+    ]);
 } else {
-    sendResponse(500, true, "An unexpected Error Ocurred, try again later");
+    sendResponse(500, true, "An unexpected Error Ocurred, try again later", [], [
+        "audit" => $auditObj
+    ]);
 }
