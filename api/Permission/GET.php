@@ -20,6 +20,7 @@ $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 permissionValidator($apiKey, "READ");
 $auditObj = new AuditObj($apiKey, "READ", $request);
+$auditObj->setOperation("GetPermission");
 
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 $targetUser = null;
