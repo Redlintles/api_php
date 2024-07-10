@@ -39,7 +39,7 @@ $validatePermissionString = validationFactory(
     "Invalid permission string, it should look like as '1010'"
 );
 
-$validateId = validationFactory(
+$validateInteger = validationFactory(
     "/^\d+$/",
     "Invalid ID(must be a number)"
 );
@@ -61,4 +61,9 @@ $validateHouseNumber = validationFactory(
 $validatePhoneNumber = validationFactory(
     "/^[0-9]{11,15}$/",
     "Invalid Phone Number, min is 11 digits and max is 15"
+);
+
+$validateUnityPrice = validationFactory(
+    "/^[0-9]+\.[0-9]{2}$/",
+    "Invalid Unity Price format is (10.99)"
 );

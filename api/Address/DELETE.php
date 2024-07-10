@@ -16,7 +16,7 @@ $body = bodyParser();
 $targetAddress = null;
 
 if($body["address_id"]) {
-    $validateId($body["address_id"]);
+    $validateInteger($body["address_id"]);
     $targetAddress = \Buildings\AddressQuery::create()->findOneById($body["address_id"]);
 }
 

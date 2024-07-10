@@ -19,7 +19,7 @@ if($user->getUsername() === "root") {
     $targetUser = null;
 
     if(isset($body["admin_id"])) {
-        $validateId($body["admin_id"]);
+        $validateInteger($body["admin_id"]);
         $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
     } elseif(isset($body["username"])) {
         $validateUsername($body["username"]);

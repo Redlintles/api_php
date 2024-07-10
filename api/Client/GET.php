@@ -49,7 +49,7 @@ function fetchClientData(\Buildings\Client $targetClient)
 $targetClient = null;
 
 if(isset($body["client_id"])) {
-    $validateId($body["client_id"]);
+    $validateInteger($body["client_id"]);
     $targetClient = \Buildings\ClientQuery::create()->findOneById($body["client_id"]);
 } elseif(isset($body["username"])) {
     $validateUsername($body["username"]);

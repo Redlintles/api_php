@@ -15,7 +15,7 @@ permissionValidator($apiKey, "UPDATE");
 $targetAddress = null;
 
 if(isset($body["address_id"])) {
-    $validateId($body["address_id"]);
+    $validateInteger($body["address_id"]);
     $targetAddress = \Buildings\AddressQuery::create()->findOneById($body["address_id"]);
 }
 
