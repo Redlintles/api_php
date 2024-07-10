@@ -7,7 +7,10 @@ function sendResponse(int $statusCode, bool $err, string $message, array $additi
 {
 
 
-    audit($auditData["api_key"], $auditData["operation"], $auditData["route"], $statusCode, $auditData["operation_info"], !$err, $message);
+    if(isset($additionalData["operation_info"])) {
+        $additionalData["audit"]->setOperation($additionalData["operation_info"]);
+    }
+    $additionalData["audit"]->postAudit($message, $statusCode);
     ob_start();
     header("Content-Type: application/json");
     http_response_code($statusCode);
