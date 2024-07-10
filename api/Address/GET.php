@@ -6,10 +6,13 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DynamicQuery.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/CollectionToArray.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 permissionValidator($apiKey, "READ");
+
+$adminObj = new AdminObj($apiKey, "READ", $request);
 
 $body = bodyParser();
 
@@ -44,7 +47,11 @@ $addresses = dynamicQuery(\Buildings\AddressQuery::create(), $queryObj);
 
 
 if(isset($addresses)) {
-    sendResponse(200, false, "Addresses Fetched Successfully", ["addresses" => collectionToArray($addresses)]);
+    sendResponse(200, false, "Addresses Fetched Successfully", ["addresses" => collectionToArray($addresses)], [
+        "audit" => $auditObj
+    ]);
 } else {
-    sendResponse(404, true, "No addresses where found with the specified criteria");
+    sendResponse(404, true, "No addresses where found with the specified criteria", [], [
+        "audit" => $auditObj
+    ]);
 }
