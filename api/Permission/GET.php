@@ -5,6 +5,8 @@ use Buildings\Permission;
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+
 
 function formatPermission(Permission $permissionObj)
 {
@@ -29,20 +31,24 @@ if(isset($body["admin_id"])) {
 }
 
 if($user->getUsername() !== "root" && isset($targetUser)) {
+    audit($apiKey, "READ", "/api/permission", 403, "unknown", false);
     sendResponse(403, true, "Only Root can check for others permissions, if you want to check about your own permissions, send a empty body request");
 }
 
 if($user->getUsername() === "root" && isset($targetUser)) {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($targetUser->getId());
+    audit($apiKey, "READ", "/api/permission", 200, "getSingle", true);
     sendResponse(200, false, $targetUser->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)]);
 }
 
 if($user->getUsername() !== "root") {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($user->getId());
+    audit($apiKey, "READ", "/api/permission", 200, "GetSingle", true);
     sendResponse(200, false, $user->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)]);
 }
 
 if($user->getUsername() === "root" && !isset($targetUser) && $target) {
+    audit($apiKey, "READ", "/api/permission", 404, "unknown", false);
     sendResponse(404, false, "User not found");
 }
 if($user->getUsername() === "root" && !isset($targetUser) && !$target) {
@@ -58,6 +64,8 @@ if($user->getUsername() === "root" && !isset($targetUser) && !$target) {
 
         array_push($resultUsers, $obj);
     }
+
+    audit($apiKey, "READ", "/api/permission", 200, "GetAll", true);
 
     sendResponse(200, false, "No criteria specified(admin_id, username) then returning all  users permissions", ["permissions" => $resultUsers]);
 }
