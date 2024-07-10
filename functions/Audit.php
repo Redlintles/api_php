@@ -1,17 +1,44 @@
 <?php
 
-function audit(string $apiKey, string $type, string $route, int $httpCode, string $operation, bool $success, string $data = "")
+
+class AuditObj
 {
-    $audit = new \Buildings\Audit();
+    public string $apiKey;
+    public string $type;
+    public string $route;
+    public string $operation;
 
-    $additionalData = ($data ? "/" . $data : "");
+    public function __construct(string $apiKey, string $type, string $route)
+    {
+        $this->apiKey = $apiKey;
+        $this->type = $type;
+        $this->route = $route;
+        $this->operation = "unknown";
+    }
 
-    $dataString = ucfirst(explode("/", $type)[1]) . "/" . $operation . "/" . ($success ? "success" : "error") . "/" . $httpCode . $additionalData;
-    $username = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey)->getUsername();
-    $audit->setOperationExecutor($username);
-    $audit->setOperationType($type);
-    $audit->setOperationRoute($route);
-    $audit->setOperationDataString($dataString);
+    public function postAudit(string $msg, string $code)
+    {
+        $audit = new \Buildings\Audit();
+        $dataStr = implode("/", [
+            ucfirst(explode("/", $this->route)[1]),
+            $this->operation,
+            $code === 200 ? "success" : "error",
+            $code,
+            $msg
+        ]);
 
-    $audit->save();
+        $username = \Buildings\AdminQuery::create()->findOneByApiKey($this->apiKey)->getUsername();
+        $audit->setOperationExecutor($username);
+        $audit->setOperationType($this->type);
+        $audit->setOperationRoute($this->route);
+        $audit->setOperationDataString($dataStr);
+
+        $audit->save();
+
+    }
+
+    public function setOperation(string $operation)
+    {
+        $this->operation = $operation;
+    }
 }
