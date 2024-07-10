@@ -13,10 +13,14 @@ $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 $body = bodyParser();
 
+
 permissionValidator($apiKey, "CREATE");
+$auditObj = new AuditObj($apiKey, "CREATE", $request);
 
 if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permissions"])) {
-    sendResponse(400, true, "Username,Password or/and Permissions is/are not defined");
+    sendResponse(400, true, "Username,Password or/and Permissions is/are not defined", [], [
+        "audit" => $auditObj
+    ]);
 }
 
 $validateUsername($body["username"]);
@@ -40,7 +44,9 @@ if($user->getUsername() === "root") {
     $usernameExists = \Buildings\AdminQuery::create()->findOneByUsername($data["username"]);
 
     if(isset($usernameExists)) {
-        sendResponse(400, true, "Username already exists");
+        sendResponse(400, true, "Username already exists", [], [
+            "audit" => $auditObj
+        ]);
     }
 
     $transaction = Propel::getConnection(\Buildings\Map\AdminTableMap::DATABASE_NAME);
@@ -53,7 +59,9 @@ if($user->getUsername() === "root") {
     $user->setApiKey($data["api_key"]);
     if(!(bool)$user->save()) {
         $transaction->rollBack();
-        sendResponse(500, true, "An unexpected error ocurred, try again later");
+        sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
+            "audit" => $auditObj
+        ]);
     }
 
 
@@ -71,13 +79,15 @@ if($user->getUsername() === "root") {
 
         $transaction->commit();
 
-
-        audit($apiKey, "CREATE", "/api/admin", "Admin/Insert/" . $userQuery->getUsername());
-        sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray()]);
+        sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray()], [
+            "audit" => $auditObj
+        ]);
 
     } else {
         $transaction->rollBack();
-        sendResponse(500, true, "An unexpected Error Ocurred, try again later");
+        sendResponse(500, true, "An unexpected Error Ocurred, try again later", [], [
+            "audit" => $auditObj
+        ]);
     }
 
 
