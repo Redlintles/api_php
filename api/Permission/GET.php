@@ -17,7 +17,9 @@ $body = bodyParser();
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 
+
 permissionValidator($apiKey, "READ");
+$auditObj = new AuditObj($apiKey, "READ", $request);
 
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 $targetUser = null;
@@ -31,25 +33,32 @@ if(isset($body["admin_id"])) {
 }
 
 if($user->getUsername() !== "root" && isset($targetUser)) {
-    audit($apiKey, "READ", "/api/permission", 403, "unknown", false);
-    sendResponse(403, true, "Only Root can check for others permissions, if you want to check about your own permissions, send a empty body request");
+    sendResponse(403, true, "Only Root can check for others permissions, if you want to check about your own permissions, send a empty body request", [], [
+        "audit" => $auditObj
+    ]);
 }
 
 if($user->getUsername() === "root" && isset($targetUser)) {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($targetUser->getId());
-    audit($apiKey, "READ", "/api/permission", 200, "getSingle", true);
-    sendResponse(200, false, $targetUser->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)]);
+
+    sendResponse(200, false, $targetUser->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)], [], [
+        "audit" => $auditObj,
+        "operation_info" => "GetSingle"
+    ]);
 }
 
 if($user->getUsername() !== "root") {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($user->getId());
-    audit($apiKey, "READ", "/api/permission", 200, "GetSingle", true);
-    sendResponse(200, false, $user->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)]);
+    sendResponse(200, false, $user->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)], [
+        "audit" => $auditObj,
+        "operation_info" => "GetSingle"
+    ]);
 }
 
 if($user->getUsername() === "root" && !isset($targetUser) && $target) {
-    audit($apiKey, "READ", "/api/permission", 404, "unknown", false);
-    sendResponse(404, false, "User not found");
+    sendResponse(404, false, "User not found", [], [
+        "audit" => $auditObj,
+    ]);
 }
 if($user->getUsername() === "root" && !isset($targetUser) && !$target) {
     $resultPermissions = \Buildings\PermissionQuery::create()->find();
@@ -65,7 +74,9 @@ if($user->getUsername() === "root" && !isset($targetUser) && !$target) {
         array_push($resultUsers, $obj);
     }
 
-    audit($apiKey, "READ", "/api/permission", 200, "GetAll", true);
 
-    sendResponse(200, false, "No criteria specified(admin_id, username) then returning all  users permissions", ["permissions" => $resultUsers]);
+    sendResponse(200, false, "No criteria specified(admin_id, username) then returning all  users permissions", ["permissions" => $resultUsers], [
+        "audit" => $auditObj,
+        "operation_info" => "GetAll"
+    ]);
 }
