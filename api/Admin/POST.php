@@ -92,6 +92,8 @@ if($user->getUsername() === "root") {
 
 
 } else {
-    sendResponse(403, true, "Only root can create admins");
+    sendResponse(403, true, "Only root can create admins", [], [
+        "audit" => $auditObj
+    ]);
 
 }
