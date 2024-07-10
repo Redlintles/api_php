@@ -1,6 +1,6 @@
 <?php
 
-
+use Propel\Runtime\Propel;
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
@@ -9,6 +9,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+$transaction = Propel::getConnection(\Buildings\Map\ClientTableMap::DATABASE_NAME);
 
 permissionValidator($apiKey, "CREATE");
 
@@ -25,6 +26,8 @@ $validateEmail($body["email"]);
 $validatePassword($body["password"]);
 $validatePhoneNumber($body["phone_number"]);
 
+$transaction->beginTransaction();
+
 $newClient = new \Buildings\Client();
 
 $newClient->setUsername($body["username"]);
@@ -38,6 +41,8 @@ $usernameExists = \Buildings\ClientQuery::create()->filterByUsername($body["user
 if(!$usernameExists->isEmpty()) {
     sendResponse(400, true, "Username already exists, choose another");
 }
+
+
 
 
 
@@ -59,10 +64,13 @@ if((bool)$newClient->save()) {
     $cart->setIdClient($user->getId());
 
     if((bool)$cart->save()) {
+        $transaction->commit();
         sendResponse(200, false, "Client created successfully", ["client" => $newClient->toArray()]);
     } else {
+        $transaction->rollBack();
         sendResponse(500, true, "An unexpected error ocurred, try again later");
     }
 } else {
+    $transaction->rollBack();
     sendResponse(500, true, "An unexpected error ocurred, try again later");
 }
