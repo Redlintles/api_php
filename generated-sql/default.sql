@@ -261,7 +261,7 @@ CREATE TABLE `product`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(50) DEFAULT '' NOT NULL,
-    `desc` VARCHAR(200) DEFAULT '',
+    `description` VARCHAR(200) DEFAULT '',
     `unity_price` FLOAT DEFAULT 1 NOT NULL,
     `in_stock` INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY (`id`),
@@ -316,6 +316,24 @@ CREATE TABLE `product_category`
         FOREIGN KEY (`id_category`)
         REFERENCES `category` (`id`)
         ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- audit
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `audit`;
+
+CREATE TABLE `audit`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `operation_executor` VARCHAR(50) DEFAULT '' NOT NULL,
+    `operation_type` VARCHAR(10) DEFAULT '' NOT NULL,
+    `operation_route` VARCHAR(50) DEFAULT '' NOT NULL,
+    `operation_data_string` VARCHAR(80) DEFAULT '' NOT NULL,
+    `created_at` TIMESTAMP NULL,
+    `updated_at` TIMESTAMP NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier

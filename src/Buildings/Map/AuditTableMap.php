@@ -2,8 +2,8 @@
 
 namespace Buildings\Map;
 
-use Buildings\Product;
-use Buildings\ProductQuery;
+use Buildings\Audit;
+use Buildings\AuditQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'product' table.
+ * This class defines the structure of the 'audit' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class ProductTableMap extends TableMap
+class AuditTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class ProductTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Buildings.Map.ProductTableMap';
+    public const CLASS_NAME = 'Buildings.Map.AuditTableMap';
 
     /**
      * The default database name for this class
@@ -43,27 +43,27 @@ class ProductTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'product';
+    public const TABLE_NAME = 'audit';
 
     /**
      * The PHP name of this class (PascalCase)
      */
-    public const TABLE_PHP_NAME = 'Product';
+    public const TABLE_PHP_NAME = 'Audit';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Buildings\\Product';
+    public const OM_CLASS = '\\Buildings\\Audit';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Buildings.Product';
+    public const CLASS_DEFAULT = 'Buildings.Audit';
 
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -73,32 +73,42 @@ class ProductTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'product.id';
+    public const COL_ID = 'audit.id';
 
     /**
-     * the column name for the title field
+     * the column name for the operation_executor field
      */
-    public const COL_TITLE = 'product.title';
+    public const COL_OPERATION_EXECUTOR = 'audit.operation_executor';
 
     /**
-     * the column name for the description field
+     * the column name for the operation_type field
      */
-    public const COL_DESCRIPTION = 'product.description';
+    public const COL_OPERATION_TYPE = 'audit.operation_type';
 
     /**
-     * the column name for the unity_price field
+     * the column name for the operation_route field
      */
-    public const COL_UNITY_PRICE = 'product.unity_price';
+    public const COL_OPERATION_ROUTE = 'audit.operation_route';
 
     /**
-     * the column name for the in_stock field
+     * the column name for the operation_data_string field
      */
-    public const COL_IN_STOCK = 'product.in_stock';
+    public const COL_OPERATION_DATA_STRING = 'audit.operation_data_string';
+
+    /**
+     * the column name for the created_at field
+     */
+    public const COL_CREATED_AT = 'audit.created_at';
+
+    /**
+     * the column name for the updated_at field
+     */
+    public const COL_UPDATED_AT = 'audit.updated_at';
 
     /**
      * The default string format for model objects of the related table
@@ -114,11 +124,11 @@ class ProductTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Title', 'Description', 'UnityPrice', 'InStock', ],
-        self::TYPE_CAMELNAME     => ['id', 'title', 'description', 'unityPrice', 'inStock', ],
-        self::TYPE_COLNAME       => [ProductTableMap::COL_ID, ProductTableMap::COL_TITLE, ProductTableMap::COL_DESCRIPTION, ProductTableMap::COL_UNITY_PRICE, ProductTableMap::COL_IN_STOCK, ],
-        self::TYPE_FIELDNAME     => ['id', 'title', 'description', 'unity_price', 'in_stock', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'OperationExecutor', 'OperationType', 'OperationRoute', 'OperationDataString', 'CreatedAt', 'UpdatedAt', ],
+        self::TYPE_CAMELNAME     => ['id', 'operationExecutor', 'operationType', 'operationRoute', 'operationDataString', 'createdAt', 'updatedAt', ],
+        self::TYPE_COLNAME       => [AuditTableMap::COL_ID, AuditTableMap::COL_OPERATION_EXECUTOR, AuditTableMap::COL_OPERATION_TYPE, AuditTableMap::COL_OPERATION_ROUTE, AuditTableMap::COL_OPERATION_DATA_STRING, AuditTableMap::COL_CREATED_AT, AuditTableMap::COL_UPDATED_AT, ],
+        self::TYPE_FIELDNAME     => ['id', 'operation_executor', 'operation_type', 'operation_route', 'operation_data_string', 'created_at', 'updated_at', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -130,11 +140,11 @@ class ProductTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Title' => 1, 'Description' => 2, 'UnityPrice' => 3, 'InStock' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'title' => 1, 'description' => 2, 'unityPrice' => 3, 'inStock' => 4, ],
-        self::TYPE_COLNAME       => [ProductTableMap::COL_ID => 0, ProductTableMap::COL_TITLE => 1, ProductTableMap::COL_DESCRIPTION => 2, ProductTableMap::COL_UNITY_PRICE => 3, ProductTableMap::COL_IN_STOCK => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'title' => 1, 'description' => 2, 'unity_price' => 3, 'in_stock' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'OperationExecutor' => 1, 'OperationType' => 2, 'OperationRoute' => 3, 'OperationDataString' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'operationExecutor' => 1, 'operationType' => 2, 'operationRoute' => 3, 'operationDataString' => 4, 'createdAt' => 5, 'updatedAt' => 6, ],
+        self::TYPE_COLNAME       => [AuditTableMap::COL_ID => 0, AuditTableMap::COL_OPERATION_EXECUTOR => 1, AuditTableMap::COL_OPERATION_TYPE => 2, AuditTableMap::COL_OPERATION_ROUTE => 3, AuditTableMap::COL_OPERATION_DATA_STRING => 4, AuditTableMap::COL_CREATED_AT => 5, AuditTableMap::COL_UPDATED_AT => 6, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'operation_executor' => 1, 'operation_type' => 2, 'operation_route' => 3, 'operation_data_string' => 4, 'created_at' => 5, 'updated_at' => 6, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -144,39 +154,59 @@ class ProductTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Product.Id' => 'ID',
+        'Audit.Id' => 'ID',
         'id' => 'ID',
-        'product.id' => 'ID',
-        'ProductTableMap::COL_ID' => 'ID',
+        'audit.id' => 'ID',
+        'AuditTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Title' => 'TITLE',
-        'Product.Title' => 'TITLE',
-        'title' => 'TITLE',
-        'product.title' => 'TITLE',
-        'ProductTableMap::COL_TITLE' => 'TITLE',
-        'COL_TITLE' => 'TITLE',
-        'Description' => 'DESCRIPTION',
-        'Product.Description' => 'DESCRIPTION',
-        'description' => 'DESCRIPTION',
-        'product.description' => 'DESCRIPTION',
-        'ProductTableMap::COL_DESCRIPTION' => 'DESCRIPTION',
-        'COL_DESCRIPTION' => 'DESCRIPTION',
-        'UnityPrice' => 'UNITY_PRICE',
-        'Product.UnityPrice' => 'UNITY_PRICE',
-        'unityPrice' => 'UNITY_PRICE',
-        'product.unityPrice' => 'UNITY_PRICE',
-        'ProductTableMap::COL_UNITY_PRICE' => 'UNITY_PRICE',
-        'COL_UNITY_PRICE' => 'UNITY_PRICE',
-        'unity_price' => 'UNITY_PRICE',
-        'product.unity_price' => 'UNITY_PRICE',
-        'InStock' => 'IN_STOCK',
-        'Product.InStock' => 'IN_STOCK',
-        'inStock' => 'IN_STOCK',
-        'product.inStock' => 'IN_STOCK',
-        'ProductTableMap::COL_IN_STOCK' => 'IN_STOCK',
-        'COL_IN_STOCK' => 'IN_STOCK',
-        'in_stock' => 'IN_STOCK',
-        'product.in_stock' => 'IN_STOCK',
+        'OperationExecutor' => 'OPERATION_EXECUTOR',
+        'Audit.OperationExecutor' => 'OPERATION_EXECUTOR',
+        'operationExecutor' => 'OPERATION_EXECUTOR',
+        'audit.operationExecutor' => 'OPERATION_EXECUTOR',
+        'AuditTableMap::COL_OPERATION_EXECUTOR' => 'OPERATION_EXECUTOR',
+        'COL_OPERATION_EXECUTOR' => 'OPERATION_EXECUTOR',
+        'operation_executor' => 'OPERATION_EXECUTOR',
+        'audit.operation_executor' => 'OPERATION_EXECUTOR',
+        'OperationType' => 'OPERATION_TYPE',
+        'Audit.OperationType' => 'OPERATION_TYPE',
+        'operationType' => 'OPERATION_TYPE',
+        'audit.operationType' => 'OPERATION_TYPE',
+        'AuditTableMap::COL_OPERATION_TYPE' => 'OPERATION_TYPE',
+        'COL_OPERATION_TYPE' => 'OPERATION_TYPE',
+        'operation_type' => 'OPERATION_TYPE',
+        'audit.operation_type' => 'OPERATION_TYPE',
+        'OperationRoute' => 'OPERATION_ROUTE',
+        'Audit.OperationRoute' => 'OPERATION_ROUTE',
+        'operationRoute' => 'OPERATION_ROUTE',
+        'audit.operationRoute' => 'OPERATION_ROUTE',
+        'AuditTableMap::COL_OPERATION_ROUTE' => 'OPERATION_ROUTE',
+        'COL_OPERATION_ROUTE' => 'OPERATION_ROUTE',
+        'operation_route' => 'OPERATION_ROUTE',
+        'audit.operation_route' => 'OPERATION_ROUTE',
+        'OperationDataString' => 'OPERATION_DATA_STRING',
+        'Audit.OperationDataString' => 'OPERATION_DATA_STRING',
+        'operationDataString' => 'OPERATION_DATA_STRING',
+        'audit.operationDataString' => 'OPERATION_DATA_STRING',
+        'AuditTableMap::COL_OPERATION_DATA_STRING' => 'OPERATION_DATA_STRING',
+        'COL_OPERATION_DATA_STRING' => 'OPERATION_DATA_STRING',
+        'operation_data_string' => 'OPERATION_DATA_STRING',
+        'audit.operation_data_string' => 'OPERATION_DATA_STRING',
+        'CreatedAt' => 'CREATED_AT',
+        'Audit.CreatedAt' => 'CREATED_AT',
+        'createdAt' => 'CREATED_AT',
+        'audit.createdAt' => 'CREATED_AT',
+        'AuditTableMap::COL_CREATED_AT' => 'CREATED_AT',
+        'COL_CREATED_AT' => 'CREATED_AT',
+        'created_at' => 'CREATED_AT',
+        'audit.created_at' => 'CREATED_AT',
+        'UpdatedAt' => 'UPDATED_AT',
+        'Audit.UpdatedAt' => 'UPDATED_AT',
+        'updatedAt' => 'UPDATED_AT',
+        'audit.updatedAt' => 'UPDATED_AT',
+        'AuditTableMap::COL_UPDATED_AT' => 'UPDATED_AT',
+        'COL_UPDATED_AT' => 'UPDATED_AT',
+        'updated_at' => 'UPDATED_AT',
+        'audit.updated_at' => 'UPDATED_AT',
     ];
 
     /**
@@ -189,18 +219,20 @@ class ProductTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('product');
-        $this->setPhpName('Product');
+        $this->setName('audit');
+        $this->setPhpName('Audit');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Buildings\\Product');
+        $this->setClassName('\\Buildings\\Audit');
         $this->setPackage('Buildings');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('title', 'Title', 'VARCHAR', true, 50, '');
-        $this->addColumn('description', 'Description', 'VARCHAR', false, 200, '');
-        $this->addColumn('unity_price', 'UnityPrice', 'FLOAT', true, null, 1);
-        $this->addColumn('in_stock', 'InStock', 'INTEGER', true, null, 1);
+        $this->addColumn('operation_executor', 'OperationExecutor', 'VARCHAR', true, 50, '');
+        $this->addColumn('operation_type', 'OperationType', 'VARCHAR', true, 10, '');
+        $this->addColumn('operation_route', 'OperationRoute', 'VARCHAR', true, 50, '');
+        $this->addColumn('operation_data_string', 'OperationDataString', 'VARCHAR', true, 80, '');
+        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     }
 
     /**
@@ -210,55 +242,19 @@ class ProductTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('CartProduct', '\\Buildings\\CartProduct', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id_product',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'CartProducts', false);
-        $this->addRelation('SellerProductProduct', '\\Buildings\\SellerProduct', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id_product',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'SellerProductProducts', false);
-        $this->addRelation('OrderProductProduct', '\\Buildings\\OrderProduct', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id_product',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'OrderProductProducts', false);
-        $this->addRelation('DiscountProductProduct', '\\Buildings\\Discount', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id_product',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'DiscountProductProducts', false);
-        $this->addRelation('ProductCategoryProduct', '\\Buildings\\ProductCategory', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':id_product',
-    1 => ':id',
-  ),
-), 'CASCADE', null, 'ProductCategoryProducts', false);
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to product     * by a foreign key with ON DELETE CASCADE
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array<string, array> Associative array (name => parameters) of behaviors
      */
-    public static function clearRelatedInstancePool(): void
+    public function getBehaviors(): array
     {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CartProductTableMap::clearInstancePool();
-        SellerProductTableMap::clearInstancePool();
-        OrderProductTableMap::clearInstancePool();
-        DiscountTableMap::clearInstancePool();
-        ProductCategoryTableMap::clearInstancePool();
+        return [
+            'timestampable' => ['create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false'],
+        ];
     }
 
     /**
@@ -318,7 +314,7 @@ class ProductTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? ProductTableMap::CLASS_DEFAULT : ProductTableMap::OM_CLASS;
+        return $withPrefix ? AuditTableMap::CLASS_DEFAULT : AuditTableMap::OM_CLASS;
     }
 
     /**
@@ -332,22 +328,22 @@ class ProductTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Product object, last column rank)
+     * @return array (Audit object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = ProductTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ProductTableMap::getInstanceFromPool($key))) {
+        $key = AuditTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = AuditTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ProductTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + AuditTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ProductTableMap::OM_CLASS;
-            /** @var Product $obj */
+            $cls = AuditTableMap::OM_CLASS;
+            /** @var Audit $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ProductTableMap::addInstanceToPool($obj, $key);
+            AuditTableMap::addInstanceToPool($obj, $key);
         }
 
         return [$obj, $col];
@@ -370,18 +366,18 @@ class ProductTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ProductTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ProductTableMap::getInstanceFromPool($key))) {
+            $key = AuditTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = AuditTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Product $obj */
+                /** @var Audit $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ProductTableMap::addInstanceToPool($obj, $key);
+                AuditTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -403,17 +399,21 @@ class ProductTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ProductTableMap::COL_ID);
-            $criteria->addSelectColumn(ProductTableMap::COL_TITLE);
-            $criteria->addSelectColumn(ProductTableMap::COL_DESCRIPTION);
-            $criteria->addSelectColumn(ProductTableMap::COL_UNITY_PRICE);
-            $criteria->addSelectColumn(ProductTableMap::COL_IN_STOCK);
+            $criteria->addSelectColumn(AuditTableMap::COL_ID);
+            $criteria->addSelectColumn(AuditTableMap::COL_OPERATION_EXECUTOR);
+            $criteria->addSelectColumn(AuditTableMap::COL_OPERATION_TYPE);
+            $criteria->addSelectColumn(AuditTableMap::COL_OPERATION_ROUTE);
+            $criteria->addSelectColumn(AuditTableMap::COL_OPERATION_DATA_STRING);
+            $criteria->addSelectColumn(AuditTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(AuditTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.title');
-            $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.unity_price');
-            $criteria->addSelectColumn($alias . '.in_stock');
+            $criteria->addSelectColumn($alias . '.operation_executor');
+            $criteria->addSelectColumn($alias . '.operation_type');
+            $criteria->addSelectColumn($alias . '.operation_route');
+            $criteria->addSelectColumn($alias . '.operation_data_string');
+            $criteria->addSelectColumn($alias . '.created_at');
+            $criteria->addSelectColumn($alias . '.updated_at');
         }
     }
 
@@ -432,17 +432,21 @@ class ProductTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(ProductTableMap::COL_ID);
-            $criteria->removeSelectColumn(ProductTableMap::COL_TITLE);
-            $criteria->removeSelectColumn(ProductTableMap::COL_DESCRIPTION);
-            $criteria->removeSelectColumn(ProductTableMap::COL_UNITY_PRICE);
-            $criteria->removeSelectColumn(ProductTableMap::COL_IN_STOCK);
+            $criteria->removeSelectColumn(AuditTableMap::COL_ID);
+            $criteria->removeSelectColumn(AuditTableMap::COL_OPERATION_EXECUTOR);
+            $criteria->removeSelectColumn(AuditTableMap::COL_OPERATION_TYPE);
+            $criteria->removeSelectColumn(AuditTableMap::COL_OPERATION_ROUTE);
+            $criteria->removeSelectColumn(AuditTableMap::COL_OPERATION_DATA_STRING);
+            $criteria->removeSelectColumn(AuditTableMap::COL_CREATED_AT);
+            $criteria->removeSelectColumn(AuditTableMap::COL_UPDATED_AT);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.title');
-            $criteria->removeSelectColumn($alias . '.description');
-            $criteria->removeSelectColumn($alias . '.unity_price');
-            $criteria->removeSelectColumn($alias . '.in_stock');
+            $criteria->removeSelectColumn($alias . '.operation_executor');
+            $criteria->removeSelectColumn($alias . '.operation_type');
+            $criteria->removeSelectColumn($alias . '.operation_route');
+            $criteria->removeSelectColumn($alias . '.operation_data_string');
+            $criteria->removeSelectColumn($alias . '.created_at');
+            $criteria->removeSelectColumn($alias . '.updated_at');
         }
     }
 
@@ -455,13 +459,13 @@ class ProductTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ProductTableMap::DATABASE_NAME)->getTable(ProductTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(AuditTableMap::DATABASE_NAME)->getTable(AuditTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Product or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Audit or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Product object or primary key or array of primary keys
+     * @param mixed $values Criteria or Audit object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -472,27 +476,27 @@ class ProductTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ProductTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuditTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Buildings\Product) { // it's a model object
+        } elseif ($values instanceof \Buildings\Audit) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ProductTableMap::DATABASE_NAME);
-            $criteria->add(ProductTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(AuditTableMap::DATABASE_NAME);
+            $criteria->add(AuditTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = ProductQuery::create()->mergeWith($criteria);
+        $query = AuditQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ProductTableMap::clearInstancePool();
+            AuditTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ProductTableMap::removeInstanceFromPool($singleval);
+                AuditTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -500,20 +504,20 @@ class ProductTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the product table.
+     * Deletes all rows from the audit table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return ProductQuery::create()->doDeleteAll($con);
+        return AuditQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Product or Criteria object.
+     * Performs an INSERT on the database, given a Audit or Criteria object.
      *
-     * @param mixed $criteria Criteria or Product object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Audit object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -522,22 +526,22 @@ class ProductTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ProductTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(AuditTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Product object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Audit object
         }
 
-        if ($criteria->containsKey(ProductTableMap::COL_ID) && $criteria->keyContainsValue(ProductTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ProductTableMap::COL_ID.')');
+        if ($criteria->containsKey(AuditTableMap::COL_ID) && $criteria->keyContainsValue(AuditTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.AuditTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = ProductQuery::create()->mergeWith($criteria);
+        $query = AuditQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

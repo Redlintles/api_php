@@ -94,12 +94,12 @@ abstract class Product implements ActiveRecordInterface
     protected $title;
 
     /**
-     * The value for the desc field.
+     * The value for the description field.
      *
      * Note: this column has a database default value of: ''
      * @var        string|null
      */
-    protected $desc;
+    protected $description;
 
     /**
      * The value for the unity_price field.
@@ -204,7 +204,7 @@ abstract class Product implements ActiveRecordInterface
     public function applyDefaultValues(): void
     {
         $this->title = '';
-        $this->desc = '';
+        $this->description = '';
         $this->unity_price = 1.0;
         $this->in_stock = 1;
     }
@@ -458,13 +458,13 @@ abstract class Product implements ActiveRecordInterface
     }
 
     /**
-     * Get the [desc] column value.
+     * Get the [description] column value.
      *
      * @return string|null
      */
-    public function getDesc()
+    public function getDescription()
     {
-        return $this->desc;
+        return $this->description;
     }
 
     /**
@@ -528,20 +528,20 @@ abstract class Product implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [desc] column.
+     * Set the value of [description] column.
      *
      * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setDesc($v)
+    public function setDescription($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->desc !== $v) {
-            $this->desc = $v;
-            $this->modifiedColumns[ProductTableMap::COL_DESC] = true;
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[ProductTableMap::COL_DESCRIPTION] = true;
         }
 
         return $this;
@@ -601,7 +601,7 @@ abstract class Product implements ActiveRecordInterface
                 return false;
             }
 
-            if ($this->desc !== '') {
+            if ($this->description !== '') {
                 return false;
             }
 
@@ -645,8 +645,8 @@ abstract class Product implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProductTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
             $this->title = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProductTableMap::translateFieldName('Desc', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->desc = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProductTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->description = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ProductTableMap::translateFieldName('UnityPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unity_price = (null !== $col) ? (double) $col : null;
@@ -964,8 +964,8 @@ abstract class Product implements ActiveRecordInterface
         if ($this->isColumnModified(ProductTableMap::COL_TITLE)) {
             $modifiedColumns[':p' . $index++]  = 'title';
         }
-        if ($this->isColumnModified(ProductTableMap::COL_DESC)) {
-            $modifiedColumns[':p' . $index++]  = 'desc';
+        if ($this->isColumnModified(ProductTableMap::COL_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'description';
         }
         if ($this->isColumnModified(ProductTableMap::COL_UNITY_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'unity_price';
@@ -992,8 +992,8 @@ abstract class Product implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
 
                         break;
-                    case 'desc':
-                        $stmt->bindValue($identifier, $this->desc, PDO::PARAM_STR);
+                    case 'description':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
 
                         break;
                     case 'unity_price':
@@ -1073,7 +1073,7 @@ abstract class Product implements ActiveRecordInterface
                 return $this->getTitle();
 
             case 2:
-                return $this->getDesc();
+                return $this->getDescription();
 
             case 3:
                 return $this->getUnityPrice();
@@ -1111,7 +1111,7 @@ abstract class Product implements ActiveRecordInterface
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getDesc(),
+            $keys[2] => $this->getDescription(),
             $keys[3] => $this->getUnityPrice(),
             $keys[4] => $this->getInStock(),
         ];
@@ -1239,7 +1239,7 @@ abstract class Product implements ActiveRecordInterface
                 $this->setTitle($value);
                 break;
             case 2:
-                $this->setDesc($value);
+                $this->setDescription($value);
                 break;
             case 3:
                 $this->setUnityPrice($value);
@@ -1280,7 +1280,7 @@ abstract class Product implements ActiveRecordInterface
             $this->setTitle($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setDesc($arr[$keys[2]]);
+            $this->setDescription($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setUnityPrice($arr[$keys[3]]);
@@ -1337,8 +1337,8 @@ abstract class Product implements ActiveRecordInterface
         if ($this->isColumnModified(ProductTableMap::COL_TITLE)) {
             $criteria->add(ProductTableMap::COL_TITLE, $this->title);
         }
-        if ($this->isColumnModified(ProductTableMap::COL_DESC)) {
-            $criteria->add(ProductTableMap::COL_DESC, $this->desc);
+        if ($this->isColumnModified(ProductTableMap::COL_DESCRIPTION)) {
+            $criteria->add(ProductTableMap::COL_DESCRIPTION, $this->description);
         }
         if ($this->isColumnModified(ProductTableMap::COL_UNITY_PRICE)) {
             $criteria->add(ProductTableMap::COL_UNITY_PRICE, $this->unity_price);
@@ -1435,7 +1435,7 @@ abstract class Product implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setTitle($this->getTitle());
-        $copyObj->setDesc($this->getDesc());
+        $copyObj->setDescription($this->getDescription());
         $copyObj->setUnityPrice($this->getUnityPrice());
         $copyObj->setInStock($this->getInStock());
 
@@ -2873,7 +2873,7 @@ abstract class Product implements ActiveRecordInterface
     {
         $this->id = null;
         $this->title = null;
-        $this->desc = null;
+        $this->description = null;
         $this->unity_price = null;
         $this->in_stock = null;
         $this->alreadyInSave = false;

@@ -134,7 +134,7 @@
   <table name="product" phpName="Product">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="title" type="VARCHAR" defaultValue="" size="50" required="true" />
-    <column name="desc" type="VARCHAR" defaultValue="" size="200" />
+    <column name="description" type="VARCHAR" defaultValue="" size="200" />
     <column name="unity_price" type="FLOAT" required="true" defaultValue="1" />
     <column name="in_stock" type="INTEGER" required="true" defaultValue="1" />
     <unique name="product_title_unique">
@@ -165,5 +165,13 @@
     <foreign-key foreignTable="category" phpName="ProductCategoryIdCategory" refPhpName="ProductCategoryCategory" name="product_category_category" onDelete="cascade">
       <reference local="id_category" foreign="id"/>
     </foreign-key>
+  </table>
+  <table name="audit" phpName="Audit">
+    <column type="INTEGER" required="true" name="id" autoIncrement="true" primaryKey="true"/>
+    <column type="VARCHAR" size="50" defaultValue="" required="true" name="operation_executor"/>
+    <column type="VARCHAR" size="10" defaultValue="" required="true" name="operation_type"/>
+    <column type="VARCHAR" size="50" defaultValue="" required="true" name="operation_route"/>
+    <column type="VARCHAR" size="80" defaultValue="" required="true" name="operation_data_string"/>
+    <behavior name="timestampable"/>
   </table>
 </database>

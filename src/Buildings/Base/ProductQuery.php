@@ -21,13 +21,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildProductQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildProductQuery orderByTitle($order = Criteria::ASC) Order by the title column
- * @method     ChildProductQuery orderByDesc($order = Criteria::ASC) Order by the desc column
+ * @method     ChildProductQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildProductQuery orderByUnityPrice($order = Criteria::ASC) Order by the unity_price column
  * @method     ChildProductQuery orderByInStock($order = Criteria::ASC) Order by the in_stock column
  *
  * @method     ChildProductQuery groupById() Group by the id column
  * @method     ChildProductQuery groupByTitle() Group by the title column
- * @method     ChildProductQuery groupByDesc() Group by the desc column
+ * @method     ChildProductQuery groupByDescription() Group by the description column
  * @method     ChildProductQuery groupByUnityPrice() Group by the unity_price column
  * @method     ChildProductQuery groupByInStock() Group by the in_stock column
  *
@@ -96,7 +96,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildProduct|null findOneById(int $id) Return the first ChildProduct filtered by the id column
  * @method     ChildProduct|null findOneByTitle(string $title) Return the first ChildProduct filtered by the title column
- * @method     ChildProduct|null findOneByDesc(string $desc) Return the first ChildProduct filtered by the desc column
+ * @method     ChildProduct|null findOneByDescription(string $description) Return the first ChildProduct filtered by the description column
  * @method     ChildProduct|null findOneByUnityPrice(double $unity_price) Return the first ChildProduct filtered by the unity_price column
  * @method     ChildProduct|null findOneByInStock(int $in_stock) Return the first ChildProduct filtered by the in_stock column
  *
@@ -105,7 +105,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildProduct requireOneById(int $id) Return the first ChildProduct filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByTitle(string $title) Return the first ChildProduct filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildProduct requireOneByDesc(string $desc) Return the first ChildProduct filtered by the desc column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProduct requireOneByDescription(string $description) Return the first ChildProduct filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByUnityPrice(double $unity_price) Return the first ChildProduct filtered by the unity_price column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProduct requireOneByInStock(int $in_stock) Return the first ChildProduct filtered by the in_stock column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -116,8 +116,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildProduct> findById(int|array<int> $id) Return ChildProduct objects filtered by the id column
  * @method     ChildProduct[]|Collection findByTitle(string|array<string> $title) Return ChildProduct objects filtered by the title column
  * @psalm-method Collection&\Traversable<ChildProduct> findByTitle(string|array<string> $title) Return ChildProduct objects filtered by the title column
- * @method     ChildProduct[]|Collection findByDesc(string|array<string> $desc) Return ChildProduct objects filtered by the desc column
- * @psalm-method Collection&\Traversable<ChildProduct> findByDesc(string|array<string> $desc) Return ChildProduct objects filtered by the desc column
+ * @method     ChildProduct[]|Collection findByDescription(string|array<string> $description) Return ChildProduct objects filtered by the description column
+ * @psalm-method Collection&\Traversable<ChildProduct> findByDescription(string|array<string> $description) Return ChildProduct objects filtered by the description column
  * @method     ChildProduct[]|Collection findByUnityPrice(double|array<double> $unity_price) Return ChildProduct objects filtered by the unity_price column
  * @psalm-method Collection&\Traversable<ChildProduct> findByUnityPrice(double|array<double> $unity_price) Return ChildProduct objects filtered by the unity_price column
  * @method     ChildProduct[]|Collection findByInStock(int|array<int> $in_stock) Return ChildProduct objects filtered by the in_stock column
@@ -221,7 +221,7 @@ abstract class ProductQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, title, desc, unity_price, in_stock FROM product WHERE id = :p0';
+        $sql = 'SELECT id, title, description, unity_price, in_stock FROM product WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -387,29 +387,29 @@ abstract class ProductQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the desc column
+     * Filter the query on the description column
      *
      * Example usage:
      * <code>
-     * $query->filterByDesc('fooValue');   // WHERE desc = 'fooValue'
-     * $query->filterByDesc('%fooValue%', Criteria::LIKE); // WHERE desc LIKE '%fooValue%'
-     * $query->filterByDesc(['foo', 'bar']); // WHERE desc IN ('foo', 'bar')
+     * $query->filterByDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDescription('%fooValue%', Criteria::LIKE); // WHERE description LIKE '%fooValue%'
+     * $query->filterByDescription(['foo', 'bar']); // WHERE description IN ('foo', 'bar')
      * </code>
      *
-     * @param string|string[] $desc The value to use as filter.
+     * @param string|string[] $description The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByDesc($desc = null, ?string $comparison = null)
+    public function filterByDescription($description = null, ?string $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($desc)) {
+            if (is_array($description)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        $this->addUsingAlias(ProductTableMap::COL_DESC, $desc, $comparison);
+        $this->addUsingAlias(ProductTableMap::COL_DESCRIPTION, $description, $comparison);
 
         return $this;
     }
