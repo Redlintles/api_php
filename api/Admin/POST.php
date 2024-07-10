@@ -16,6 +16,7 @@ $body = bodyParser();
 
 permissionValidator($apiKey, "CREATE");
 $auditObj = new AuditObj($apiKey, "CREATE", $request);
+$auditObj->setOperation("AddAdmin");
 
 if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permissions"])) {
     sendResponse(400, true, "Username,Password or/and Permissions is/are not defined", [], [
