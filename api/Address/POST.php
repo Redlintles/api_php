@@ -4,10 +4,14 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 
 $body = bodyParser();
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+
+$auditObj = new AuditObj($apiKey, "CREATE", $request);
+$auditObj->setOperation("CreateAddress");
 permissionValidator($apiKey, "CREATE");
 
 $addressObj = [];
@@ -47,7 +51,11 @@ $obj->setNumber($addressObj["number"]);
 $obj->save();
 
 if(isset($obj)) {
-    sendResponse(200, false, "Address Created Successfully", $obj->toArray());
+    sendResponse(200, false, "Address Created Successfully", $obj->toArray(), [], [
+        "audit" => $auditObj
+    ]);
 } else {
-    sendResponse(500, true, "An unexpected error ocurred");
+    sendResponse(500, true, "An unexpected error ocurred", [], [
+        "audit" => $auditObj
+    ]);
 }
