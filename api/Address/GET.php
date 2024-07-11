@@ -12,7 +12,8 @@ $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 permissionValidator($apiKey, "READ");
 
-$adminObj = new AdminObj($apiKey, "READ", $request);
+$auditObj = new AuditObj($apiKey, "READ", $request);
+$auditObj->setOperation("GetAddress");
 
 $body = bodyParser();
 
