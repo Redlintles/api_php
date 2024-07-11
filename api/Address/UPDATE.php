@@ -5,10 +5,16 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
 $body = bodyParser();
+
+
+$auditObj = new AuditObj($apiKey, "UPDATE", $request);
+
+$auditObj->setOperation("UpdateAddress");
 
 permissionValidator($apiKey, "UPDATE");
 
@@ -20,7 +26,9 @@ if(isset($body["address_id"])) {
 }
 
 if(!isset($targetAddress)) {
-    sendResponse(400, true, "address could not be found, is address_id set?");
+    sendResponse(400, true, "address could not be found, is address_id set?", [], [
+        "audit" => $auditObj
+    ]);
 }
 
 
@@ -57,7 +65,11 @@ foreach($mergeObj as $key => $value) {
 }
 
 if((bool)$targetAddress->save()) {
-    sendResponse(200, false, "Object updated successfully");
+    sendResponse(200, false, "Object updated successfully", [], [
+        "audit" => $auditObj
+    ]);
 } else {
-    sendResponse(500, true, "An unexpected error ocurred, try again later");
+    sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
+        "audit" => $auditObj
+    ]);
 }
