@@ -16,7 +16,7 @@ class AuditObj
         $this->operation = "unknown";
     }
 
-    public function postAudit(string $msg, string $code)
+    public function postAudit(string $msg, int $code)
     {
         $audit = new \Buildings\Audit();
         $dataStr = implode("/", [
