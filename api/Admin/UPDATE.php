@@ -5,6 +5,8 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/UpdateObject.php";
 
 $body = bodyParser();
 
@@ -28,7 +30,24 @@ if(isset($body["password"])) {
     $validatePassword($body["password"]);
 }
 
-$targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
+$body = groupValidation($body, [
+    "keys" => [
+        "admin_id" => $validateInteger,
+        "username?" => $validateUsername,
+        "password?" => $validatePassword,
+    ],
+    "at_least" => 2,
+    "audit" => $auditObj
+]);
+
+$targetUser = findSingle($body, [
+    "keys" => [
+        "admin_id" => $validateInteger
+    ],
+    "query" => \Buildings\AdminQuery::create(),
+    "audit" => $auditObj
+]);
+
 $isRoot = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey)->getUsername() === "root";
 
 
@@ -54,7 +73,7 @@ if($targetUser->getUsername() === "root") {
         sendResponse(400, true, "Root new password not specified", [], [
             "audit" => $auditObj
         ]);
-    } else {
+    } elseif($isRoot) {
         $targetUser->setPassword($body["password"]);
         $targetUser->save();
         sendResponse(200, false, "Root Password changed successfully", [], [
