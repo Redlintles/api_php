@@ -5,6 +5,8 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/UpdateObject.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -13,53 +15,25 @@ permissionValidator($apiKey, "UPDATE");
 $body = bodyParser();
 
 $auditObj = new AuditObj($apiKey, "UPDATE", $request);
-
 $auditObj->setOperation("UpdateClient");
-$targetClient = null;
+
+$targetClient = findSingle($body, [
+    "keys" => [
+        "client_id" => $validateInteger
+    ],
+    "query" => \Buildings\ClientQuery::create(),
+    "audit" => $auditObj
+]);
 
 
-if(isset($body["client_id"])) {
-    $validateInteger($body["client_id"]);
-    $targetClient = \Buildings\ClientQuery::create()->findOneById($body["client_id"]);
-}
-
-
-if(!isset($targetClient)) {
-    sendResponse(400, true, "User not found, is client_id specified?", [], [
-        "audit" => $auditObj
-    ]);
-}
-
-if(isset($body["username"])) {
-    $validateUsername($body["username"]);
-    $isUnique = \Buildings\ClientQuery::create()->findByUsername($body["username"]);
-
-    if(!$isUnique->isEmpty()) {
-        sendResponse(400, true, "Username already exists", [], [
-            "audit" => $auditObj
-        ]);
-    }
-    $targetClient->setUsername($body["username"]);
-}
-if(isset($body["email"])) {
-    $validateEmail($body["email"]);
-    $targetClient->setEmail($body["email"]);
-}
-if(isset($body["password"])) {
-    $validateUsername($body["password"]);
-    $targetClient->setPassword($body["password"]);
-}
-if(isset($body["phone_number"])) {
-    $validateUsername($body["phone_number"]);
-    $targetClient->setPhoneNumber($body["phone_number"]);
-}
-
-if((bool)$targetClient->save()) {
-    sendResponse(200, false, "Client updated successfully", ["client" => $targetClient->toArray()], [
-        "audit" => $auditObj
-    ]);
-} else {
-    sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
-        "audit" => $auditObj
-    ]);
-}
+UpdateObject($body, [
+    "username:unique" => $validateUsername,
+    "password" => $validatePassword,
+    "email" => $validateEmail,
+    "phone_number" => $validatePhoneNumber,
+], $targetClient, [
+    "audit" => $auditObj,
+    "result" => "client",
+    "success_msg" => "Client updated successfully",
+    "query" => \Buildings\ClientQuery::create()
+]);
