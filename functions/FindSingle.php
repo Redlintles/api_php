@@ -2,6 +2,13 @@
 
 use Symfony\Component\Validator\Constraints\Optional;
 
+/**
+ * @param array $body
+ * @param array $options
+ * @return object|null returns the found object or null
+ * @throws \Exception if the object is not found and throw_error is true
+ */
+
 function findSingle(array $body, array $options)
 {
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
@@ -30,10 +37,10 @@ function findSingle(array $body, array $options)
         sendResponse(400, true, "Object not found, have you set any of " . implode(",", $options["keys"]) . "?", [], [
             $audit => $options["audit"]
         ]);
+        throw new Exception("Object not found");
     } elseif(!isset($targetObj)) {
         return null;
-    } else {
-        return $targetObj;
     }
+    return $targetObj;
 
 }
