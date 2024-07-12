@@ -6,6 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
@@ -21,29 +22,20 @@ $auditObj->setOperation("DeleteAdmin");
 
 if($user->getUsername() === "root") {
 
-    $targetUser = null;
-
-    if(isset($body["admin_id"])) {
-        $validateInteger($body["admin_id"]);
-        $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
-    } elseif(isset($body["username"])) {
-        $validateUsername($body["username"]);
-        $targetUser = \Buildings\AdminQuery::create()->findOneByUsername($body["username"]);
-    }
-
-    if(!isset($targetUser)) {
-        sendResponse(400, true, "User not found", [], [
-            "audit" => $auditObj
-        ]);
-    }
+    $targetUser = findSingle($body, [
+        "keys" => [
+            "admin_id" => $validateInteger,
+            "username" => $validateUsername
+        ],
+        "audit" => $auditObj,
+        "query" => \Buildings\AdminQuery::create()
+    ]);
 
     if($targetUser->getUsername() === "root") {
         sendResponse(400, true, "Root cannot be deleted", [], [
             "audit" => $auditObj
         ]);
     }
-
-    $targetUser->delete();
     sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully", [], [
         "audit" => $auditObj
     ]);
