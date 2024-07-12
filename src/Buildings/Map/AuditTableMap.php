@@ -230,7 +230,7 @@ class AuditTableMap extends TableMap
         $this->addColumn('operation_executor', 'OperationExecutor', 'VARCHAR', true, 50, '');
         $this->addColumn('operation_type', 'OperationType', 'VARCHAR', true, 10, '');
         $this->addColumn('operation_route', 'OperationRoute', 'VARCHAR', true, 50, '');
-        $this->addColumn('operation_data_string', 'OperationDataString', 'VARCHAR', true, 80, '');
+        $this->addColumn('operation_data_string', 'OperationDataString', 'VARCHAR', true, 200, '');
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     }

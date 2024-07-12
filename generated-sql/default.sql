@@ -330,7 +330,7 @@ CREATE TABLE `audit`
     `operation_executor` VARCHAR(50) DEFAULT '' NOT NULL,
     `operation_type` VARCHAR(10) DEFAULT '' NOT NULL,
     `operation_route` VARCHAR(50) DEFAULT '' NOT NULL,
-    `operation_data_string` VARCHAR(80) DEFAULT '' NOT NULL,
+    `operation_data_string` VARCHAR(200) DEFAULT '' NOT NULL,
     `created_at` TIMESTAMP NULL,
     `updated_at` TIMESTAMP NULL,
     PRIMARY KEY (`id`)
