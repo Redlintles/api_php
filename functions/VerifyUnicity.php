@@ -4,6 +4,7 @@
 function VerifyUnicity($queryObj, string $key, string $value)
 {
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
 
 
     $methodName = null;
