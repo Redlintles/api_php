@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/CollectionToArray.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
@@ -22,16 +23,16 @@ $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
 
 if(isset($user) && $user->getUsername() === "root") {
 
-    $targetUser = null;
+    $targetUser = findSingle($body, [
+        "keys" => [
+            "admin_id" => $validateInteger,
+            "username" => $validateUsername,
+        ],
+        "audit" => $auditObj,
+        "query" => \Buildings\AdminQuery::create(),
+        "throw_error" => false
+    ]);
 
-
-    if(isset($body["admin_id"])) {
-        $validateInteger($body["admin_id"]);
-        $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
-    } elseif(isset($body["username"])) {
-        $validateUsername($body["username"]);
-        $targetUser = \Buildings\AdminQuery::create()->findOneByUsername($body["username"]);
-    }
     if(!isset($targetUser)) {
         $users = \Buildings\AdminQuery::create()->find();
 
