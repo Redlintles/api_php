@@ -5,6 +5,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $body = bodyParser();
 
@@ -14,31 +15,17 @@ $auditObj = new AuditObj($apiKey, "CREATE", $request);
 $auditObj->setOperation("CreateAddress");
 permissionValidator($apiKey, "CREATE");
 
-$addressObj = [];
-if(isset($body["country"])) {
-    $validateCapitalized($body["country"]);
-    $addressObj["country"] = $body["country"];
-}
-if(isset($body["state"])) {
-    $validateState($body["state"]);
-    $addressObj["state"] = $body["state"];
-}
-if(isset($body["city"])) {
-    $validateCapitalized($body["city"]);
-    $addressObj["city"] = $body["city"];
-}
-if(isset($body["neighborhood"])) {
-    $validateCapitalized($body["neighborhood"]);
-    $addressObj["neighborhood"] = $body["neighborhood"];
-}
-if(isset($body["street"])) {
-    $validateCapitalized($body["street"]);
-    $addressObj["street"] = $body["street"];
-}
-if(isset($body["house_number"])) {
-    $validateHouseNumber($body["house_number"]);
-    $addressObj["number"] = $body["house_number"];
-}
+$addressObj = groupValidation($body, [
+    "keys" => [
+        "country" => $validateCapitalized,
+        "state" => $validateState,
+        "city" => $validateCapitalized,
+        "neighborhood" => $validateCapitalized,
+        "street" => $validateCapitalized,
+        "house_number" => $validateHouseNumber
+    ],
+    "audit" => $auditObj,
+]);
 
 $obj = new \Buildings\Address();
 
@@ -47,7 +34,7 @@ $obj->setCity($addressObj["city"]);
 $obj->setState($addressObj["state"]);
 $obj->setStreet($addressObj["street"]);
 $obj->setNeighborhood($addressObj["neighborhood"]);
-$obj->setNumber($addressObj["number"]);
+$obj->setNumber($addressObj["house_number"]);
 $obj->save();
 
 if(isset($obj)) {
