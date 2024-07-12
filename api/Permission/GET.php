@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 function formatPermission(Permission $permissionObj)
 {
@@ -25,7 +26,9 @@ $targetUser = findSingle($body, [
     "keys" => [
         "admin_id" => $validateInteger,
         "username" => $validateUsername
-    ]
+    ],
+    "query" => \Buildings\AdminQuery::create(),
+    "audit" => $auditObj
 ]);
 
 if(isset($targetUser)) {
