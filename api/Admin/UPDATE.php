@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/UpdateObject.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $body = bodyParser();
 
@@ -76,7 +77,7 @@ if($targetUser->getUsername() === "root") {
     } elseif($isRoot) {
         $targetUser->setPassword($body["password"]);
         $targetUser->save();
-        sendResponse(200, false, "Root Password changed successfully", [], [
+        sendResponse(200, false, "Root Password changed successfully", ["user" => $targetUser->toArray()], [
             "audit" => $auditObj
         ]);
     }
@@ -102,7 +103,7 @@ if($targetUser->getUsername() === "root") {
         $targetUser->setPassword($body["password"]);
     }
     $targetUser->save();
-    sendResponse(200, false, "Root has changed username(and/or)password successfully", [], [
+    sendResponse(200, false, "Root has changed username(and/or)password of ". $targetUser->getUsername() ." successfully", ["user" => $targetUser->toArray()], [
         "audit" => $auditObj
     ]);
 
