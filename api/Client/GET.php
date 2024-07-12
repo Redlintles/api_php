@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/CollectionToArray.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -47,22 +48,14 @@ function fetchClientData(\Buildings\Client $targetClient)
     return $result;
 }
 
-
-$targetClient = null;
-
-if(isset($body["client_id"])) {
-    $validateInteger($body["client_id"]);
-    $targetClient = \Buildings\ClientQuery::create()->findOneById($body["client_id"]);
-} elseif(isset($body["username"])) {
-    $validateUsername($body["username"]);
-    $targetClient =  \Buildings\ClientQuery::create()->findOneByUsername($body["username"]);
-}
-
-if(!isset($targetClient)) {
-    sendResponse(400, true, "Client not found, is criteria(client_id,username) specified?", [], [
-        "audit" => $auditObj
-    ]);
-}
+$targetClient = findSingle($body, [
+    "keys" => [
+        "client_id" => $validateInteger,
+        "username" => $validateUsername
+    ],
+    "query" => \Buildings\ClientQuery::create(),
+    "audit" => $auditObj,
+]);
 
 $result = fetchClientData($targetClient);
 
