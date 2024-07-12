@@ -5,14 +5,14 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
-
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
 
 $body = bodyParser();
 
-
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
-$auditObj = new AuditObj($apikey, "UPDATE", $request);
+
+$auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("ChangePermission");
 
 if(!isset($user)) {
@@ -23,26 +23,14 @@ if(!isset($user)) {
 
 permissionValidator($apiKey, "UPDATE");
 
-$targetUser = null;
-
-if(isset($body["admin_id"])) {
-    $validateInteger($body["admin_id"]);
-    $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
-} elseif(isset($body["username"])) {
-    $validateUsername($body["username"]);
-    $targetUser = \Buildings\AdminQuery::create()->findOneByUsername($body["username"]);
-} else {
-    sendResponse(400, true, "No criteria for target user specified, body must contain either admin_id or username keys", [], [
-        "audit" => $auditObj
-    ]);
-}
-
-if(!isset($targetUser)) {
-
-    sendResponse(404, true, "Target user not found", [], [
-        "audit" => $auditObj
-    ]);
-}
+$targetUser = findSingle($body, [
+    "keys" => [
+        "admin_id" => $validateInteger,
+        "username" => $validateUsername
+    ],
+    "query" => \Buildings\AdminQuery::create(),
+    "audit" => $auditObj
+]);
 
 if(!isset($body["permission"])) {
     sendResponse(400, true, "permission string not specified", [], [
