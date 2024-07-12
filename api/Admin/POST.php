@@ -5,6 +5,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 use Ramsey\Uuid\Uuid;
 use Propel\Runtime\Propel;
@@ -24,9 +25,17 @@ if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permi
     ]);
 }
 
-$validateUsername($body["username"]);
-$validatePassword($body["password"]);
-$validatePermissionString($body["permissions"]);
+
+$body = groupValidation($body, [
+    "keys" => [
+        "username" => $validateUsername,
+        "password" => $validatePassword,
+        "permissions" => $validatePermissionString
+    ],
+    "audit" => $auditObj,
+
+]);
+
 
 $permissionString = $body["permissions"];
 
