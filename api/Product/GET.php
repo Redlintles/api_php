@@ -19,7 +19,7 @@ $body = bodyParser();
 
 $targetProduct = findSingle($body, [
     "audit" => $auditObj,
-    "keys" => ["product_id" => $validateInteger,"title" => $validateLocation],
+    "keys" => ["product_id" => $validateInteger,"title" => $validateCapitalized],
     "query" => \Buildings\ProductQuery::create(),
 ]);
 

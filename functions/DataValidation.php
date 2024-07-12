@@ -49,9 +49,9 @@ $validateState = validationFactory(
     "Invalid state(must be a capitalized string"
 );
 
-$validateLocation = validationFactory(
+$validateCapitalized = validationFactory(
     "/^(?:[A-Z][a-z]+\s?)+$/",
-    "Invalid location(must be a capitalized string"
+    "Invalid Capitalized String(must be a capitalized string)"
 );
 
 $validateHouseNumber = validationFactory(

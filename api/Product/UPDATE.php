@@ -18,13 +18,13 @@ $body = bodyParser();
 
 $targetProduct = findSingle($body, [
     "audit" => $auditObj,
-    "keys" => ["product_id" => $validateInteger, "title" => $validateLocation],
+    "keys" => ["product_id" => $validateInteger, "title" => $validateCapitalized],
     "query" => \Buildings\ProductQuery::create()
 ]);
 
 
 UpdateObject($body, [
-    "title:unique" => $validateLocation,
+    "title:unique" => $validateCapitalized,
     "desc" => function () {},
     "in_stock" => $validateInteger,
     "unity_price" => $validateUnityPrice,

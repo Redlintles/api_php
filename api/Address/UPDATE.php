@@ -35,7 +35,7 @@ if(!isset($targetAddress)) {
 $mergeObj = [];
 
 if($body["country"]) {
-    $validateLocation($body["country"]);
+    $validateCapitalized($body["country"]);
     $mergeObj["country"] = $body["country"];
 }
 if($body["state"]) {
@@ -43,15 +43,15 @@ if($body["state"]) {
     $mergeObj["state"] = $body["state"];
 }
 if($body["city"]) {
-    $validateLocation($body["city"]);
+    $validateCapitalized($body["city"]);
     $mergeObj["city"] = $body["city"];
 }
 if($body["neighborhood"]) {
-    $validateLocation($body["neighborhood"]);
+    $validateCapitalized($body["neighborhood"]);
     $mergeObj["neighborhood"] = $body["neighborhood"];
 }
 if($body["street"]) {
-    $validateLocation($body["street"]);
+    $validateCapitalized($body["street"]);
     $mergeObj["street"] = $body["street"];
 }
 if($body["house_number"]) {

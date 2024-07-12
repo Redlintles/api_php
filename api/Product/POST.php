@@ -19,7 +19,7 @@ $auditObj = new AuditObj($apiKey, "CREATE", $request);
 
 function addToProduct()
 {
-    global $body,$validateInteger,$validateLocation,$apiKey,$auditObj;
+    global $body,$validateInteger,$validateCapitalized,$apiKey,$auditObj;
 
     $auditObj->setOperation("AddQtd");
 
@@ -28,7 +28,7 @@ function addToProduct()
         $validateInteger($body["product_id"]);
         $targetProduct = \Buildings\ProductQuery::create()->findOneById($body["product_id"]);
     } elseif(isset($body["title"])) {
-        $validateLocation($body["title"]);
+        $validateCapitalized($body["title"]);
         $targetProduct = \Buildings\ProductQuery::create()->findOneByTitle($body["title"]);
     }
 
@@ -69,7 +69,7 @@ function createProduct()
 
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
 
-    global $body,$validateInteger,$validateLocation,$validateUnityPrice,$apiKey,$auditObj;
+    global $body,$validateInteger,$validateCapitalized,$validateUnityPrice,$apiKey,$auditObj;
 
     $auditObj->setOperation("CreateProduct");
 
@@ -84,7 +84,7 @@ function createProduct()
     echo (bool)isset($validateInteger);
 
     $validateInteger($body["in_stock"]);
-    $validateLocation($body["title"]);
+    $validateCapitalized($body["title"]);
     $validateUnityPrice($body["unity_price"]);
 
     $product = new \Buildings\Product();

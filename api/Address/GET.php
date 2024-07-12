@@ -20,7 +20,7 @@ $body = bodyParser();
 $queryObj = [];
 
 if(isset($body["country"])) {
-    $validateLocation($body["country"]);
+    $validateCapitalized($body["country"]);
     $queryObj["country"] = $body["country"];
 }
 if(isset($body["state"])) {
@@ -28,15 +28,15 @@ if(isset($body["state"])) {
     $queryObj["state"] = $body["state"];
 }
 if(isset($body["city"])) {
-    $validateLocation($body["city"]);
+    $validateCapitalized($body["city"]);
     $queryObj["city"] = $body["city"];
 }
 if(isset($body["neighborhood"])) {
-    $validateLocation($body["neighborhood"]);
+    $validateCapitalized($body["neighborhood"]);
     $queryObj["neighborhood"] = $body["neighborhood"];
 }
 if(isset($body["street"])) {
-    $validateLocation($body["street"]);
+    $validateCapitalized($body["street"]);
     $queryObj["street"] = $body["street"];
 }
 if(isset($body["house_number"])) {

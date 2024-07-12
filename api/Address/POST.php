@@ -16,7 +16,7 @@ permissionValidator($apiKey, "CREATE");
 
 $addressObj = [];
 if(isset($body["country"])) {
-    $validateLocation($body["country"]);
+    $validateCapitalized($body["country"]);
     $addressObj["country"] = $body["country"];
 }
 if(isset($body["state"])) {
@@ -24,15 +24,15 @@ if(isset($body["state"])) {
     $addressObj["state"] = $body["state"];
 }
 if(isset($body["city"])) {
-    $validateLocation($body["city"]);
+    $validateCapitalized($body["city"]);
     $addressObj["city"] = $body["city"];
 }
 if(isset($body["neighborhood"])) {
-    $validateLocation($body["neighborhood"]);
+    $validateCapitalized($body["neighborhood"]);
     $addressObj["neighborhood"] = $body["neighborhood"];
 }
 if(isset($body["street"])) {
-    $validateLocation($body["street"]);
+    $validateCapitalized($body["street"]);
     $addressObj["street"] = $body["street"];
 }
 if(isset($body["house_number"])) {
