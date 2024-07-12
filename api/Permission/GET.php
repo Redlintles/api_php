@@ -6,7 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
-
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 
 function formatPermission(Permission $permissionObj)
 {
@@ -16,21 +16,22 @@ $body = bodyParser();
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
-
-
 permissionValidator($apiKey, "READ");
 $auditObj = new AuditObj($apiKey, "READ", $request);
 $auditObj->setOperation("GetPermission");
 
 $user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
-$targetUser = null;
-$target = false;
-if(isset($body["admin_id"])) {
-    $targetUser = \Buildings\AdminQuery::create()->findOneById($body["admin_id"]);
+$targetUser = findSingle($body, [
+    "keys" => [
+        "admin_id" => $validateInteger,
+        "username" => $validateUsername
+    ]
+]);
+
+if(isset($targetUser)) {
     $target = true;
-} elseif(isset($body["username"])) {
-    $targetUser = \Buildings\AdminQuery::create()->findOneByUsername($body["username"]);
-    $target = true;
+} else {
+    $target = false;
 }
 
 if($user->getUsername() !== "root" && isset($targetUser)) {
