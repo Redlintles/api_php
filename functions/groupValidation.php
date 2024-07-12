@@ -7,6 +7,10 @@ function groupValidation($body, $options)
 {
     $validatedObj = [];
 
+    if(!isset($options["at_least"])) {
+        $options["at_least"] = count($options["keys"]);
+    }
+
 
     if(!isset($options["keys"]) || !isset($options["audit"])) {
         return null;
