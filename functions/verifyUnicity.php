@@ -1,9 +1,9 @@
 <?php
 
 
-function VerifyUnicity($queryObj, string $key, string $value)
+function verifyUnicity($queryObj, string $key, string $value)
 {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
 
 

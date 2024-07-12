@@ -1,16 +1,16 @@
 <?php
 
 
-function UpdateObject(array $body, array $keys, $targetObject, $options)
+function updateObject(array $body, array $keys, $targetObject, $options)
 {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/VerifyUnicity.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/verifyUnicity.php";
     foreach($keys as $key => $validation) {
         if(preg_match("/:unique/", $key)) {
             $key = explode(":", $key)[0];
-            VerifyUnicity($options["query"], $key, $body[$key]);
+            verifyUnicity($options["query"], $key, $body[$key]);
         }
         if(isset($body[$key])) {
             $validation($body[$key]);

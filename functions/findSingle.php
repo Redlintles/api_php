@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Optional;
 
 function findSingle(array $body, array $options)
 {
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
     $targetObj = null;
 

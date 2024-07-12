@@ -4,8 +4,8 @@ require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/conf/config.php";
 
 require_once __DIR__ . "/functions/initDb.php";
-require_once __DIR__ . "/functions/ApiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
-require_once __DIR__ . "/functions/SendResponse.php";
+require_once __DIR__ . "/functions/apiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
+require_once __DIR__ . "/functions/sendResponse.php";
 initRoot();
 
 $request = parse_url($_SERVER["REQUEST_URI"])["path"];

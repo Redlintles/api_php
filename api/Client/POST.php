@@ -2,13 +2,13 @@
 
 use Propel\Runtime\Propel;
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/VerifyUnicity.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/verifyUnicity.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $transaction = Propel::getConnection(\Buildings\Map\ClientTableMap::DATABASE_NAME);
@@ -39,7 +39,7 @@ $newClient->setEmail($body["email"]);
 $newClient->setPassword($body["password"]);
 $newClient->setPhoneNumber($body["phone_number"]);
 
-VerifyUnicity(\Buildings\ClientQuery::create(), "username", $body["username"]);
+verifyUnicity(\Buildings\ClientQuery::create(), "username", $body["username"]);
 
 if((bool)$newClient->save()) {
 

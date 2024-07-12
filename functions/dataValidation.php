@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 
 function validationFactory(string $regex, string $message)
 {

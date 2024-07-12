@@ -1,12 +1,12 @@
 <?php
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/SendResponse.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/UpdateObject.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/updateObject.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -23,7 +23,7 @@ $targetProduct = findSingle($body, [
 ]);
 
 
-UpdateObject($body, [
+updateObject($body, [
     "title:unique" => $validateCapitalized,
     "desc" => function () {},
     "in_stock" => $validateInteger,
