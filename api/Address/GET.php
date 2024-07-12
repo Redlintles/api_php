@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/CollectionToArray.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -17,33 +18,19 @@ $auditObj->setOperation("GetAddress");
 
 $body = bodyParser();
 
-$queryObj = [];
+$queryObj = groupValidation($body, [
+    "keys" => [
+        "country?" => $validateCapitalized,
+        "state?" => $validateState,
+        "city?" => $validateCapitalized,
+        "neighborhood?" => $validateCapitalized,
+        "street?" => $validateCapitalized,
+        "house_number?" => $validateHouseNumber,
 
-if(isset($body["country"])) {
-    $validateCapitalized($body["country"]);
-    $queryObj["country"] = $body["country"];
-}
-if(isset($body["state"])) {
-    $validateState($body["state"]);
-    $queryObj["state"] = $body["state"];
-}
-if(isset($body["city"])) {
-    $validateCapitalized($body["city"]);
-    $queryObj["city"] = $body["city"];
-}
-if(isset($body["neighborhood"])) {
-    $validateCapitalized($body["neighborhood"]);
-    $queryObj["neighborhood"] = $body["neighborhood"];
-}
-if(isset($body["street"])) {
-    $validateCapitalized($body["street"]);
-    $queryObj["street"] = $body["street"];
-}
-if(isset($body["house_number"])) {
-    $validateHouseNumber($body["house_number"]);
-    $queryObj["house_number"] = $body["house_number"];
-}
-
+    ],
+    "at_least" => 1,
+    "audit" => $auditObj
+]);
 $addresses = dynamicQuery(\Buildings\AddressQuery::create(), $queryObj);
 
 
