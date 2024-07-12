@@ -5,9 +5,11 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/PermissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/DataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/Audit.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/FindSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/VerifyUnicity.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
-
 
 $body = bodyParser();
 
@@ -15,28 +17,20 @@ permissionValidator($apiKey, "CREATE");
 
 $auditObj = new AuditObj($apiKey, "CREATE", $request);
 
-
-
 function addToProduct()
 {
     global $body,$validateInteger,$validateCapitalized,$apiKey,$auditObj;
 
     $auditObj->setOperation("AddQtd");
 
-    $targetProduct = null;
-    if(isset($body["product_id"])) {
-        $validateInteger($body["product_id"]);
-        $targetProduct = \Buildings\ProductQuery::create()->findOneById($body["product_id"]);
-    } elseif(isset($body["title"])) {
-        $validateCapitalized($body["title"]);
-        $targetProduct = \Buildings\ProductQuery::create()->findOneByTitle($body["title"]);
-    }
-
-    if(!isset($targetProduct)) {
-        sendResponse(400, true, "Product could not be found, is product_id or title set?", [], [
-            "audit" => $auditObj
-        ]);
-    }
+    $targetProduct = findSingle($body, [
+        "keys" => [
+            "product_id" => $validateInteger,
+            "title" => $validateCapitalized,
+        ],
+        "query" => \Buildings\ProductQuery::create(),
+        "audit" => $auditObj
+    ]);
 
     if(!isset($body["quantity"])) {
         sendResponse(400, true, "Quantity is not set, it should be an integer greater than zero", [], [
@@ -59,10 +53,7 @@ function addToProduct()
             "audit" => $auditObj
         ]);
     }
-
 }
-
-
 
 function createProduct()
 {
@@ -73,24 +64,22 @@ function createProduct()
 
     $auditObj->setOperation("CreateProduct");
 
-    $keys = ["title","description","in_stock","unity_price"];
+    $body = groupValidation($body, [
+        "keys" => [
+            "in_stock" => $validateInteger,
+            "title" => $validateCapitalized,
+            "description" => function () {},
+            "unity_price" => $validateUnityPrice
+        ],
+        "audit" => $auditObj
+    ]);
 
-    if(count(array_intersect_key($keys, array_keys($body))) !== count($keys)) {
-        sendResponse(400, true, "Invalid body, for creating a new product, it should contain title, desc, in_stock and unity_price fields", [], [
-            "audit" => $auditObj
-        ]);
-    }
-
-    echo (bool)isset($validateInteger);
-
-    $validateInteger($body["in_stock"]);
-    $validateCapitalized($body["title"]);
-    $validateUnityPrice($body["unity_price"]);
+    VerifyUnicity(\Buildings\ProductQuery::create(), "title", $body["title"]);
 
     $product = new \Buildings\Product();
-    foreach($keys as $field) {
+    foreach($body as $field => $value) {
         $methodName = "set" . ucfirst(snakeToCamel($field));
-        $product->$methodName($body[$field]);
+        $product->$methodName($value);
     }
 
     if($product->save()) {
@@ -102,9 +91,6 @@ function createProduct()
             "audit" => $auditObj
         ]);
     }
-
-
-
 }
 if(!isset($body["type"])) {
     sendResponse(400, true, "Type field is not set in the request body", [], [
