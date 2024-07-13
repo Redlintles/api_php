@@ -34,7 +34,7 @@ function findSingle(array $body, array $options)
     }
 
     if(!isset($targetObj) && $options["throw_error"]) {
-        sendResponse(400, true, "Object not found, have you set any of " . implode(",", $options["keys"]) . "?", [], [
+        sendResponse(400, true, "Object not found, have you set any of " . implode(",", array_keys($options["keys"])) . "?", [], [
             $audit => $options["audit"]
         ]);
         throw new Exception("Object not found");
