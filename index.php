@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . "/vendor/autoload.php";
-require_once __DIR__ . "/conf/config.php";
+require_once __DIR__ . "/generated-conf/config.php";
 
 require_once __DIR__ . "/functions/initDb.php";
 require_once __DIR__ . "/functions/apiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php

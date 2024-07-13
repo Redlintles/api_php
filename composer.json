@@ -1,20 +1,20 @@
 {
-    "name": "jota/api_php",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Buildings\\": "src/Buildings"
-        }
-    },
-    "authors": [
-        {
-            "name": "redlintles",
-            "email": "treelands54@gmail.com"
-        }
-    ],
-    "minimum-stability": "alpha",
-    "require": {
-        "propel/propel": "^2.0@beta",
-        "ramsey/uuid": "^4.7"
+  "name": "jota/api_php",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Buildings\\": "generated-classes/Buildings"
     }
+  },
+  "authors": [
+    {
+      "name": "redlintles",
+      "email": "treelands54@gmail.com"
+    }
+  ],
+  "minimum-stability": "alpha",
+  "require": {
+    "propel/propel": "^2.0@beta",
+    "ramsey/uuid": "^4.7"
+  }
 }
