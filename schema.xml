@@ -76,6 +76,7 @@
     </behavior>
   </table>
   <table name="cart_products" phpName="CartProduct">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="id_cart" type="INTEGER" required="true" defaultValue="1"/>
     <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
     <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>

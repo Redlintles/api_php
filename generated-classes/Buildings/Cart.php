@@ -4,6 +4,8 @@ namespace Buildings;
 
 use Buildings\Base\Cart as BaseCart;
 
+require_once __DIR__ . "/../../functions/collectionToArray.php";
+
 /**
  * Skeleton subclass for representing a row from the 'cart' table.
  *
@@ -15,5 +17,57 @@ use Buildings\Base\Cart as BaseCart;
  */
 class Cart extends BaseCart
 {
+    public function addProduct(\Buildings\Product $targetProduct, int $qtd = 1)
+    {
+        $cartRows = \Buildings\CartProductQuery::create()->filterByIdCart($this->getId())->find();
 
+        $alreadyInCart = false;
+        foreach($cartRows as $row) {
+            if($targetProduct->getId() === $row->getIdProduct()) {
+                $row->setQuantity($row->getQuantity() + $qtd);
+                $alreadyInCart = true;
+                $row->save();
+                break;
+            }
+        }
+
+        if(!$alreadyInCart) {
+            $row = new \Buildings\CartProduct();
+            $row->setIdCart($this->getId());
+            $row->setIdProduct($this->getId());
+            $row->setQuantity($qtd);
+            $row->save();
+        }
+    }
+
+    public function removeProduct(\Buildings\Product $targetProduct, int $qtd = null)
+    {
+        $productRows = \Buildings\CartProductQuery::create()->filterByIdCart($this->getId())->find();
+
+        foreach($productRows as $row) {
+            if($row->getIdProduct() === $targetProduct->getId()) {
+
+                if($qtd === null) {
+                    $qtd = $row->getQuantity();
+                }
+                $newQtd = $row->getQuantity() - $qtd > 0 ? $row->getQuantity() - $qtd : 0;
+
+
+                if($newQtd === 0) {
+                    $row->delete();
+                } else {
+                    $row->setQuantity($newQtd);
+                    $row->save();
+                }
+                break;
+            }
+        }
+    }
+
+    public function getProducts()
+    {
+        $cartProducts = \Buildings\CartProductQuery::create()->find();
+        return collectionToArray($cartProducts);
+
+    }
 }

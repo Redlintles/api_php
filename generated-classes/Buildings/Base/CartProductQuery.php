@@ -3,6 +3,7 @@
 namespace Buildings\Base;
 
 use \Exception;
+use \PDO;
 use Buildings\CartProduct as ChildCartProduct;
 use Buildings\CartProductQuery as ChildCartProductQuery;
 use Buildings\Map\CartProductTableMap;
@@ -13,16 +14,17 @@ use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 
 /**
  * Base class that represents a query for the `cart_products` table.
  *
+ * @method     ChildCartProductQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCartProductQuery orderByIdCart($order = Criteria::ASC) Order by the id_cart column
  * @method     ChildCartProductQuery orderByIdProduct($order = Criteria::ASC) Order by the id_product column
  * @method     ChildCartProductQuery orderByQuantity($order = Criteria::ASC) Order by the quantity column
  *
+ * @method     ChildCartProductQuery groupById() Group by the id column
  * @method     ChildCartProductQuery groupByIdCart() Group by the id_cart column
  * @method     ChildCartProductQuery groupByIdProduct() Group by the id_product column
  * @method     ChildCartProductQuery groupByQuantity() Group by the quantity column
@@ -60,6 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCartProduct|null findOne(?ConnectionInterface $con = null) Return the first ChildCartProduct matching the query
  * @method     ChildCartProduct findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildCartProduct matching the query, or a new ChildCartProduct object populated from the query conditions when no match is found
  *
+ * @method     ChildCartProduct|null findOneById(int $id) Return the first ChildCartProduct filtered by the id column
  * @method     ChildCartProduct|null findOneByIdCart(int $id_cart) Return the first ChildCartProduct filtered by the id_cart column
  * @method     ChildCartProduct|null findOneByIdProduct(int $id_product) Return the first ChildCartProduct filtered by the id_product column
  * @method     ChildCartProduct|null findOneByQuantity(int $quantity) Return the first ChildCartProduct filtered by the quantity column
@@ -67,6 +70,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCartProduct requirePk($key, ?ConnectionInterface $con = null) Return the ChildCartProduct by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCartProduct requireOne(?ConnectionInterface $con = null) Return the first ChildCartProduct matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
+ * @method     ChildCartProduct requireOneById(int $id) Return the first ChildCartProduct filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCartProduct requireOneByIdCart(int $id_cart) Return the first ChildCartProduct filtered by the id_cart column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCartProduct requireOneByIdProduct(int $id_product) Return the first ChildCartProduct filtered by the id_product column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCartProduct requireOneByQuantity(int $quantity) Return the first ChildCartProduct filtered by the quantity column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -74,6 +78,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCartProduct[]|Collection find(?ConnectionInterface $con = null) Return ChildCartProduct objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildCartProduct> find(?ConnectionInterface $con = null) Return ChildCartProduct objects based on current ModelCriteria
  *
+ * @method     ChildCartProduct[]|Collection findById(int|array<int> $id) Return ChildCartProduct objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildCartProduct> findById(int|array<int> $id) Return ChildCartProduct objects filtered by the id column
  * @method     ChildCartProduct[]|Collection findByIdCart(int|array<int> $id_cart) Return ChildCartProduct objects filtered by the id_cart column
  * @psalm-method Collection&\Traversable<ChildCartProduct> findByIdCart(int|array<int> $id_cart) Return ChildCartProduct objects filtered by the id_cart column
  * @method     ChildCartProduct[]|Collection findByIdProduct(int|array<int> $id_product) Return ChildCartProduct objects filtered by the id_product column
@@ -140,13 +146,89 @@ abstract class CartProductQuery extends ModelCriteria
      */
     public function findPk($key, ?ConnectionInterface $con = null)
     {
-        throw new LogicException('The CartProduct object has no primary key');
+        if ($key === null) {
+            return null;
+        }
+
+        if ($con === null) {
+            $con = Propel::getServiceContainer()->getReadConnection(CartProductTableMap::DATABASE_NAME);
+        }
+
+        $this->basePreSelect($con);
+
+        if (
+            $this->formatter || $this->modelAlias || $this->with || $this->select
+            || $this->selectColumns || $this->asColumns || $this->selectModifiers
+            || $this->map || $this->having || $this->joins
+        ) {
+            return $this->findPkComplex($key, $con);
+        }
+
+        if ((null !== ($obj = CartProductTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+
+        return $this->findPkSimple($key, $con);
+    }
+
+    /**
+     * Find object by primary key using raw SQL to go fast.
+     * Bypass doSelect() and the object formatter by using generated code.
+     *
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildCartProduct A model object, or null if the key is not found
+     */
+    protected function findPkSimple($key, ConnectionInterface $con)
+    {
+        $sql = 'SELECT id, id_cart, id_product, quantity FROM cart_products WHERE id = :p0';
+        try {
+            $stmt = $con->prepare($sql);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (Exception $e) {
+            Propel::log($e->getMessage(), Propel::LOG_ERR);
+            throw new PropelException(sprintf('Unable to execute SELECT statement [%s]', $sql), 0, $e);
+        }
+        $obj = null;
+        if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildCartProduct $obj */
+            $obj = new ChildCartProduct();
+            $obj->hydrate($row);
+            CartProductTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
+        }
+        $stmt->closeCursor();
+
+        return $obj;
+    }
+
+    /**
+     * Find object by primary key.
+     *
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
+     *
+     * @return ChildCartProduct|array|mixed the result, formatted by the current formatter
+     */
+    protected function findPkComplex($key, ConnectionInterface $con)
+    {
+        // As the query uses a PK condition, no limit(1) is necessary.
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKey($key)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->formatOne($dataFetcher);
     }
 
     /**
      * Find objects by primary key
      * <code>
-     * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
+     * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
      * @param array $keys Primary keys to use for the query
      * @param ConnectionInterface $con an optional connection object
@@ -155,7 +237,16 @@ abstract class CartProductQuery extends ModelCriteria
      */
     public function findPks($keys, ?ConnectionInterface $con = null)
     {
-        throw new LogicException('The CartProduct object has no primary key');
+        if (null === $con) {
+            $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
+        }
+        $this->basePreSelect($con);
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKeys($keys)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->format($dataFetcher);
     }
 
     /**
@@ -167,7 +258,10 @@ abstract class CartProductQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
-        throw new LogicException('The CartProduct object has no primary key');
+
+        $this->addUsingAlias(CartProductTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
@@ -179,7 +273,53 @@ abstract class CartProductQuery extends ModelCriteria
      */
     public function filterByPrimaryKeys($keys)
     {
-        throw new LogicException('The CartProduct object has no primary key');
+
+        $this->addUsingAlias(CartProductTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterById($id = null, ?string $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(CartProductTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(CartProductTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        $this->addUsingAlias(CartProductTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -675,8 +815,7 @@ abstract class CartProductQuery extends ModelCriteria
     public function prune($cartProduct = null)
     {
         if ($cartProduct) {
-            throw new LogicException('CartProduct object has no primary key');
-
+            $this->addUsingAlias(CartProductTableMap::COL_ID, $cartProduct->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

@@ -144,9 +144,11 @@ DROP TABLE IF EXISTS `cart_products`;
 
 CREATE TABLE `cart_products`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_cart` INTEGER DEFAULT 1 NOT NULL,
     `id_product` INTEGER DEFAULT 1 NOT NULL,
     `quantity` INTEGER DEFAULT 1 NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_t_product_cart` (`id_cart`),
     INDEX `fi_t_product_product` (`id_product`),
     CONSTRAINT `cart_product_cart`

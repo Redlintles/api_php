@@ -15,5 +15,4 @@ use Buildings\Base\CartProduct as BaseCartProduct;
  */
 class CartProduct extends BaseCartProduct
 {
-
 }
