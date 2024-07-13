@@ -21,7 +21,7 @@ function addToProduct()
 {
     global $body,$validateInteger,$validateCapitalized,$apiKey,$auditObj;
 
-    $auditObj->setOperation("AddQtd");
+    $auditObj->setOperation("IncQtd");
 
     $targetProduct = findSingle($body, [
         "keys" => [
@@ -32,27 +32,12 @@ function addToProduct()
         "audit" => $auditObj
     ]);
 
-    if(!isset($body["quantity"])) {
-        sendResponse(400, true, "Quantity is not set, it should be an integer greater than zero", [], [
-            "audit" => $auditObj
-        ]);
-    }
-    if(!(is_int($body["quantity"]) && (int)$body["quantity"] > 0)) {
-        sendResponse(400, true, "quantity field value is not valid", [], [
-            "audit" => $auditObj
-        ]);
-    }
-    $oldQuantity = $targetProduct->getInStock();
-    $targetProduct->setInStock($oldQuantity + (int)$body["quantity"]);
-    if($targetProduct->save()) {
-        sendResponse(200, false, $body["quantity"] . " units added to product " . $targetProduct->getTitle() . "(total=" . $targetProduct->getInStock() . ")", $targetProduct->toArray(), [
-            "audit" => $auditObj
-        ]);
-    } else {
-        sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
-            "audit" => $auditObj
-        ]);
-    }
+    $validateInteger($body["quantity"]);
+    $targetProduct->incrementProduct($body["quantity"]);
+
+    sendResponse(400, true, "Product quantity incremented by " . $body["quantity"] . " Successfully(total=" . $targetProduct->getInStock() . ")", ["product" => $targetProduct->toArray()], [
+        "audit" => $auditObj
+    ]);
 }
 
 function createProduct()
