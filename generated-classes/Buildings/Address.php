@@ -15,8 +15,4 @@ use Buildings\Base\Address as BaseAddress;
  */
 class Address extends BaseAddress
 {
-    public function hello()
-    {
-        echo "Hello";
-    }
 }
