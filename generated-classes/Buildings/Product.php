@@ -15,5 +15,18 @@ use Buildings\Base\Product as BaseProduct;
  */
 class Product extends BaseProduct
 {
+    public function decrementProduct(int $qtd)
+    {
+        $newQtd = $this->getInStock() - $qtd > 0 ? $this->getInStock() - $qtd : 0;
+        $this->setInStock($newQtd);
+        $this->save();
+    }
+
+    public function incrementProduct(int $qtd)
+    {
+        $newQtd = $this->getInStock() + $qtd;
+        $this->setInStock($newQtd);
+        $this->save();
+    }
 
 }
