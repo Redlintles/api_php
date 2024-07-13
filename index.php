@@ -39,6 +39,9 @@ switch ($request) {
     case "/api/product":
         require_once __DIR__ . "/api/Product/router.php";
         break;
+    case "/api/cart":
+        require_once __DIR__ . "/api/Cart/router.php";
+        // no break
     default:
         // Rota padrão para tratamento de 404
         sendResponse(404, true, "Page not found");
