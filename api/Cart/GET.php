@@ -27,9 +27,6 @@ $targetCart = findSingle($body, [
     "query" => \Buildings\CartQuery::create()
 ]);
 
-$cartProducts = \Buildings\CartProductQuery::create()->filterByIdCart($targetCart->getId())->find();
-
-
-sendResponse(200, false, "Cart fetched successfully", ["cart" => $targetCart->toArray(),"cart_products" => collectionToArray($cartProducts)], [
+sendResponse(200, false, "Cart fetched successfully", ["cart" => $targetCart->toArray(),"cart_products" => $targetCart->getProducts()], [
     "audit" => $auditObj
 ]);
