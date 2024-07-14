@@ -6,5 +6,5 @@ if($_SERVER["REQUEST_METHOD"] === "GET") {
 } elseif($_SERVER["REQUEST_METHOD"] === "POST") {
     require_once __DIR__ . "/AddCartProduct.php";
 } elseif($_SERVER["REQUEST_METHOD"] === "DELETE") {
-    require_once __DIR__ . "/DeleteCartProduct.php";
+    require_once __DIR__ . "/RemoveCartProduct.php";
 }
