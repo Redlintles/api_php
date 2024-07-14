@@ -70,6 +70,8 @@ class Cart extends BaseCart
 
         $result = [];
 
+        $finalPrice = 0;
+
         foreach($cartProducts as $row) {
             $product = \Buildings\ProductQuery::create()
             ->useCartProductQuery()
@@ -79,9 +81,13 @@ class Cart extends BaseCart
             ->findOneById($row->getIdProduct());
             $arr = $product;
             $arr["final_price"] = $arr["quantity"] * $arr["unity_price"];
+            $finalPrice += $arr["final_price"];
             array_push($result, $arr);
         }
-        return $result;
+        return [
+            "products" => $result,
+            "final_price" => $finalPrice
+        ];
 
     }
 }

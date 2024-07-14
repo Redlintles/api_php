@@ -47,7 +47,13 @@ $targetCart->removeProduct($targetProduct, isset($body["quantity"]) ? $body["qua
 
 
 $clientUsername = \Buildings\ClientQuery::create()->findOneById($targetCart->getIdClient())->getUsername();
-sendResponse(200, false, "Product " .$targetProduct->getTitle(). " Removed from " . $clientUsername ."'s cart", [
-    "product" => $targetProduct->toArray(),
-    "cart_products" => $targetCart->getProducts()
-], ["audit" => $auditObj]);
+sendResponse(
+    200,
+    false,
+    "Product " .$targetProduct->getTitle(). " Removed from " . $clientUsername ."'s cart",
+    array_merge(
+        ["product" => $targetProduct->toArray()],
+        $targetCart->getProducts()
+    ),
+    ["audit" => $auditObj]
+);

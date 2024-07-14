@@ -27,6 +27,6 @@ $targetCart = findSingle($body, [
     "query" => \Buildings\CartQuery::create()
 ]);
 
-sendResponse(200, false, "Cart fetched successfully", ["cart" => $targetCart->toArray(),"cart_products" => $targetCart->getProducts()], [
+sendResponse(200, false, "Cart fetched successfully", array_merge(["cart" => $targetCart->toArray()], $targetCart->getProducts()), [
     "audit" => $auditObj
 ]);

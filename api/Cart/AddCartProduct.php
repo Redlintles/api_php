@@ -51,6 +51,6 @@ sendResponse(
     200,
     false,
     "Product " . $targetProduct->getTitle() . " Added to " . $clientUsername->getUsername() . "'s cart successfully",
-    ["cart" => $targetCart->toArray(),"products" => $targetCart->getProducts()],
+    array_merge(["cart" => $targetCart->toArray()], $targetCart->getProducts()),
     ["audit" => $auditObj]
 );
