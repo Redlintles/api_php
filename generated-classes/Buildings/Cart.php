@@ -34,7 +34,7 @@ class Cart extends BaseCart
         if(!$alreadyInCart) {
             $row = new \Buildings\CartProduct();
             $row->setIdCart($this->getId());
-            $row->setIdProduct($this->getId());
+            $row->setIdProduct($targetProduct->getId());
             $row->setQuantity($qtd);
             $row->save();
         }
@@ -67,7 +67,21 @@ class Cart extends BaseCart
     public function getProducts()
     {
         $cartProducts = \Buildings\CartProductQuery::create()->find();
-        return collectionToArray($cartProducts);
+
+        $result = [];
+
+        foreach($cartProducts as $row) {
+            $product = \Buildings\ProductQuery::create()
+            ->useCartProductQuery()
+                ->withColumn("CartProduct.quantity", "quantity")
+            ->endUse()
+            ->select(array("title","description","unity_price"))
+            ->findOneById($row->getIdProduct());
+            $arr = $product;
+            $arr["final_price"] = $arr["quantity"] * $arr["unity_price"];
+            array_push($result, $arr);
+        }
+        return $result;
 
     }
 }
