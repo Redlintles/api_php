@@ -10,6 +10,11 @@ initRoot();
 
 $request = parse_url($_SERVER["REQUEST_URI"])["path"];
 
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 // Verifica se a requisição é para uma rota começando com "/api"
 if (strpos($request, "/api") === 0) {
     // Realiza a validação da chave API apenas se a requisição é para uma rota "/api"
