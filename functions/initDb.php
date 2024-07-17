@@ -23,7 +23,7 @@ function initRoot()
     if(!isset($adm)) {
         $root = new \Buildings\Admin();
         $root->setUsername("root");
-        $root->setPassword("root123");
+        $root->setPassword(password_hash("root123", PASSWORD_DEFAULT));
         $root->setApiKey(Uuid::uuid4()->toString());
         $root->save();
         createRootPermission();

@@ -36,7 +36,7 @@ $newClient = new \Buildings\Client();
 
 $newClient->setUsername($body["username"]);
 $newClient->setEmail($body["email"]);
-$newClient->setPassword($body["password"]);
+$newClient->setPassword(password_hash($body["password"], PASSWORD_DEFAULT));
 $newClient->setPhoneNumber($body["phone_number"]);
 
 verifyUnicity(\Buildings\ClientQuery::create(), "username", $body["username"]);

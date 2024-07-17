@@ -65,7 +65,7 @@ if($user->getUsername() === "root") {
 
     $user = new \Buildings\Admin();
     $user->setUsername($data["username"]);
-    $user->setPassword($data["password"]);
+    $user->setPassword(password_hash($data["password"], PASSWORD_DEFAULT));
     $user->setApiKey($data["api_key"]);
     if(!(bool)$user->save()) {
         $transaction->rollBack();
