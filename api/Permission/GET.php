@@ -8,6 +8,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 
 function formatPermission(Permission $permissionObj)
 {
@@ -21,7 +22,7 @@ permissionValidator($apiKey, "READ");
 $auditObj = new AuditObj($apiKey, "READ", $request);
 $auditObj->setOperation("GetPermission");
 
-$user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+$user = findAdmin($apiKey);
 $targetUser = findSingle($body, [
     "keys" => [
         "admin_id" => $validateInteger,

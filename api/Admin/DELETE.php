@@ -7,6 +7,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
@@ -16,7 +17,7 @@ permissionValidator($apiKey, "DELETE");
 
 $body = bodyParser();
 
-$user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+$user = findAdmin($apiKey);
 $auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteAdmin");
 

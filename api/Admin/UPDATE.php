@@ -6,6 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/updateObject.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
@@ -49,7 +50,7 @@ $targetUser = findSingle($body, [
     "audit" => $auditObj
 ]);
 
-$isRoot = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey)->getUsername() === "root";
+$isRoot = findAdmin($apiKey)->getUsername() === "root";
 
 
 if(!isset($targetUser)) {

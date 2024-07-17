@@ -6,11 +6,12 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 
 $body = bodyParser();
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
-$user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+$user = findAdmin($apiKey);
 
 $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("ChangePermission");

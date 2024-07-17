@@ -8,6 +8,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/collectionToArray.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
@@ -18,7 +19,7 @@ $body = bodyParser();
 $auditObj = new AuditObj($apiKey, "READ", $request);
 $auditObj->setOperation("ReadAdmin");
 
-$user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+$user = findAdmin($apiKey);
 
 
 if(isset($user) && $user->getUsername() === "root") {
