@@ -196,7 +196,7 @@ class ClientTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('username', 'Username', 'VARCHAR', true, 50, '');
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, '');
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 200, '');
         $this->addColumn('email', 'Email', 'VARCHAR', true, 30, '');
         $this->addColumn('phone_number', 'PhoneNumber', 'VARCHAR', true, 15, '');
     }

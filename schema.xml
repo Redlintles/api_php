@@ -3,8 +3,8 @@
   <table name="admin" phpName="Admin">
     <column name="id" primaryKey="true" autoIncrement="true" type="INTEGER" required="true" />
     <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
-    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
-    <column name="api_key" type="VARCHAR" defaultValue="" size="36" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="200" required="true" />
+    <column name="api_key" type="VARCHAR" defaultValue="" size="200" required="true" />
     <unique name="admin_username_unique">
       <unique-column name="username" />
     </unique>
@@ -27,7 +27,7 @@
   <table name="client" phpName="Client">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
-    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="200" required="true" />
     <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
     <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
     <unique name="client_username_unique">
@@ -37,7 +37,7 @@
   <table name="seller" phpName="Seller">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="username" type="VARCHAR" defaultValue="" size="50" required="true" />
-    <column name="password" type="VARCHAR" defaultValue="" size="30" required="true" />
+    <column name="password" type="VARCHAR" defaultValue="" size="200" required="true" />
     <column name="email" type="VARCHAR" defaultValue="" size="30" required="true" />
     <column name="phone_number" type="VARCHAR" defaultValue="" size="15" required="true" />
   </table>

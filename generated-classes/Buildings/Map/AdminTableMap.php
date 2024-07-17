@@ -185,8 +185,8 @@ class AdminTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('username', 'Username', 'VARCHAR', true, 50, '');
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 30, '');
-        $this->addColumn('api_key', 'ApiKey', 'VARCHAR', true, 36, '');
+        $this->addColumn('password', 'Password', 'VARCHAR', true, 200, '');
+        $this->addColumn('api_key', 'ApiKey', 'VARCHAR', true, 200, '');
     }
 
     /**

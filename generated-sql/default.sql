@@ -13,8 +13,8 @@ CREATE TABLE `admin`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(50) DEFAULT '' NOT NULL,
-    `password` VARCHAR(30) DEFAULT '' NOT NULL,
-    `api_key` VARCHAR(36) DEFAULT '' NOT NULL,
+    `password` VARCHAR(200) DEFAULT '' NOT NULL,
+    `api_key` VARCHAR(200) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `admin_username_unique` (`username`),
     UNIQUE INDEX `admin_api_key_unique` (`api_key`)
@@ -52,7 +52,7 @@ CREATE TABLE `client`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(50) DEFAULT '' NOT NULL,
-    `password` VARCHAR(30) DEFAULT '' NOT NULL,
+    `password` VARCHAR(200) DEFAULT '' NOT NULL,
     `email` VARCHAR(30) DEFAULT '' NOT NULL,
     `phone_number` VARCHAR(15) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`),
@@ -69,7 +69,7 @@ CREATE TABLE `seller`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(50) DEFAULT '' NOT NULL,
-    `password` VARCHAR(30) DEFAULT '' NOT NULL,
+    `password` VARCHAR(200) DEFAULT '' NOT NULL,
     `email` VARCHAR(30) DEFAULT '' NOT NULL,
     `phone_number` VARCHAR(15) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`)
