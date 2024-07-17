@@ -20,11 +20,17 @@ function createRootPermission()
 function initRoot()
 {
     $adm = \Buildings\AdminQuery::create()->findOneByUsername("root");
+
     if(!isset($adm)) {
+
+        $apiKey = Uuid::uuid4()->toString();
+
+        echo $apiKey;
+
         $root = new \Buildings\Admin();
         $root->setUsername("root");
         $root->setPassword(password_hash("root123", PASSWORD_DEFAULT));
-        $root->setApiKey(Uuid::uuid4()->toString());
+        $root->setApiKey(password_hash($apiKey, PASSWORD_DEFAULT));
         $root->save();
         createRootPermission();
     } elseif(isset($adm)) {

@@ -6,6 +6,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
 
 use Ramsey\Uuid\Uuid;
 use Propel\Runtime\Propel;
@@ -39,15 +40,17 @@ $body = groupValidation($body, [
 
 $permissionString = $body["permissions"];
 
-$user = \Buildings\AdminQuery::create()->findOneByApiKey($apiKey);
+$user = findAdmin($apiKey);
 
 
 if($user->getUsername() === "root") {
 
+    $key = Uuid::uuid4()->toString();
+
     $data = [
         "username" => $body["username"],
         "password" => $body["password"],
-        "api_key" => Uuid::uuid4()->toString()
+        "api_key" => password_hash($key, PASSWORD_DEFAULT)
     ];
 
 
@@ -89,7 +92,7 @@ if($user->getUsername() === "root") {
 
         $transaction->commit();
 
-        sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray()], [
+        sendResponse(200, false, "Admin Created Successfully", ["admin" => $user->toArray(), "permissions" => $permissionObj->toArray(), "api_key" => $key], [
             "audit" => $auditObj
         ]);
 
