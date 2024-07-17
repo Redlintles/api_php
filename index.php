@@ -50,6 +50,9 @@ switch ($request) {
     case "/api/category":
         require_once __DIR__ . "/api/Category/router.php";
         break;
+    case "/api/seller":
+        require_once __DIR__ . "/api/Seller/router.php";
+        break;
 
     default:
         // Rota padrão para tratamento de 404
