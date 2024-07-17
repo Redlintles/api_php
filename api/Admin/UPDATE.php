@@ -76,7 +76,7 @@ if($targetUser->getUsername() === "root") {
             "audit" => $auditObj
         ]);
     } elseif($isRoot) {
-        $targetUser->setPassword($body["password"]);
+        $targetUser->setPassword(password_hash($body["password"], PASSWORD_DEFAULT));
         $targetUser->save();
         sendResponse(200, false, "Root Password changed successfully", ["user" => $targetUser->toArray()], [
             "audit" => $auditObj
