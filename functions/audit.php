@@ -1,6 +1,9 @@
 <?php
 
 
+
+require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
+
 class AuditObj
 {
     public string $apiKey;
@@ -27,7 +30,7 @@ class AuditObj
             $msg
         ]);
 
-        $username = \Buildings\AdminQuery::create()->findOneByApiKey($this->apiKey)->getUsername();
+        $username = findAdmin($this->apiKey)->getUsername();
         $audit->setOperationExecutor($username);
         $audit->setOperationType($this->type);
         $audit->setOperationRoute($this->route);
