@@ -24,37 +24,42 @@ if (strpos($request, "/api") === 0) {
     }
 }
 
+function startsWith($string, $startString)
+{
+    return strncmp($string, $startString, strlen($startString)) === 0;
+}
+
 // Roteamento baseado na requisição
-switch ($request) {
-    case "/":
-        echo "<h1>Hello World!</h1>";
-        break;
-    case "/api/admin":
+switch (true) {
+    case startsWith($request, "/api/admin"):
         require_once __DIR__ . "/api/Admin/router.php";
         break;
-    case "/api/permission":
+    case startsWith($request, "/api/permission"):
         require_once __DIR__ . "/api/Permission/router.php";
         break;
-    case "/api/address":
+    case startsWith($request, "/api/address"):
         require_once __DIR__ . "/api/Address/router.php";
         break;
-    case "/api/client":
+    case startsWith($request, "/api/client"):
         require_once __DIR__ . "/api/Client/router.php";
         break;
-    case "/api/product":
+    case startsWith($request, "/api/product"):
         require_once __DIR__ . "/api/Product/router.php";
         break;
-    case "/api/cart":
+    case startsWith($request, "/api/cart"):
         require_once __DIR__ . "/api/Cart/router.php";
         break;
-    case "/api/category":
+    case startsWith($request, "/api/category"):
         require_once __DIR__ . "/api/Category/router.php";
         break;
-    case "/api/seller":
+    case startsWith($request, "/api/seller"):
         require_once __DIR__ . "/api/Seller/router.php";
         break;
-    case "/api/discount":
+    case startsWith($request, "/api/discount"):
         require_once __DIR__ . "/api/Discount/router.php";
+        break;
+    case startsWith($request, "/"):
+        echo "<h1>Hello World!</h1>";
         break;
 
     default:
