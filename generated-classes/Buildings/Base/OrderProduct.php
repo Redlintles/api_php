@@ -66,6 +66,13 @@ abstract class OrderProduct implements ActiveRecordInterface
     protected $virtualColumns = [];
 
     /**
+     * The value for the id field.
+     *
+     * @var        int
+     */
+    protected $id;
+
+    /**
      * The value for the id_order field.
      *
      * Note: this column has a database default value of: 1
@@ -349,6 +356,16 @@ abstract class OrderProduct implements ActiveRecordInterface
     }
 
     /**
+     * Get the [id] column value.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Get the [id_order] column value.
      *
      * @return int
@@ -376,6 +393,26 @@ abstract class OrderProduct implements ActiveRecordInterface
     public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    /**
+     * Set the value of [id] column.
+     *
+     * @param int $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[OrderProductTableMap::COL_ID] = true;
+        }
+
+        return $this;
     }
 
     /**
@@ -494,13 +531,16 @@ abstract class OrderProduct implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : OrderProductTableMap::translateFieldName('IdOrder', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : OrderProductTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : OrderProductTableMap::translateFieldName('IdOrder', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id_order = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : OrderProductTableMap::translateFieldName('IdProduct', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : OrderProductTableMap::translateFieldName('IdProduct', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id_product = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : OrderProductTableMap::translateFieldName('Quantity', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : OrderProductTableMap::translateFieldName('Quantity', TableMap::TYPE_PHPNAME, $indexType)];
             $this->quantity = (null !== $col) ? (int) $col : null;
 
             $this->resetModified();
@@ -510,7 +550,7 @@ abstract class OrderProduct implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = OrderProductTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = OrderProductTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Buildings\\OrderProduct'), 0, $e);
@@ -733,8 +773,15 @@ abstract class OrderProduct implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
+        $this->modifiedColumns[OrderProductTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . OrderProductTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
+        if ($this->isColumnModified(OrderProductTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
         if ($this->isColumnModified(OrderProductTableMap::COL_ID_ORDER)) {
             $modifiedColumns[':p' . $index++]  = 'id_order';
         }
@@ -755,6 +802,10 @@ abstract class OrderProduct implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case 'id':
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+
+                        break;
                     case 'id_order':
                         $stmt->bindValue($identifier, $this->id_order, PDO::PARAM_INT);
 
@@ -774,6 +825,13 @@ abstract class OrderProduct implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -823,12 +881,15 @@ abstract class OrderProduct implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getIdOrder();
+                return $this->getId();
 
             case 1:
-                return $this->getIdProduct();
+                return $this->getIdOrder();
 
             case 2:
+                return $this->getIdProduct();
+
+            case 3:
                 return $this->getQuantity();
 
             default:
@@ -859,9 +920,10 @@ abstract class OrderProduct implements ActiveRecordInterface
         $alreadyDumpedObjects['OrderProduct'][$this->hashCode()] = true;
         $keys = OrderProductTableMap::getFieldNames($keyType);
         $result = [
-            $keys[0] => $this->getIdOrder(),
-            $keys[1] => $this->getIdProduct(),
-            $keys[2] => $this->getQuantity(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getIdOrder(),
+            $keys[2] => $this->getIdProduct(),
+            $keys[3] => $this->getQuantity(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -936,12 +998,15 @@ abstract class OrderProduct implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setIdOrder($value);
+                $this->setId($value);
                 break;
             case 1:
-                $this->setIdProduct($value);
+                $this->setIdOrder($value);
                 break;
             case 2:
+                $this->setIdProduct($value);
+                break;
+            case 3:
                 $this->setQuantity($value);
                 break;
         } // switch()
@@ -971,13 +1036,16 @@ abstract class OrderProduct implements ActiveRecordInterface
         $keys = OrderProductTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setIdOrder($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setIdProduct($arr[$keys[1]]);
+            $this->setIdOrder($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setQuantity($arr[$keys[2]]);
+            $this->setIdProduct($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setQuantity($arr[$keys[3]]);
         }
 
         return $this;
@@ -1022,6 +1090,9 @@ abstract class OrderProduct implements ActiveRecordInterface
     {
         $criteria = new Criteria(OrderProductTableMap::DATABASE_NAME);
 
+        if ($this->isColumnModified(OrderProductTableMap::COL_ID)) {
+            $criteria->add(OrderProductTableMap::COL_ID, $this->id);
+        }
         if ($this->isColumnModified(OrderProductTableMap::COL_ID_ORDER)) {
             $criteria->add(OrderProductTableMap::COL_ID_ORDER, $this->id_order);
         }
@@ -1047,7 +1118,8 @@ abstract class OrderProduct implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        throw new LogicException('The OrderProduct object has no primary key');
+        $criteria = ChildOrderProductQuery::create();
+        $criteria->add(OrderProductTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1060,7 +1132,7 @@ abstract class OrderProduct implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = false;
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -1075,13 +1147,23 @@ abstract class OrderProduct implements ActiveRecordInterface
     }
 
     /**
-     * Returns NULL since this table doesn't have a primary key.
-     * This method exists only for BC and is deprecated!
-     * @return null
+     * Returns the primary key for this object (row).
+     * @return int
      */
     public function getPrimaryKey()
     {
-        return null;
+        return $this->getId();
+    }
+
+    /**
+     * Generic method to set the primary key (id column).
+     *
+     * @param int|null $key Primary key.
+     * @return void
+     */
+    public function setPrimaryKey(?int $key = null): void
+    {
+        $this->setId($key);
     }
 
     /**
@@ -1091,7 +1173,7 @@ abstract class OrderProduct implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull(): bool
     {
-        return false;
+        return null === $this->getId();
     }
 
     /**
@@ -1113,6 +1195,7 @@ abstract class OrderProduct implements ActiveRecordInterface
         $copyObj->setQuantity($this->getQuantity());
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1255,6 +1338,7 @@ abstract class OrderProduct implements ActiveRecordInterface
         if (null !== $this->aOrderProductIdProduct) {
             $this->aOrderProductIdProduct->removeOrderProductProduct($this);
         }
+        $this->id = null;
         $this->id_order = null;
         $this->id_product = null;
         $this->quantity = null;

@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -64,7 +63,7 @@ class AddressOwnerTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 4;
+    public const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -74,7 +73,12 @@ class AddressOwnerTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 4;
+    public const NUM_HYDRATE_COLUMNS = 5;
+
+    /**
+     * the column name for the id field
+     */
+    public const COL_ID = 'address_owner.id';
 
     /**
      * the column name for the id_address field
@@ -110,11 +114,11 @@ class AddressOwnerTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['IdAddress', 'IdClient', 'IdSeller', 'Type', ],
-        self::TYPE_CAMELNAME     => ['idAddress', 'idClient', 'idSeller', 'type', ],
-        self::TYPE_COLNAME       => [AddressOwnerTableMap::COL_ID_ADDRESS, AddressOwnerTableMap::COL_ID_CLIENT, AddressOwnerTableMap::COL_ID_SELLER, AddressOwnerTableMap::COL_TYPE, ],
-        self::TYPE_FIELDNAME     => ['id_address', 'id_client', 'id_seller', 'type', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, ]
+        self::TYPE_PHPNAME       => ['Id', 'IdAddress', 'IdClient', 'IdSeller', 'Type', ],
+        self::TYPE_CAMELNAME     => ['id', 'idAddress', 'idClient', 'idSeller', 'type', ],
+        self::TYPE_COLNAME       => [AddressOwnerTableMap::COL_ID, AddressOwnerTableMap::COL_ID_ADDRESS, AddressOwnerTableMap::COL_ID_CLIENT, AddressOwnerTableMap::COL_ID_SELLER, AddressOwnerTableMap::COL_TYPE, ],
+        self::TYPE_FIELDNAME     => ['id', 'id_address', 'id_client', 'id_seller', 'type', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
     ];
 
     /**
@@ -126,11 +130,11 @@ class AddressOwnerTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['IdAddress' => 0, 'IdClient' => 1, 'IdSeller' => 2, 'Type' => 3, ],
-        self::TYPE_CAMELNAME     => ['idAddress' => 0, 'idClient' => 1, 'idSeller' => 2, 'type' => 3, ],
-        self::TYPE_COLNAME       => [AddressOwnerTableMap::COL_ID_ADDRESS => 0, AddressOwnerTableMap::COL_ID_CLIENT => 1, AddressOwnerTableMap::COL_ID_SELLER => 2, AddressOwnerTableMap::COL_TYPE => 3, ],
-        self::TYPE_FIELDNAME     => ['id_address' => 0, 'id_client' => 1, 'id_seller' => 2, 'type' => 3, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'IdAddress' => 1, 'IdClient' => 2, 'IdSeller' => 3, 'Type' => 4, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'idAddress' => 1, 'idClient' => 2, 'idSeller' => 3, 'type' => 4, ],
+        self::TYPE_COLNAME       => [AddressOwnerTableMap::COL_ID => 0, AddressOwnerTableMap::COL_ID_ADDRESS => 1, AddressOwnerTableMap::COL_ID_CLIENT => 2, AddressOwnerTableMap::COL_ID_SELLER => 3, AddressOwnerTableMap::COL_TYPE => 4, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'id_address' => 1, 'id_client' => 2, 'id_seller' => 3, 'type' => 4, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
     ];
 
     /**
@@ -139,6 +143,13 @@ class AddressOwnerTableMap extends TableMap
      * @var array<string>
      */
     protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'AddressOwner.Id' => 'ID',
+        'id' => 'ID',
+        'addressOwner.id' => 'ID',
+        'AddressOwnerTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'address_owner.id' => 'ID',
         'IdAddress' => 'ID_ADDRESS',
         'AddressOwner.IdAddress' => 'ID_ADDRESS',
         'idAddress' => 'ID_ADDRESS',
@@ -187,8 +198,9 @@ class AddressOwnerTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Buildings\\AddressOwner');
         $this->setPackage('Buildings');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('id_address', 'IdAddress', 'INTEGER', 'address', 'id', true, null, 1);
         $this->addForeignKey('id_client', 'IdClient', 'INTEGER', 'client', 'id', false, null, null);
         $this->addForeignKey('id_seller', 'IdSeller', 'INTEGER', 'seller', 'id', false, null, null);
@@ -240,7 +252,12 @@ class AddressOwnerTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
-        return null;
+        // If the PK cannot be derived from the row, return NULL.
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+            return null;
+        }
+
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -257,7 +274,11 @@ class AddressOwnerTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
-        return '';
+        return (int) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        ];
     }
 
     /**
@@ -358,11 +379,13 @@ class AddressOwnerTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
+            $criteria->addSelectColumn(AddressOwnerTableMap::COL_ID);
             $criteria->addSelectColumn(AddressOwnerTableMap::COL_ID_ADDRESS);
             $criteria->addSelectColumn(AddressOwnerTableMap::COL_ID_CLIENT);
             $criteria->addSelectColumn(AddressOwnerTableMap::COL_ID_SELLER);
             $criteria->addSelectColumn(AddressOwnerTableMap::COL_TYPE);
         } else {
+            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.id_address');
             $criteria->addSelectColumn($alias . '.id_client');
             $criteria->addSelectColumn($alias . '.id_seller');
@@ -385,11 +408,13 @@ class AddressOwnerTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
+            $criteria->removeSelectColumn(AddressOwnerTableMap::COL_ID);
             $criteria->removeSelectColumn(AddressOwnerTableMap::COL_ID_ADDRESS);
             $criteria->removeSelectColumn(AddressOwnerTableMap::COL_ID_CLIENT);
             $criteria->removeSelectColumn(AddressOwnerTableMap::COL_ID_SELLER);
             $criteria->removeSelectColumn(AddressOwnerTableMap::COL_TYPE);
         } else {
+            $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.id_address');
             $criteria->removeSelectColumn($alias . '.id_client');
             $criteria->removeSelectColumn($alias . '.id_seller');
@@ -430,10 +455,11 @@ class AddressOwnerTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Buildings\AddressOwner) { // it's a model object
-            // create criteria based on pk value
-            $criteria = $values->buildCriteria();
+            // create criteria based on pk values
+            $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            throw new LogicException('The AddressOwner object has no primary key');
+            $criteria = new Criteria(AddressOwnerTableMap::DATABASE_NAME);
+            $criteria->add(AddressOwnerTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = AddressOwnerQuery::create()->mergeWith($criteria);
@@ -479,6 +505,10 @@ class AddressOwnerTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from AddressOwner object
+        }
+
+        if ($criteria->containsKey(AddressOwnerTableMap::COL_ID) && $criteria->keyContainsValue(AddressOwnerTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.AddressOwnerTableMap::COL_ID.')');
         }
 
 

@@ -169,8 +169,10 @@ DROP TABLE IF EXISTS `seller_products`;
 
 CREATE TABLE `seller_products`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_seller` INTEGER DEFAULT 1 NOT NULL,
     `id_product` INTEGER DEFAULT 1 NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_ler_product_seller` (`id_seller`),
     INDEX `fi_ler_product_product` (`id_product`),
     CONSTRAINT `seller_product_seller`
@@ -191,9 +193,11 @@ DROP TABLE IF EXISTS `order_products`;
 
 CREATE TABLE `order_products`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_order` INTEGER DEFAULT 1 NOT NULL,
     `id_product` INTEGER DEFAULT 1 NOT NULL,
     `quantity` INTEGER DEFAULT 1 NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_er_product_cart` (`id_order`),
     INDEX `fi_er_product_product` (`id_product`),
     CONSTRAINT `order_product_cart`
@@ -232,10 +236,12 @@ DROP TABLE IF EXISTS `address_owner`;
 
 CREATE TABLE `address_owner`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_address` INTEGER DEFAULT 1 NOT NULL,
     `id_client` INTEGER,
     `id_seller` INTEGER,
     `type` VARCHAR(10) DEFAULT '' NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_ress_owner_address` (`id_address`),
     INDEX `fi_ress_owner_client` (`id_client`),
     INDEX `fi_ress_owner_seller` (`id_seller`),
@@ -306,8 +312,10 @@ DROP TABLE IF EXISTS `product_category`;
 
 CREATE TABLE `product_category`
 (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `id_product` INTEGER DEFAULT 1 NOT NULL,
     `id_category` INTEGER DEFAULT 1 NOT NULL,
+    PRIMARY KEY (`id`),
     INDEX `fi_duct_category_product` (`id_product`),
     INDEX `fi_duct_category_category` (`id_category`),
     CONSTRAINT `product_category_product`

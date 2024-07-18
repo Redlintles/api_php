@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -64,7 +63,7 @@ class ProductCategoryTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 2;
+    public const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -74,7 +73,12 @@ class ProductCategoryTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 2;
+    public const NUM_HYDRATE_COLUMNS = 3;
+
+    /**
+     * the column name for the id field
+     */
+    public const COL_ID = 'product_category.id';
 
     /**
      * the column name for the id_product field
@@ -100,11 +104,11 @@ class ProductCategoryTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['IdProduct', 'IdCategory', ],
-        self::TYPE_CAMELNAME     => ['idProduct', 'idCategory', ],
-        self::TYPE_COLNAME       => [ProductCategoryTableMap::COL_ID_PRODUCT, ProductCategoryTableMap::COL_ID_CATEGORY, ],
-        self::TYPE_FIELDNAME     => ['id_product', 'id_category', ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id', 'IdProduct', 'IdCategory', ],
+        self::TYPE_CAMELNAME     => ['id', 'idProduct', 'idCategory', ],
+        self::TYPE_COLNAME       => [ProductCategoryTableMap::COL_ID, ProductCategoryTableMap::COL_ID_PRODUCT, ProductCategoryTableMap::COL_ID_CATEGORY, ],
+        self::TYPE_FIELDNAME     => ['id', 'id_product', 'id_category', ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -116,11 +120,11 @@ class ProductCategoryTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['IdProduct' => 0, 'IdCategory' => 1, ],
-        self::TYPE_CAMELNAME     => ['idProduct' => 0, 'idCategory' => 1, ],
-        self::TYPE_COLNAME       => [ProductCategoryTableMap::COL_ID_PRODUCT => 0, ProductCategoryTableMap::COL_ID_CATEGORY => 1, ],
-        self::TYPE_FIELDNAME     => ['id_product' => 0, 'id_category' => 1, ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'IdProduct' => 1, 'IdCategory' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'idProduct' => 1, 'idCategory' => 2, ],
+        self::TYPE_COLNAME       => [ProductCategoryTableMap::COL_ID => 0, ProductCategoryTableMap::COL_ID_PRODUCT => 1, ProductCategoryTableMap::COL_ID_CATEGORY => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'id_product' => 1, 'id_category' => 2, ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -129,6 +133,13 @@ class ProductCategoryTableMap extends TableMap
      * @var array<string>
      */
     protected $normalizedColumnNameMap = [
+        'Id' => 'ID',
+        'ProductCategory.Id' => 'ID',
+        'id' => 'ID',
+        'productCategory.id' => 'ID',
+        'ProductCategoryTableMap::COL_ID' => 'ID',
+        'COL_ID' => 'ID',
+        'product_category.id' => 'ID',
         'IdProduct' => 'ID_PRODUCT',
         'ProductCategory.IdProduct' => 'ID_PRODUCT',
         'idProduct' => 'ID_PRODUCT',
@@ -162,8 +173,9 @@ class ProductCategoryTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Buildings\\ProductCategory');
         $this->setPackage('Buildings');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('id_product', 'IdProduct', 'INTEGER', 'product', 'id', true, null, 1);
         $this->addForeignKey('id_category', 'IdCategory', 'INTEGER', 'category', 'id', true, null, 1);
     }
@@ -206,7 +218,12 @@ class ProductCategoryTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
-        return null;
+        // If the PK cannot be derived from the row, return NULL.
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+            return null;
+        }
+
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -223,7 +240,11 @@ class ProductCategoryTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
-        return '';
+        return (int) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
+        ];
     }
 
     /**
@@ -324,9 +345,11 @@ class ProductCategoryTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
+            $criteria->addSelectColumn(ProductCategoryTableMap::COL_ID);
             $criteria->addSelectColumn(ProductCategoryTableMap::COL_ID_PRODUCT);
             $criteria->addSelectColumn(ProductCategoryTableMap::COL_ID_CATEGORY);
         } else {
+            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.id_product');
             $criteria->addSelectColumn($alias . '.id_category');
         }
@@ -347,9 +370,11 @@ class ProductCategoryTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
+            $criteria->removeSelectColumn(ProductCategoryTableMap::COL_ID);
             $criteria->removeSelectColumn(ProductCategoryTableMap::COL_ID_PRODUCT);
             $criteria->removeSelectColumn(ProductCategoryTableMap::COL_ID_CATEGORY);
         } else {
+            $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.id_product');
             $criteria->removeSelectColumn($alias . '.id_category');
         }
@@ -388,10 +413,11 @@ class ProductCategoryTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \Buildings\ProductCategory) { // it's a model object
-            // create criteria based on pk value
-            $criteria = $values->buildCriteria();
+            // create criteria based on pk values
+            $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            throw new LogicException('The ProductCategory object has no primary key');
+            $criteria = new Criteria(ProductCategoryTableMap::DATABASE_NAME);
+            $criteria->add(ProductCategoryTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = ProductCategoryQuery::create()->mergeWith($criteria);
@@ -437,6 +463,10 @@ class ProductCategoryTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from ProductCategory object
+        }
+
+        if ($criteria->containsKey(ProductCategoryTableMap::COL_ID) && $criteria->keyContainsValue(ProductCategoryTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ProductCategoryTableMap::COL_ID.')');
         }
 
 

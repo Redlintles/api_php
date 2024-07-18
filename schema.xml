@@ -88,6 +88,7 @@
     </foreign-key>
   </table>
   <table name="seller_products" phpName="SellerProduct">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="id_seller" type="INTEGER" required="true" defaultValue="1"/>
     <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
     <foreign-key foreignTable="seller" phpName="SellerProductIdSeller" refPhpName="SellerProductSeller" onDelete="cascade" name="seller_product_seller">
@@ -98,6 +99,7 @@
     </foreign-key>
   </table>
   <table name="order_products" phpName="OrderProduct">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column name="id_order" type="INTEGER" required="true" defaultValue="1"/>
     <column name="id_product" type="INTEGER" required="true" defaultValue="1"/>
     <column name="quantity" type="INTEGER" required="true" defaultValue="1"/>
@@ -118,6 +120,7 @@
     <column name="number" type="INTEGER" required="true" defaultValue="1"/>
   </table>
   <table name="address_owner" phpName="AddressOwner">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column type="INTEGER" name="id_address" required="true" defaultValue="1"/>
     <column type="INTEGER" name="id_client" />
     <column type="INTEGER" name="id_seller" />
@@ -158,6 +161,7 @@
     </foreign-key>
   </table>
   <table name="product_category" phpName="ProductCategory">
+    <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />
     <column type="INTEGER" required="true" name="id_product" defaultValue="1"/>
     <column type="INTEGER" required="true" name="id_category" defaultValue="1"/>
     <foreign-key foreignTable="product" phpName="ProductCategoryIdProduct" refPhpName="ProductCategoryProduct" name="product_category_product" onDelete="cascade">
