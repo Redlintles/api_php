@@ -23,6 +23,15 @@ $targetProduct = findSingle($body, [
     "query" => \Buildings\ProductQuery::create(),
 ]);
 
-sendResponse(200, false, "Product found successfully", ["product" => $targetProduct->toArray()], [
+$categories = \Buildings\ProductCategoryQuery::create()->findByIdProduct($targetProduct);
+
+$productCategories = [];
+foreach($categories as $c) {
+    $category = \Buildings\CategoryQuery::create()->findOneById($c->getIdCategory());
+    array_push($productCategories, $category->getName());
+}
+
+
+sendResponse(200, false, "Product found successfully", ["product" => $targetProduct->toArray(), "categories" => $productCategories], [
     "audit" => $auditObj
 ]);
