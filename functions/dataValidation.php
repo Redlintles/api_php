@@ -67,3 +67,30 @@ $validateUnityPrice = validationFactory(
     "/^[0-9]+\.[0-9]{2}$/",
     "Invalid Unity Price format is (10.99)"
 );
+
+$validateDate = validationFactory(
+    "/^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}$/",
+    "Invalid date, must be in format '2024-01-01 23:59:02' "
+);
+
+$validateIsInArray = function (string $string, array $arr) {
+
+    if(!in_array($string, $arr, true)) {
+        sendResponse(400, true, "Invalid key, $string must be in " . implode(",", $arr));
+    }
+};
+
+$validateExpiration = function (string $date1, string $date2) {
+    $timestamp1 = strtotime($date1);
+    $timestamp2 = strtotime($date2);
+
+    if($timestamp1 > $timestamp2) {
+        sendResponse(400, true, "Invalid expiration, it should be a later time than start time");
+    }
+};
+
+$validateIsInRange = function (int $val, int $min = 0, int $max = INF) {
+    if(!($min < $val && $val < $max)) {
+        sendResponse(400, true, "Invalid number, it should be in range ($min,$max)");
+    }
+};
