@@ -22,7 +22,12 @@ function groupValidation($body, $options)
             $optional = true;
         }
         if(isset($body[$key])) {
-            $validation($body[$key]);
+
+            if(is_array($validation)) {
+                $validation[0]($body[$key], $validation[1]);
+            } else {
+                $validation($body[$key]);
+            }
             $validatedObj[$key] = $body[$key];
         } elseif(!$optional) {
             sendResponse(400, true, "Key " . $key . "Is not set on body", [], ["audit" => $options["audit"]]);
