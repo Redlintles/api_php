@@ -1,60 +1,26 @@
 <?php
 
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/verifyUnicity.php";
-require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
+$body = bodyParser();
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
-$body = bodyParser();
-
 permissionValidator($apiKey, "CREATE");
-
-$auditObj = new AuditObj($apiKey, "CREATE", $request);
-
-function addToProduct()
-{
-    global $body,$validateInteger,$validateCapitalized,$apiKey,$auditObj;
-
-    $auditObj->setOperation("IncQtd");
-
-    $targetProduct = findSingle($body, [
-        "keys" => [
-            "product_id" => $validateInteger,
-            "title" => $validateCapitalized,
-        ],
-        "query" => \Buildings\ProductQuery::create(),
-        "audit" => $auditObj
-    ]);
-
-    $validateInteger($body["quantity"]);
-    $targetProduct->incrementProduct($body["quantity"]);
-
-    sendResponse(400, true, "Product quantity incremented by " . $body["quantity"] . " Successfully(total=" . $targetProduct->getInStock() . ")", ["product" => $targetProduct->toArray()], [
-        "audit" => $auditObj
-    ]);
-}
 
 function createProduct()
 {
 
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
+    global $request;
 
-    global $body,$validateInteger,$validateCapitalized,$validateUnityPrice,$apiKey,$auditObj;
-
+    $apiKey = $_SERVER["HTTP_X_API_KEY"];
+    $auditObj = new AuditObj($apiKey, "CREATE", $request);
     $auditObj->setOperation("CreateProduct");
 
+    $body = bodyParser();
     $body = groupValidation($body, [
         "keys" => [
-            "in_stock" => $validateInteger,
-            "title" => $validateCapitalized,
-            "description" => function () {},
-            "unity_price" => $validateUnityPrice
+            "in_stock" => 'validateInteger',
+            "title" => 'validateCapitalized',
+            "unity_price" => 'validateUnityPrice',
         ],
         "audit" => $auditObj
     ]);
@@ -76,6 +42,36 @@ function createProduct()
             "audit" => $auditObj
         ]);
     }
+}
+function addToProduct()
+{
+
+    global $request;
+
+    $apiKey = $_SERVER["HTTP_X_API_KEY"];
+    $auditObj = new AuditObj($apiKey, "CREATE", $request);
+
+    $apiKey = $_SERVER["HTTP_X_API_KEY"];
+
+    $body = bodyParser();
+
+    $auditObj->setOperation("IncQtd");
+
+    $targetProduct = findSingle($body, [
+        "keys" => [
+            "product_id" => 'validateInteger',
+            "title" => 'validateCapitalized',
+        ],
+        "query" => \Buildings\ProductQuery::create(),
+        "audit" => $auditObj
+    ]);
+
+    Validate::validateInteger($body["quantity"]);
+    $targetProduct->incrementProduct($body["quantity"]);
+
+    sendResponse(400, true, "Product quantity incremented by " . $body["quantity"] . " Successfully(total=" . $targetProduct->getInStock() . ")", ["product" => $targetProduct->toArray()], [
+        "audit" => $auditObj
+    ]);
 }
 if(!isset($body["type"])) {
     sendResponse(400, true, "Type field is not set in the request body", [], [
