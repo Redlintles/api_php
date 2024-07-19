@@ -24,9 +24,12 @@ function groupValidation($body, $options)
         if(isset($body[$key])) {
 
             if(is_array($validation)) {
-                $validation[0]($body[$key], $validation[1]);
+
+                $methodName = $validation[0];
+                Validate::$methodName($body[$key], $validation[1]);
             } else {
-                $validation($body[$key]);
+
+                Validate::$validation($body[$key]);
             }
             $validatedObj[$key] = $body[$key];
         } elseif(!$optional) {
