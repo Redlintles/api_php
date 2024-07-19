@@ -3,10 +3,25 @@
 require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/generated-conf/config.php";
 
+require_once __DIR__ . "/functions/apiKeyValidation.php";
+require_once __DIR__ . "/functions/audit.php";
+require_once __DIR__ . "/functions/bodyParser.php";
+require_once __DIR__ . "/functions/collectionToArray.php";
+require_once __DIR__ . "/functions/dataValidation.php";
+require_once __DIR__ . "/functions/dynamicQuery.php";
+require_once __DIR__ . "/functions/findAdmin.php";
+require_once __DIR__ . "/functions/findSingle.php";
+require_once __DIR__ . "/functions/groupValidation.php";
 require_once __DIR__ . "/functions/initDb.php";
-require_once __DIR__ . "/functions/apiKeyValidation.php"; // Corrigido o caminho para apiKeyValidation.php
+require_once __DIR__ . "/functions/permissionValidator.php";
+require_once __DIR__ . "/functions/router.php";
 require_once __DIR__ . "/functions/sendResponse.php";
+require_once __DIR__ . "/functions/snakeToCamel.php";
+require_once __DIR__ . "/functions/updateObject.php";
+require_once __DIR__ . "/functions/verifyUnicity.php";
+
 initRoot();
+
 
 $request = parse_url($_SERVER["REQUEST_URI"])["path"];
 
