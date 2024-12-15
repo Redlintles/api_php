@@ -19,6 +19,7 @@ require_once __DIR__ . "/functions/sendResponse.php";
 require_once __DIR__ . "/functions/snakeToCamel.php";
 require_once __DIR__ . "/functions/updateObject.php";
 require_once __DIR__ . "/functions/verifyUnicity.php";
+require_once __DIR__ . "/functions/discount.php";
 
 initRoot();
 
