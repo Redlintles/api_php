@@ -24,10 +24,10 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "product_id?" => $validateInteger,
-        "title?" => $validateInteger,
-        "type" => [$validateIsInArray,["override", "insert", "delete"]],
-        "categories" => $validateCapitalized
+        "product_id?" => "validateInteger",
+        "title?" => "validateInteger",
+        "type" => ["validateIsInArray",["override", "insert", "delete"]],
+        "categories" => "validateCapitalized"
     ],
     "at_least" => 3,
     "audit" => $auditObj
@@ -35,18 +35,18 @@ $body = groupValidation($body, [
 
 $targetProduct = findSingle($body, [
     "keys" => [
-        "product_id" => $validateInteger,
-        "title" => $validateCapitalized
+        "product_id" => "validateInteger",
+        "title" => "validateCapitalized"
     ],
     "audit" => $auditObj,
     "query" => \Buildings\ProductQuery::create()
 ]);
 
 
-foreach($body["categories"] as $categoryName) {
+foreach ($body["categories"] as $categoryName) {
     $targetCategory = findSingle(["name" => $categoryName], [
         "keys" => [
-            "name" => $validateCapitalized
+            "name" => "validateCapitalized"
         ],
         "audit" => $auditObj,
         "query" => \Buildings\CategoryQuery::create()
@@ -58,23 +58,25 @@ $productCategories = \Buildings\ProductCategoryQuery::create()->filterByIdProduc
 function deleteAll(\Propel\RUntime\Collection\Collection $arr)
 {
     global $auditObj;
-    foreach($arr as $item) {
+    foreach ($arr as $item) {
         $item->delete();
 
-        if(!$item->isDeleted()) {
+        if (!$item->isDeleted()) {
             sendResponse(400, true, "Category" . $item->getName() . "could not be deleted", [], ["audit" => $auditObj]);
         }
     }
 }
 
-if($body["type"] === "delete") {
+echo "HERE";
+
+if ($body["type"] === "delete") {
     $auditObj->setOperation("DeleteProductCategories");
-    foreach($productCategories as $pc) {
+    foreach ($productCategories as $pc) {
         $category = \Buildings\CategoryQuery::create()->findOneById($pc->getIdCategory());
-        if(in_array($category->getName(), $body["categories"])) {
+        if (in_array($category->getName(), $body["categories"])) {
             $pc->delete();
 
-            if(!$pc->isDeleted()) {
+            if (!$pc->isDeleted()) {
                 sendResponse(400, true, "Category" . $item->getName() . "could not be deleted". ["audit" => $auditObj]);
             }
 
@@ -89,28 +91,29 @@ if($body["type"] === "delete") {
     $toReturn = array_values(array_diff($toReturn, $body["categories"]));
 
     sendResponse(200, false, "Categories deleted successfully", ["product" => $targetProduct, "deletedCategories" => $body["categories"], "remainingCategories" => $toReturn], ["audit" => $auditObj]);
-} elseif($body["type"] === "override") {
+} elseif ($body["type"] === "override") {
     $auditObj->setOperation("OverrideProductCategories");
+    echo "Here";
     $toReturn = array_map(function ($item) {
         $category = \Buildings\CategoryQuery::create()->findOneById($item["IdCategory"]);
         return $category->getName();
     }, collectionToArray($productCategories));
     deleteAll($productCategories);
-    foreach($body["categories"] as $cName) {
+    foreach ($body["categories"] as $cName) {
         $category = \Buildings\CategoryQuery::create()->findOneByName($cName);
         $association = new \Buildings\ProductCategory();
 
         $association->setIdProduct($targetProduct->getId());
         $association->setIdCategory($category->getId());
 
-        if(!$association->save()) {
+        if (!$association->save()) {
             sendResponse(500, true, "An unexpected error ocurred, try again later", [], ["audit" => $auditObj]);
         }
     }
     sendResponse(200, false, "Product Categories overwritten succesfully", ["product" => $targetProduct,"oldCategories" => $toReturn, "newCategories" => $body["categories"]], ["audit" => $auditObj]);
-} elseif($body["type"] === "insert") {
+} elseif ($body["type"] === "insert") {
     $auditObj->setOperation("InsertProductCategories");
-    if(!$productCategories->isEmpty()) {
+    if (!$productCategories->isEmpty()) {
 
         $toInsert = array_map(function ($item) {
             $category = \Buildings\CategoryQuery::create()->findOneById($item["IdCategory"]);
@@ -123,14 +126,14 @@ if($body["type"] === "delete") {
         $toInsert = $body["categories"];
     }
 
-    foreach($toInsert as $cName) {
+    foreach ($toInsert as $cName) {
         $category = \Buildings\CategoryQuery::create()->findOneByName($cName);
         $association = new \Buildings\ProductCategory();
 
         $association->setIdProduct($targetProduct->getId());
         $association->setIdCategory($category->getId());
 
-        if(!$association->save()) {
+        if (!$association->save()) {
             sendResponse(500, true, "An unexpected error ocurred, try again later", [], ["audit" => $auditObj]);
         }
     }
