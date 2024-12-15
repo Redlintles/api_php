@@ -19,12 +19,12 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "type" => [$validateIsInArray,["C", "P"]],
-        "category_id?" => $validateInteger,
-        "product_id?" => $validateInteger,
-        "percent" => $validateInteger,
-        "starts_at" => $validateDate,
-        "expires_at" => $validateDate
+        "type" => ['validateIsInArray',["C", "P"]],
+        "category_id?" => 'validateInteger',
+        "product_id?" => 'validateInteger',
+        "percent" => 'validateInteger',
+        "starts_at" => 'validateDate',
+        "expires_at" => 'validateDate'
     ],
     "at_least" => 5,
     "audit" => $auditObj
@@ -32,22 +32,22 @@ $body = groupValidation($body, [
 $target = null;
 
 $discount = new \Buildings\Discount();
-if($body["type"] === "C") {
-    $discount->setType("C");
+if ($body["type"] === "C") {
+    $discount->setType("C"); // Category
     $discount->setIdCategory($body["category_id"]);
     $target = findSingle($body, [
         "keys" => [
-            "category_id" => $validateInteger
+            "category_id" => 'validateInteger'
         ],
         "audit" => $auditObj,
         "query" => \Buildings\CategoryQuery::create()
     ]);
-} elseif($body["type"] === "P") {
-    $discount->setType("P");
+} elseif ($body["type"] === "P") {
+    $discount->setType("P"); // Products
     $discount->setIdProduct($body["product_id"]);
     $target = findSingle($body, [
         "keys" => [
-            "product_id" => $validateInteger
+            "product_id" => 'validateInteger'
         ],
         "audit" => $auditObj,
         "query" => \Buildings\ProductQuery::create()
@@ -56,11 +56,11 @@ if($body["type"] === "C") {
 
 $validateExpiration($body["starts_at"], $body["expires_at"]);
 
-if(!isset($target)) {
+if (!isset($target)) {
     sendResponse(400, true, "Discount Target not found", [], ["audit" => $auditObj]);
 }
 
-if($body["percent"] > 100 || $body["percent"] < 0) {
+if ($body["percent"] > 100 || $body["percent"] < 0) {
     sendResponse(400, true, "Percent value must be between 0% and 100%", [], ["audit" => $auditObj]);
 }
 
@@ -68,7 +68,7 @@ $discount->setStartAt($body["starts_at"]);
 $discount->setExpiresAt($body["expires_at"]);
 $discount->setPercent($body["percent"]);
 
-if($discount->save()) {
+if ($discount->save()) {
     sendResponse(200, false, "Discount created successfully", ["discount" => $discount->toArray()], ["audit" => $auditObj]);
 } else {
     sendResponse(500, true, "An unexpected Error ocurred, try again later", [], ["audit" => $auditObj]);
