@@ -22,19 +22,19 @@ $auditObj->setOperation("ReadAdmin");
 $user = findAdmin($apiKey);
 
 
-if(isset($user) && $user->getUsername() === "root") {
+if (isset($user) && $user->getUsername() === "root") {
 
     $targetUser = findSingle($body, [
         "keys" => [
-            "admin_id" => $validateInteger,
-            "username" => $validateUsername,
+            "admin_id" => "validateInteger",
+            "username" => "validateUsername",
         ],
         "audit" => $auditObj,
         "query" => \Buildings\AdminQuery::create(),
         "throw_error" => false
     ]);
 
-    if(!isset($targetUser)) {
+    if (!isset($targetUser)) {
         $users = \Buildings\AdminQuery::create()->find();
 
         $resultUsers = collectionToArray($users);
@@ -46,7 +46,7 @@ if(isset($user) && $user->getUsername() === "root") {
             "audit" => $auditObj
         ]);
     }
-} elseif(isset($user)) {
+} elseif (isset($user)) {
     sendResponse(200, false, "User data fetched successfully", $user->toArray(), [], [
         "audit" => $auditObj
     ]);

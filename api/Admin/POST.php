@@ -20,7 +20,7 @@ permissionValidator($apiKey, "CREATE");
 $auditObj = new AuditObj($apiKey, "CREATE", $request);
 $auditObj->setOperation("AddAdmin");
 
-if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permissions"])) {
+if (!isset($body["username"]) || !isset($body["password"]) || !isset($body["permissions"])) {
     sendResponse(400, true, "Username,Password or/and Permissions is/are not defined", [], [
         "audit" => $auditObj
     ]);
@@ -29,9 +29,9 @@ if(!isset($body["username"]) || !isset($body["password"]) || !isset($body["permi
 
 $body = groupValidation($body, [
     "keys" => [
-        "username" => $validateUsername,
-        "password" => $validatePassword,
-        "permissions" => $validatePermissionString
+        "username" => "validateUsername",
+        "password" => "validatePassword",
+        "permissions" => "validatePermissionString"
     ],
     "audit" => $auditObj,
 
@@ -43,7 +43,7 @@ $permissionString = $body["permissions"];
 $user = findAdmin($apiKey);
 
 
-if($user->getUsername() === "root") {
+if ($user->getUsername() === "root") {
 
     $key = Uuid::uuid4()->toString();
 
@@ -56,7 +56,7 @@ if($user->getUsername() === "root") {
 
     $usernameExists = \Buildings\AdminQuery::create()->findOneByUsername($data["username"]);
 
-    if(isset($usernameExists)) {
+    if (isset($usernameExists)) {
         sendResponse(400, true, "Username already exists", [], [
             "audit" => $auditObj
         ]);
@@ -70,7 +70,7 @@ if($user->getUsername() === "root") {
     $user->setUsername($data["username"]);
     $user->setPassword(password_hash($data["password"], PASSWORD_DEFAULT));
     $user->setApiKey($data["api_key"]);
-    if(!(bool)$user->save()) {
+    if (!(bool)$user->save()) {
         $transaction->rollBack();
         sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
             "audit" => $auditObj
@@ -80,7 +80,7 @@ if($user->getUsername() === "root") {
 
     $userQuery = \Buildings\AdminQuery::create()->findOneByUsername($data["username"]);
 
-    if(isset($userQuery)) {
+    if (isset($userQuery)) {
         $userId = $userQuery->getId();
         $permissionObj = new \Buildings\Permission();
         $permissionObj->setAdminId($userId);

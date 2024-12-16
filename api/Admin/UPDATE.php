@@ -19,24 +19,17 @@ permissionValidator($apiKey, "UPDATE");
 $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateAdmin");
 
-if(!isset($body["admin_id"])) {
+if (!isset($body["admin_id"])) {
     sendResponse(400, true, "admin_id not defined", [], [
         "audit" => $auditObj
     ]);
 }
-if(isset($body["username"])) {
-    $validateUsername($body["username"]);
-}
-
-if(isset($body["password"])) {
-    $validatePassword($body["password"]);
-}
 
 $body = groupValidation($body, [
     "keys" => [
-        "admin_id" => $validateInteger,
-        "username?" => $validateUsername,
-        "password?" => $validatePassword,
+        "admin_id" => "validateInteger",
+        "username?" => "validateUsername",
+        "password?" => "validatePassword",
     ],
     "at_least" => 2,
     "audit" => $auditObj
@@ -44,7 +37,7 @@ $body = groupValidation($body, [
 
 $targetUser = findSingle($body, [
     "keys" => [
-        "admin_id" => $validateInteger
+        "admin_id" => "validateInteger"
     ],
     "query" => \Buildings\AdminQuery::create(),
     "audit" => $auditObj
@@ -53,41 +46,41 @@ $targetUser = findSingle($body, [
 $isRoot = findAdmin($apiKey)->getUsername() === "root";
 
 
-if(!isset($targetUser)) {
+if (!isset($targetUser)) {
     sendResponse(400, true, "Admin not found", [], [
         "audit" => $auditObj
     ]);
 }
 
-if($targetUser->getUsername() === "root") {
+if ($targetUser->getUsername() === "root") {
 
-    if(!$isRoot) {
+    if (!$isRoot) {
         sendResponse(400, true, "Only root can change it's own password", [], [
             "audit" => $auditObj
         ]);
     }
-    if(isset($body["username"])) {
+    if (isset($body["username"])) {
         sendResponse(400, true, "Root username cannot be changed, only password", [], [
             "audit" => $auditObj
         ]);
     }
-    if(!isset($body["password"])) {
+    if (!isset($body["password"])) {
         sendResponse(400, true, "Root new password not specified", [], [
             "audit" => $auditObj
         ]);
-    } elseif($isRoot) {
+    } elseif ($isRoot) {
         $targetUser->setPassword(password_hash($body["password"], PASSWORD_DEFAULT));
         $targetUser->save();
         sendResponse(200, false, "Root Password changed successfully", ["user" => $targetUser->toArray()], [
             "audit" => $auditObj
         ]);
     }
-} elseif(!$isRoot && $targetUser->getApiKey() === $apiKey) {
-    if(isset($body["username"])) {
+} elseif (!$isRoot && $targetUser->getApiKey() === $apiKey) {
+    if (isset($body["username"])) {
         $targetUser->setUsername($body["username"]);
     }
 
-    if(isset($body["password"])) {
+    if (isset($body["password"])) {
         $targetUser->setPassword($body["password"]);
     }
 
@@ -95,12 +88,12 @@ if($targetUser->getUsername() === "root") {
     sendResponse(200, false, "You have changed your own username(and/or)password Successfully", [], [
         "audit" => $auditObj
     ]);
-} elseif($isRoot) {
-    if(isset($body["username"])) {
+} elseif ($isRoot) {
+    if (isset($body["username"])) {
         $targetUser->setUsername($body["username"]);
     }
 
-    if(isset($body["password"])) {
+    if (isset($body["password"])) {
         $targetUser->setPassword($body["password"]);
     }
     $targetUser->save();

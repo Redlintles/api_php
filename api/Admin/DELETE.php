@@ -21,18 +21,18 @@ $user = findAdmin($apiKey);
 $auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteAdmin");
 
-if($user->getUsername() === "root") {
+if ($user->getUsername() === "root") {
 
     $targetUser = findSingle($body, [
         "keys" => [
-            "admin_id" => $validateInteger,
-            "username" => $validateUsername
+            "admin_id" => "validateInteger",
+            "username" => "validateUsername"
         ],
         "audit" => $auditObj,
         "query" => \Buildings\AdminQuery::create()
     ]);
 
-    if($targetUser->getUsername() === "root") {
+    if ($targetUser->getUsername() === "root") {
         sendResponse(400, true, "Root cannot be deleted", [], [
             "audit" => $auditObj
         ]);
