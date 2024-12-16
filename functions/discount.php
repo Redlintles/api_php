@@ -4,20 +4,21 @@ use Buildings\Base\Category;
 use Buildings\Base\DiscountQuery;
 use Buildings\CategoryQuery;
 
-function getDiscountsByFinalPrice($product, $categories)
+/**
+ * @param Buildings\Product $product Product to discount
+ * @param string[] $categories Category array of the given product
+ * @return array;
+ */
+
+function getDiscounts(Buildings\Product $product, array $categories): array
 {
-    $price = $product->getUnityPrice();
-
-    $final = 0;
-
 
     $categoriesId = [];
-
 
     foreach ($categories as $cName) {
         $category = CategoryQuery::create()->findByName($cName);
 
-        if (isset($category)) {
+        if (isset($category) && $category->count() > 0) {
 
             array_push($categoriesId, $category[0]->getId());
         }
@@ -37,22 +38,74 @@ function getDiscountsByFinalPrice($product, $categories)
 
 
 
+
+
+
+    $result = [];
+
+
+
     foreach ($productDiscounts as $discount) {
-
-        $final += ($discount->getPercent() / 100) * $price;
+        array_push($result, $discount);
     }
-
     foreach ($categoryDiscounts as $discount) {
-        $final += ($discount->getPercent() / 100) * $price;
+        array_push($result, $discount);
     }
 
-    return $final;
-
+    return $result;
 }
 
 
-function getIncrementalDiscounts($product)
+/**
+ * @param Buildings\Product $product Product to discount
+ * @param string[] $categories Category array of the given product
+ * @return float
+ */
+function getDiscountsByFinalPrice(Buildings\Product $product, array $categories): float
 {
+
+    $price = $product->getUnityPrice();
+
+    $final = 0;
+
+    $discounts = getDiscounts($product, $categories);
+
+
+    foreach ($discounts as $discount) {
+        $final += (intval($discount->getPercent()) / 100) * $price;
+    }
+
+
+    return round($final, 2);
+
+}
+
+/**
+ * @param Buildings\Product $product Product to discount
+ * @param string[] $categories Category array of the given product
+ * @return float
+ */
+function getIncrementalDiscounts(Buildings\Product $product, array $categories): float
+{
+    $price = $product->getUnityPrice();
+
+
+    $discounts = getDiscounts($product, $categories);
+
+    $priceArr = [$price];
+
+
+
+    foreach ($discounts as $discount) {
+        $last = $priceArr[count($priceArr) - 1];
+
+        $d = ($discount->getPercent() / 100) * $last;
+
+        array_push($priceArr, $last - $d);
+    }
+
+
+    return round($priceArr[count($priceArr) - 1], 2);
 
 
 }
