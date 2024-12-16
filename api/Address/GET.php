@@ -20,12 +20,12 @@ $body = bodyParser();
 
 $queryObj = groupValidation($body, [
     "keys" => [
-        "country?" => $validateCapitalized,
-        "state?" => $validateState,
-        "city?" => $validateCapitalized,
-        "neighborhood?" => $validateCapitalized,
-        "street?" => $validateCapitalized,
-        "house_number?" => $validateHouseNumber,
+        "country?" => "validateCapitalized",
+        "state?" => "validateState",
+        "city?" => "validateCapitalized",
+        "neighborhood?" => "validateCapitalized",
+        "street?" => "validateCapitalized",
+        "house_number?" => "validateHouseNumber",
 
     ],
     "at_least" => 1,
@@ -34,7 +34,7 @@ $queryObj = groupValidation($body, [
 $addresses = dynamicQuery(\Buildings\AddressQuery::create(), $queryObj);
 
 
-if(isset($addresses)) {
+if (isset($addresses)) {
     sendResponse(200, false, "Addresses Fetched Successfully", ["addresses" => collectionToArray($addresses)], [
         "audit" => $auditObj
     ]);

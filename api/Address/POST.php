@@ -17,12 +17,12 @@ permissionValidator($apiKey, "CREATE");
 
 $addressObj = groupValidation($body, [
     "keys" => [
-        "country" => $validateCapitalized,
-        "state" => $validateState,
-        "city" => $validateCapitalized,
-        "neighborhood" => $validateCapitalized,
-        "street" => $validateCapitalized,
-        "house_number" => $validateHouseNumber
+        "country" => "validateCapitalized",
+        "state" => "validateState",
+        "city" => "validateCapitalized",
+        "neighborhood" => "validateCapitalized",
+        "street" => "validateCapitalized",
+        "house_number" => "validateHouseNumber"
     ],
     "audit" => $auditObj,
 ]);
@@ -37,7 +37,7 @@ $obj->setNeighborhood($addressObj["neighborhood"]);
 $obj->setNumber($addressObj["house_number"]);
 $obj->save();
 
-if(isset($obj)) {
+if (isset($obj)) {
     sendResponse(200, false, "Address Created Successfully", $obj->toArray(), [], [
         "audit" => $auditObj
     ]);

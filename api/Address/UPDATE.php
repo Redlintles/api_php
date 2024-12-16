@@ -20,7 +20,7 @@ permissionValidator($apiKey, "UPDATE");
 
 $targetAddress = findSingle($body, [
     "keys" => [
-        "address_id" => $validateInteger,
+        "address_id" => "validateInteger",
     ],
     "audit" => $auditObj,
     "query" => \Buildings\AddressQuery::create()
@@ -30,28 +30,28 @@ $targetAddress = findSingle($body, [
 $mergeObj = groupValidation($body, [
     "audit" => $auditObj,
     "keys" => [
-        "country?" => $validateCapitalized,
-        "state?" => $validateState,
-        "city?" => $validateCapitalized,
-        "neighborhood?" => $validateCapitalized,
-        "street?" => $validateCapitalized,
-        "house_number?" => $validateHouseNumber
+        "country?" => "validateCapitalized",
+        "state?" => "validateState",
+        "city?" => "validateCapitalized",
+        "neighborhood?" => "validateCapitalized",
+        "street?" => "validateCapitalized",
+        "house_number?" => "validateHouseNumber"
     ],
     "at_least" => 1
 ]);
 
-if(isset($mergeObj["house_number"])) {
+if (isset($mergeObj["house_number"])) {
     $mergeObj["number"] = $mergeObj["house_number"];
     unset($mergeObj["house_number"]);
 }
 
 updateObject($body, [
-    "country" => $validateCapitalized,
-    "state" => $validateState,
-    "city" => $validateCapitalized,
-    "neighborhood" => $validateCapitalized,
-    "street" => $validateCapitalized,
-    "house_number" => $validateHouseNumber
+    "country" => "validateCapitalized",
+    "state" => "validateState",
+    "city" => "validateCapitalized",
+    "neighborhood" => "validateCapitalized",
+    "street" => "validateCapitalized",
+    "house_number" => "validateHouseNumber"
 ], $targetAddress, [
     "audit" => $auditObj,
     "result" => "address",

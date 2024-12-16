@@ -18,12 +18,12 @@ $auditObj->setOperation("DeleteAddress");
 
 $targetAddress = findSingle($body, [
     "audit" => $auditObj,
-    "keys" => ["address_id" => $validateInteger],
+    "keys" => ["address_id" => "validateInteger"],
     "query" => \Buildings\AddressQuery::create()
 ]);
 
 $targetAddress->delete();
-if($targetAddress->isDeleted()) {
+if ($targetAddress->isDeleted()) {
     sendResponse(200, false, "Address Deleted Successfully", [], [
         "audit" => $auditObj
     ]);
