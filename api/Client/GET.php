@@ -29,7 +29,7 @@ function fetchClientData(\Buildings\Client $targetClient)
 
     $final_orders = [];
 
-    foreach($orders as $item) {
+    foreach ($orders as $item) {
         $order = [];
         $order["order"] = $item;
         $order["products"] = collectionToArray(\Buildings\OrderProductQuery::create()->findByIdOrder($item->getId()));
@@ -50,8 +50,8 @@ function fetchClientData(\Buildings\Client $targetClient)
 
 $targetClient = findSingle($body, [
     "keys" => [
-        "client_id" => $validateInteger,
-        "username" => $validateUsername
+        "client_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "query" => \Buildings\ClientQuery::create(),
     "audit" => $auditObj,
@@ -59,7 +59,7 @@ $targetClient = findSingle($body, [
 
 $result = fetchClientData($targetClient);
 
-if(isset($result)) {
+if (isset($result)) {
     sendResponse(200, false, "Client Data fetched successfully", $result, [
         "audit" => $auditObj
     ]);

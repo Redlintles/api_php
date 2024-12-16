@@ -18,15 +18,15 @@ $auditObj->setOperation("DeleteClient");
 
 $targetClient = findSingle($body, [
     "keys" => [
-        "client_id" => $validateInteger,
-        "username" => $validateUsername
+        "client_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "query" => \Buildings\ClientQuery::create(),
     "audit" => $auditObj
 ]);
 
 $targetClient->delete();
-if($targetClient->isDeleted()) {
+if ($targetClient->isDeleted()) {
     sendResponse(200, false, "User deleted successfully", ["user" => $targetClient->toArray()], [
         "audit" => $auditObj
     ]);

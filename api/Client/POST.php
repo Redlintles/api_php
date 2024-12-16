@@ -14,10 +14,10 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "username" => $validateUsername,
-        "password" => $validatePassword,
-        "email" => $validateEmail,
-        "phone_number" => $validatePhoneNumber,
+        "username" => "validateUsername",
+        "password" => "validatePassword",
+        "email" => "validateEmail",
+        "phone_number" => "validatePhoneNumber",
     ],
     "audit" => $auditObj
 ]);
@@ -33,12 +33,12 @@ $newClient->setPhoneNumber($body["phone_number"]);
 
 verifyUnicity(\Buildings\ClientQuery::create(), "username", $body["username"]);
 
-if((bool)$newClient->save()) {
+if ((bool)$newClient->save()) {
 
     $user = \Buildings\ClientQuery::create()->findOneByUsername($newClient->getUsername());
 
 
-    if(!isset($user)) {
+    if (!isset($user)) {
         sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
             "audit" => $auditObj
         ]);
@@ -48,7 +48,7 @@ if((bool)$newClient->save()) {
 
     $cart->setIdClient($user->getId());
 
-    if((bool)$cart->save()) {
+    if ((bool)$cart->save()) {
         $transaction->commit();
         sendResponse(200, false, "Client created successfully", ["client" => $newClient->toArray()], [
             "audit" => $auditObj

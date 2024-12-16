@@ -19,7 +19,7 @@ $auditObj->setOperation("UpdateClient");
 
 $targetClient = findSingle($body, [
     "keys" => [
-        "client_id" => $validateInteger
+        "client_id" => "validateInteger"
     ],
     "query" => \Buildings\ClientQuery::create(),
     "audit" => $auditObj
@@ -27,10 +27,10 @@ $targetClient = findSingle($body, [
 
 
 updateObject($body, [
-    "username:unique" => $validateUsername,
-    "password" => $validatePassword,
-    "email" => $validateEmail,
-    "phone_number" => $validatePhoneNumber,
+    "username:unique" => "validateUsername",
+    "password" => "validatePassword",
+    "email" => "validateEmail",
+    "phone_number" => "validatePhoneNumber",
 ], $targetClient, [
     "audit" => $auditObj,
     "result" => "client",
