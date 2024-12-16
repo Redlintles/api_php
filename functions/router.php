@@ -19,15 +19,14 @@ class Router
         $pattern = "/\/api\/". substr($this->listenFor, 1) ."/";
 
 
-        if(!preg_match($pattern, $request)) {
+        if (!preg_match($pattern, $request)) {
             return;
         }
 
-        foreach($this->routes as $route) {
+        foreach ($this->routes as $route) {
             $fullPath = "/api" . $route["route"];
 
-
-            if($request === $fullPath && $route["method"] === $_SERVER["REQUEST_METHOD"]) {
+            if ($request === $fullPath && $route["method"] === $_SERVER["REQUEST_METHOD"]) {
                 require_once $route["file"];
             }
         }
