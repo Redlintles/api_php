@@ -18,7 +18,7 @@ function sendResponse(int $statusCode, bool $err, string $message, array $additi
         if (isset($auditData["operation_info"])) {
             $auditData["audit"]->setOperation($auditData["operation_info"]);
         }
-        $auditData["audit"]->postaudit($message, $statusCode);
+        $auditData["audit"]->postAudit($message, $statusCode);
     }
     ob_start();
     header("Content-Type: application/json");
