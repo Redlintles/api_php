@@ -1,19 +1,18 @@
 <?php
 
-use Buildings\Base\Category;
 use Buildings\Base\DiscountQuery;
 use Buildings\CategoryQuery;
 
 /**
  * @param Buildings\Product $product Product to discount
  * @param string[] $categories Category array of the given product
- * @return array;
+ * @return Buildings\Discount;
  */
 
 function getDiscounts(Buildings\Product $product, array $categories): array
 {
-
     $categoriesId = [];
+    $result = [];
 
     foreach ($categories as $cName) {
         $category = CategoryQuery::create()->findByName($cName);
@@ -24,8 +23,6 @@ function getDiscounts(Buildings\Product $product, array $categories): array
         }
     };
 
-
-
     $productDiscounts = dynamicQuery(DiscountQuery::create(), [
         "idProduct" => $product->getId(),
         "type" => "P"
@@ -35,13 +32,6 @@ function getDiscounts(Buildings\Product $product, array $categories): array
         "idCategory" => $categoriesId,
         "type" => "C"
     ]);
-
-
-
-
-
-
-    $result = [];
 
 
 
@@ -63,13 +53,9 @@ function getDiscounts(Buildings\Product $product, array $categories): array
  */
 function getDiscountsByFinalPrice(Buildings\Product $product, array $categories): float
 {
-
     $price = $product->getUnityPrice();
-
     $final = 0;
-
     $discounts = getDiscounts($product, $categories);
-
 
     foreach ($discounts as $discount) {
         $final += (intval($discount->getPercent()) / 100) * $price;
@@ -88,13 +74,8 @@ function getDiscountsByFinalPrice(Buildings\Product $product, array $categories)
 function getIncrementalDiscounts(Buildings\Product $product, array $categories): float
 {
     $price = $product->getUnityPrice();
-
-
     $discounts = getDiscounts($product, $categories);
-
     $priceArr = [$price];
-
-
 
     foreach ($discounts as $discount) {
         $last = $priceArr[count($priceArr) - 1];
@@ -104,8 +85,5 @@ function getIncrementalDiscounts(Buildings\Product $product, array $categories):
         array_push($priceArr, $last - $d);
     }
 
-
     return round($priceArr[count($priceArr) - 1], 2);
-
-
 }
