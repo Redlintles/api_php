@@ -19,10 +19,10 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "username" => $validateUsername,
-        "email" => $validateEmail,
-        "password" => $validatePassword,
-        "phone_number" => $validatePhoneNumber
+        "username" => "validateUsername",
+        "email" => "validateEmail",
+        "password" => "validatePassword",
+        "phone_number" => "validatePhoneNumber"
     ],
     "audit" => $auditObj
 ]);
@@ -36,7 +36,7 @@ $seller->setEmail($body["email"]);
 $seller->setPassword($body["password"]);
 $seller->setPhoneNumber($body["phone_number"]);
 
-if($seller->save()) {
+if ($seller->save()) {
     sendResponse(200, false, "Seller created successfully", [
         "seller" => $seller->toArray()
     ], [

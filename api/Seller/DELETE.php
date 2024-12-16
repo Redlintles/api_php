@@ -18,8 +18,8 @@ $body = bodyParser();
 
 $targetObj = findSingle($body, [
     "keys" => [
-        "seller_id" => $validateInteger,
-        "username" => $validateUsername
+        "seller_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "audit" => $auditObj,
     "query" => \Buildings\SellerQuery::create()
@@ -28,7 +28,7 @@ $targetObj = findSingle($body, [
 
 $targetObj->delete();
 
-if($targetObj->isDeleted()) {
+if ($targetObj->isDeleted()) {
     sendResponse(200, false, "Seller deleted successfully", [
         "seller" => $targetObj->toArray()
     ], [

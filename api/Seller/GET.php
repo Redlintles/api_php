@@ -22,8 +22,8 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "seller_id?" => $validateInteger,
-        "username?" => $validateUsername
+        "seller_id?" => "validateInteger",
+        "username?" => "validateUsername"
     ],
     "at_least" => 1,
     "audit" => $auditObj
@@ -32,15 +32,15 @@ $body = groupValidation($body, [
 
 $targetSeller = findSingle($body, [
     "keys" => [
-        "seller_id" => $validateInteger,
-        "username" => $validateUsername
+        "seller_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "query" => \Buildings\SellerQuery::create(),
     "audit" => $auditObj
 ]);
 
 
-if(isset($targetSeller)) {
+if (isset($targetSeller)) {
     sendResponse(200, false, "Seller fetched successfully", [
         "seller" => $targetSeller->toArray()
     ], [
