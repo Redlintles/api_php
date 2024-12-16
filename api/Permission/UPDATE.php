@@ -16,7 +16,7 @@ $user = findAdmin($apiKey);
 $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("ChangePermission");
 
-if(!isset($user)) {
+if (!isset($user)) {
     sendResponse(404, true, "User not found", [], [
         "audit" => $auditObj
     ]);
@@ -26,14 +26,14 @@ permissionValidator($apiKey, "UPDATE");
 
 $targetUser = findSingle($body, [
     "keys" => [
-        "admin_id" => $validateInteger,
-        "username" => $validateUsername
+        "admin_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "query" => \Buildings\AdminQuery::create(),
     "audit" => $auditObj
 ]);
 
-if(!isset($body["permission"])) {
+if (!isset($body["permission"])) {
     sendResponse(400, true, "permission string not specified", [], [
         "audit" => $auditObj
     ]);
@@ -42,13 +42,13 @@ if(!isset($body["permission"])) {
 $validatePermissionString($body["permission"]);
 
 
-if($user->getUsername() !== "root") {
+if ($user->getUsername() !== "root") {
     $msg = "Only root can change permissions";
     sendResponse(403, true, "Only root can change permissions", [], [
         "audit" => $auditObj
     ]);
 } else {
-    if($targetUser->getUsername() === "root") {
+    if ($targetUser->getUsername() === "root") {
         sendResponse(400, true, "Root permissions cannot be changed", [], [
             "audit" => $auditObj
         ]);

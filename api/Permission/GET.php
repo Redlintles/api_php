@@ -25,26 +25,26 @@ $auditObj->setOperation("GetPermission");
 $user = findAdmin($apiKey);
 $targetUser = findSingle($body, [
     "keys" => [
-        "admin_id" => $validateInteger,
-        "username" => $validateUsername
+        "admin_id" => "validateInteger",
+        "username" => "validateUsername"
     ],
     "query" => \Buildings\AdminQuery::create(),
     "audit" => $auditObj
 ]);
 
-if(isset($targetUser)) {
+if (isset($targetUser)) {
     $target = true;
 } else {
     $target = false;
 }
 
-if($user->getUsername() !== "root" && isset($targetUser)) {
+if ($user->getUsername() !== "root" && isset($targetUser)) {
     sendResponse(403, true, "Only Root can check for others permissions, if you want to check about your own permissions, send a empty body request", [], [
         "audit" => $auditObj
     ]);
 }
 
-if($user->getUsername() === "root" && isset($targetUser)) {
+if ($user->getUsername() === "root" && isset($targetUser)) {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($targetUser->getId());
 
     sendResponse(200, false, $targetUser->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)], [], [
@@ -53,7 +53,7 @@ if($user->getUsername() === "root" && isset($targetUser)) {
     ]);
 }
 
-if($user->getUsername() !== "root") {
+if ($user->getUsername() !== "root") {
     $targetPermissions = \Buildings\PermissionQuery::create()->findOneByAdminId($user->getId());
     sendResponse(200, false, $user->getUsername() . " Permissions fetched successfully", ["permissions" => formatPermission($targetPermissions)], [
         "audit" => $auditObj,
@@ -61,17 +61,17 @@ if($user->getUsername() !== "root") {
     ]);
 }
 
-if($user->getUsername() === "root" && !isset($targetUser) && $target) {
+if ($user->getUsername() === "root" && !isset($targetUser) && $target) {
     sendResponse(404, false, "User not found", [], [
         "audit" => $auditObj,
     ]);
 }
-if($user->getUsername() === "root" && !isset($targetUser) && !$target) {
+if ($user->getUsername() === "root" && !isset($targetUser) && !$target) {
     $resultPermissions = \Buildings\PermissionQuery::create()->find();
 
     $resultUsers = [];
 
-    foreach($resultPermissions as $item) {
+    foreach ($resultPermissions as $item) {
         $obj = [];
 
         $obj["user"] = \Buildings\AdminQuery::create()->findOneById($item->getAdminId())->getUsername();
