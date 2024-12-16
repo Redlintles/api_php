@@ -3,11 +3,19 @@
 
 require_once __DIR__ . "/audit.php";
 
+/**
+ * @param int $statusCode The Response Status Code
+ * @param bool $err If true, it's an error response
+ * @param string $message The message of the response
+ * @param array $additionalData The data of the response
+ * @param array $auditData Data relative to the auditory
+ */
+
 function sendResponse(int $statusCode, bool $err, string $message, array $additionalData = [], array $auditData = [])
 {
 
-    if(isset($auditData["audit"])) {
-        if(isset($auditData["operation_info"])) {
+    if (isset($auditData["audit"])) {
+        if (isset($auditData["operation_info"])) {
             $auditData["audit"]->setOperation($auditData["operation_info"]);
         }
         $auditData["audit"]->postaudit($message, $statusCode);
@@ -18,11 +26,12 @@ function sendResponse(int $statusCode, bool $err, string $message, array $additi
 
     $response = [
         "error" => $err,
-        "message" => $message
+        "message" => $message,
+        "data" => $additionalData
     ];
-    $final = array_merge($response, $additionalData);
 
-    echo json_encode($final);
+
+    echo json_encode($response);
     ob_end_flush();
     exit;
 }
