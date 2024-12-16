@@ -19,8 +19,8 @@ $body = bodyParser();
 
 $targetCategory = findSingle($body, [
     "keys" => [
-        "category_id" => $validateInteger,
-        "name" => $validateCapitalized
+        "category_id" => "validateInteger",
+        "name" => "validateCapitalized"
     ],
     "audit" => $auditObj,
     "query" => \Buildings\CategoryQuery::create()
@@ -28,7 +28,7 @@ $targetCategory = findSingle($body, [
 
 $targetCategory->delete();
 
-if($targetCategory->isDeleted()) {
+if ($targetCategory->isDeleted()) {
     sendResponse(200, false, "Category deleted successfully", [
         "category" => $targetCategory->toArray(),
     ], [
