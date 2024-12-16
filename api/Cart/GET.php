@@ -21,7 +21,7 @@ $auditObj->setOperation("GetCart");
 
 $targetCart = findSingle($body, [
     "keys" => [
-        "id_client" => $validateInteger,
+        "id_client" => "validateInteger",
     ],
     "audit" => $auditObj,
     "query" => \Buildings\CartQuery::create()

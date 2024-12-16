@@ -20,16 +20,16 @@ $body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
-        "id_client" => $validateInteger,
-        "product_id" => $validateInteger,
-        "quantity" => $validateInteger
+        "id_client" => "validateInteger",
+        "product_id" => "validateInteger",
+        "quantity" => "validateInteger"
     ],
     "audit" => $auditObj
 ]);
 
 $targetCart = findSingle($body, [
     "keys" => [
-        "id_client" => $validateInteger
+        "id_client" => "validateInteger"
     ],
     "query" => \Buildings\CartQuery::create(),
     "audit" => $auditObj
@@ -37,7 +37,7 @@ $targetCart = findSingle($body, [
 
 $targetProduct = findSingle($body, [
     "keys" => [
-        "product_id" => $validateInteger,
+        "product_id" => "validateInteger",
     ],
     "query" => \Buildings\ProductQuery::create(),
     "audit" => $auditObj

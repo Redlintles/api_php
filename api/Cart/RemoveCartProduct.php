@@ -19,16 +19,16 @@ $auditObj->setOperation("DeleteOrDecrementProduct");
 
 $body = groupValidation($body, [
     "keys" => [
-        "id_client" => $validateInteger,
-        "product_id" => $validateInteger,
-        "quantity" => $validateInteger
+        "id_client" => "validateInteger",
+        "product_id" => "validateInteger",
+        "quantity" => "validateInteger"
     ],
     "audit" => $auditObj
 ]);
 
 $targetCart = findSingle($body, [
     "keys" => [
-        "id_client" => $validateInteger,
+        "id_client" => "validateInteger",
     ],
     "audit" => $auditObj,
     "query" => \Buildings\CartQuery::create()
@@ -37,7 +37,7 @@ $targetCart = findSingle($body, [
 
 $targetProduct = findSingle($body, [
     "keys" => [
-        "product_id" => $validateInteger
+        "product_id" => "validateInteger"
     ],
     "audit" => $auditObj,
     "query" => \Buildings\ProductQuery::create()
