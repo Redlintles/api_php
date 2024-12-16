@@ -2,6 +2,9 @@
 
 use Buildings\AdminQuery;
 
+/**
+ * @return bool Check if the api Key is valid
+ */
 function apiKeyValidator()
 {
     if (isset($_SERVER["HTTP_X_API_KEY"])) {
@@ -11,9 +14,9 @@ function apiKeyValidator()
 
         $users = AdminQuery::create()->find();
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $encrypted = $user->getApiKey();
-            if(password_verify($apiKey, $encrypted)) {
+            if (password_verify($apiKey, $encrypted)) {
                 $userId = $user->getId();
             }
         }
