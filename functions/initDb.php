@@ -3,10 +3,13 @@
 
 use Ramsey\Uuid\Uuid;
 
+/**
+ * Create the root permissions
+ */
 function createRootPermission()
 {
     $root = \Buildings\AdminQuery::create()->findOneByUsername("root");
-    if(isset($root)) {
+    if (isset($root)) {
         $permission = new \Buildings\Permission();
         $permission->setAdminId($root->getId());
         $permission->setCreatePermission("1");
@@ -17,11 +20,15 @@ function createRootPermission()
     }
 }
 
+
+/**
+ * Inits the root user when the application starts.
+ */
 function initRoot()
 {
     $adm = \Buildings\AdminQuery::create()->findOneByUsername("root");
 
-    if(!isset($adm)) {
+    if (!isset($adm)) {
 
         $apiKey = Uuid::uuid4()->toString();
 
@@ -33,9 +40,9 @@ function initRoot()
         $root->setApiKey(password_hash($apiKey, PASSWORD_DEFAULT));
         $root->save();
         createRootPermission();
-    } elseif(isset($adm)) {
+    } elseif (isset($adm)) {
         $permission = \Buildings\PermissionQuery::create()->findOneByAdminId($adm->getId());
-        if(!isset($permission)) {
+        if (!isset($permission)) {
             createRootPermission();
         }
     }
