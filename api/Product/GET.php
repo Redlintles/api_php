@@ -36,8 +36,19 @@ foreach ($categories as $c) {
 
 
 $discountedPrice = getDiscountsByFinalPrice($targetProduct, $productCategories);
+$incrementalDiscountedPrice = getIncrementalDiscounts($targetProduct, $productCategories);
 
-
-sendResponse(200, false, "Product found successfully", ["product" => $targetProduct->toArray(), "categories" => $productCategories, "discounted_rpice" => $discountedPrice], [
+sendResponse(
+    200,
+    false,
+    "Product found successfully",
+    [
+        "product" => $targetProduct->toArray(),
+  "categories" => $productCategories,
+   "discounted_price" => $discountedPrice,
+   "incremental_discounted_price" => $incrementalDiscountedPrice
+],
+    [
     "audit" => $auditObj
-]);
+]
+);
