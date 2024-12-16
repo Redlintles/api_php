@@ -18,7 +18,7 @@ $body = bodyParser();
 
 $targetDiscount = findSingle($body, [
     "keys" => [
-        "discount_id" => $validateInteger
+        "discount_id" => "validateInteger"
     ],
     "audit" => $auditObj,
     "query" => \Buildings\DiscountQuery::create()
@@ -26,7 +26,7 @@ $targetDiscount = findSingle($body, [
 
 $targetDiscount->delete();
 
-if($targetDiscount->isDeleted()) {
+if ($targetDiscount->isDeleted()) {
     sendResponse(
         200,
         false,
