@@ -27,8 +27,8 @@ function decrementProduct()
     $targetProduct = findSingle($body, [
         "query" => \Buildings\ProductQuery::create(),
         "keys" => [
-            "product_id" => $validateInteger,
-            "title" => $validateCapitalized
+            "product_id" => "validateInteger",
+            "title" => "validateCapitalized"
         ],
         "audit" => "auditObj"
     ]);
@@ -48,15 +48,15 @@ function deleteProduct()
     $targetProduct = findSingle($body, [
         "query" => \Buildings\ProductQuery::create(),
         "keys" => [
-            "product_id" => $validateInteger,
-            "title" => $validateCapitalized
+            "product_id" => "validateInteger",
+            "title" => "validateCapitalized"
         ],
         "audit" => "auditObj"
     ]);
 
     $targetProduct->delete();
 
-    if($targetProduct->isDeleted()) {
+    if ($targetProduct->isDeleted()) {
         sendResponse(200, false, "Product " . $targetProduct->getTitle() ." Deleted successfully", [], ["audit" => $auditObj]);
     } else {
         sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
@@ -65,12 +65,12 @@ function deleteProduct()
     }
 }
 
-if(!isset($body["type"])) {
+if (!isset($body["type"])) {
 
     sendResponse(400, true, "Type field is not set, must be 'del' or 'dec'", [], ["audit" => $auditObj]);
 
-} elseif($body["type"] === "dec") {
+} elseif ($body["type"] === "dec") {
     decrementProduct();
-} elseif($body["type"] === "del") {
+} elseif ($body["type"] === "del") {
     deleteProduct();
 }
