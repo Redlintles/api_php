@@ -4,8 +4,13 @@
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 
-
-function groupValidation($body, $options)
+/**
+ * Validates a body object based on validation functions, if the validation fails, throws an error
+ * @param array $body The body to be validated
+ * @param array $options an array which should contain the keys property which is an array of body keys to be validated, and functions to validate that key as values, place ? after the name of the key to mark it as optional the at_least parameter controls the number of minimum matches for the validation to be considered.
+ * @return array the validated array
+ */
+function groupValidation($body, $options): array
 {
     $validatedObj = [];
 
