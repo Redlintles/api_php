@@ -2,104 +2,24 @@
 
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 
-function validationFactory(string $regex, string $message)
-{
-    return function (string | array $toValidate) use ($regex, $message) {
-        if (is_array($toValidate)) {
-            foreach ($toValidate as $item) {
-                if (!preg_match($regex, $item)) {
-                    sendResponse(400, true, $message);
-                }
-            }
-        } else {
-            if (!preg_match($regex, $toValidate)) {
-                sendResponse(400, true, $message);
-            }
-        }
-    };
-}
-
-$validateUsername = validationFactory(
-    "/^[a-zA-Z]{8,46}(?:\d{0,4}?)$/",
-    "Invalid Username, length must be in range(8,50) and it should not start with a number"
-);
-
-$validatePassword = validationFactory(
-    "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/",
-    "Invalid Password, length must be in range(8,30) and it should contain at least one uppercase letter, one lowercase, one number and one special character"
-);
-
-$validateEmail = validationFactory(
-    "/^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+$/",
-    "Invalid Email(banana@gmail.com)"
-);
-
-$validatePermissionString = validationFactory(
-    "/^[0-1]{4}$/",
-    "Invalid permission string, it should look like as '1010'"
-);
-
-$validateInteger = validationFactory(
-    "/^\d+$/",
-    "Invalid ID(must be a number)"
-);
-
-
-$validateState = validationFactory(
-    "/^[A-Z]{2}$/",
-    "Invalid state(must be a capitalized string"
-);
-
-$validateCapitalized = validationFactory(
-    "/^(?:[A-Z][a-z]+\s?)+$/",
-    "Invalid Capitalized String(must be a capitalized string)"
-);
-
-$validateHouseNumber = validationFactory(
-    "/^[A-Za-z0-9\-\/\s]{1,10}$/",
-    "Invalid houseNumber(must be a capitalized string"
-);
-$validatePhoneNumber = validationFactory(
-    "/^[0-9]{11,15}$/",
-    "Invalid Phone Number, min is 11 digits and max is 15"
-);
-
-$validateUnityPrice = validationFactory(
-    "/^[0-9]+\.[0-9]{2}$/",
-    "Invalid Unity Price format is (10.99)"
-);
-
-$validateDate = validationFactory(
-    "/^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}$/",
-    "Invalid date, must be in format '2024-01-01 23:59:02' "
-);
-
-$validateIsInArray = function (string $string, array $arr) {
-
-    if (!in_array($string, $arr, true)) {
-        sendResponse(400, true, "Invalid key, $string must be in " . implode(",", $arr));
-    }
-};
-
-$validateExpiration = function (string $date1, string $date2) {
-    $timestamp1 = strtotime($date1);
-    $timestamp2 = strtotime($date2);
-
-    if ($timestamp1 > $timestamp2) {
-        sendResponse(400, true, "Invalid expiration, it should be a later time than start time");
-    }
-};
-
-$validateIsInRange = function (int $val, int $min = 0, int $max = INF) {
-    if (!($min < $val && $val < $max)) {
-        sendResponse(400, true, "Invalid number, it should be in range ($min,$max)");
-    }
-};
 
 
 
+
+
+/**
+ * A Class for centering validation logic
+ *
+ */
 class Validate
 {
+    /**
+     * A factory for simple validation functions
+     * The callable returned functions receives Strings or arrays and call sendResponse with 400 status code if the validation fails
+     * @param string $regex The Regex to be applied
+     * @param string $message The Message returned in the case of error
+     * @return callable Returns the validation function
+     */
     private static function validationFactory(string $regex, string $message)
     {
         return function (string | array $toValidate) use ($regex, $message) {
@@ -117,8 +37,12 @@ class Validate
         };
     }
 
-
-    public static function validateUsername($data)
+    /**
+     * Validate an username based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateUsername(array | string $data): bool
     {
         $__validateUsername = self::validationFactory(...[
             "/^[a-zA-Z]{8,46}(?:\d{0,4}?)$/",
@@ -136,7 +60,12 @@ class Validate
 
     }
 
-    public static function validateEmail($data)
+    /**
+     * Validate an email based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateEmail(array | string $data): bool
     {
         $__validateEmail = self::validationFactory(...[
             "/^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+$/",
@@ -152,7 +81,12 @@ class Validate
         }
         return true;
     }
-    public static function validatePassword($data)
+    /**
+     * Validate a password based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validatePassword(array | string $data): bool
     {
 
         $__validatePassword = self::validationFactory(...[
@@ -170,7 +104,12 @@ class Validate
         }
         return true;
     }
-    public static function validatePhoneNumber($data)
+    /**
+     * Validate a phone number based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validatePhoneNumber(array | string $data): bool
     {
 
         $__validatePhoneNumber = self::validationFactory(...[
@@ -187,7 +126,12 @@ class Validate
         }
         return true;
     }
-    public static function validatePermissionString($data)
+    /**
+     * Validate a permission string based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validatePermissionString(array | string $data): bool
     {
 
         $__validatePermissionString = self::validationFactory(...[
@@ -204,7 +148,12 @@ class Validate
         }
         return true;
     }
-    public static function validateInteger($data)
+    /**
+     * Validate an integer string based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateInteger(array | string $data): bool
     {
 
         $__validateInteger = self::validationFactory(...[
@@ -221,7 +170,12 @@ class Validate
         }
         return true;
     }
-    public static function validateState($data)
+    /**
+     * Validate a country state code based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateState(array | string $data): bool
     {
 
         $__validateState = self::validationFactory(...[
@@ -238,7 +192,12 @@ class Validate
         }
         return true;
     }
-    public static function validateHouseNumber($data)
+    /**
+     * Validate a house number code based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateHouseNumber(array | string $data): bool
     {
 
         $__validateHouseNumber = self::validationFactory(...[
@@ -255,7 +214,12 @@ class Validate
         }
         return true;
     }
-    public static function validateCapitalized($data)
+    /**
+     * Validate a capitalized string based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateCapitalized(array | string $data): bool
     {
 
         $__validateCapitalized = self::validationFactory(...[
@@ -275,7 +239,12 @@ class Validate
 
         return true;
     }
-    public static function validateUnityPrice($data)
+    /**
+     * Validate a product unity price based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateUnityPrice(array | string $data): bool
     {
 
         $__validateUnityPrice = self::validationFactory(...[
@@ -294,7 +263,12 @@ class Validate
 
         return true;
     }
-    public static function validateDate($data)
+    /**
+     * Validate a date based on a regex
+     * @param string[]|string $data the data to be validated
+     * @return bool always return true or an error if the validation fails
+     */
+    public static function validateDate(array | string $data): bool
     {
 
         $__validateDate = self::validationFactory(...[
@@ -311,8 +285,14 @@ class Validate
         }
         return true;
     }
+    /**
+     * checks if a value exists in an array
+     * @param string $data the data to be validated
+     * @param string[] $arr The array that will be checked
+     * @return bool always return true or an error if the validation fails
+     */
 
-    public static function validateIsInArray(string $data, array $arr)
+    public static function validateIsInArray(string $data, array $arr): bool
     {
 
         $__validateIsInArray = function (string $string, array $arr) {
