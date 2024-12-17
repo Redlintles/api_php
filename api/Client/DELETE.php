@@ -17,13 +17,8 @@ $auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteClient");
 
 $targetClient = findSingle($body, [
-    "keys" => [
-        "client_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "query" => \Buildings\ClientQuery::create(),
-    "audit" => $auditObj
-]);
+    "client_id" => "id",
+], \Buildings\ClientQuery::create(), true, $auditObj);
 
 $targetClient->delete();
 if ($targetClient->isDeleted()) {
