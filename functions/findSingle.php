@@ -37,8 +37,10 @@ function findSingle(array $body, array $options): object | null
             }
             if (method_exists($options["query"], $methodName)) {
                 $targetObj = $options["query"]->$methodName($body[$key]);
-            } else {
+            } elseif ($options["throw_error"]) {
                 throwErr($body, $audit, $options);
+            } else {
+                return null;
             }
         }
         if (isset($targetObj)) {
