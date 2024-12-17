@@ -134,6 +134,9 @@
     <foreign-key phpName="AddressOwnerIdSeller" refPhpName="AddressOwnerSeller" onDelete="cascade" name="address_owner_seller" foreignTable="seller">
       <reference foreign="id" local="id_seller"/>
     </foreign-key>
+    <unique name="id_address_unique">
+      <unique-column name="id_address" />
+    </unique>
   </table>
   <table name="product" phpName="Product">
     <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true" required="true" />

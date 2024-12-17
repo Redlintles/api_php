@@ -242,7 +242,7 @@ CREATE TABLE `address_owner`
     `id_seller` INTEGER,
     `type` VARCHAR(10) DEFAULT '' NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `fi_ress_owner_address` (`id_address`),
+    UNIQUE INDEX `id_address_unique` (`id_address`),
     INDEX `fi_ress_owner_client` (`id_client`),
     INDEX `fi_ress_owner_seller` (`id_seller`),
     CONSTRAINT `address_owner_address`
