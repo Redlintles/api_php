@@ -1,6 +1,5 @@
 <?php
 
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
@@ -8,23 +7,17 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
 
-
+$body = bodyParser();
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+$auditObj = new AuditObj($apiKey, "DELETE", $request);
 
 permissionValidator($apiKey, "DELETE");
-$auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteCategory");
 
-$body = bodyParser();
 
 $targetCategory = findSingle($body, [
-    "keys" => [
-        "category_id" => "validateInteger",
-        "name" => "validateCapitalized"
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\CategoryQuery::create()
-]);
+    "category_id" => "id",
+], \Buildings\CategoryQuery::create(), true, $auditObj);
 
 $targetCategory->delete();
 
