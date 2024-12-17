@@ -1,6 +1,5 @@
 <?php
 
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
@@ -9,7 +8,6 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findAdmin.php";
-
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 
@@ -21,18 +19,11 @@ $auditObj->setOperation("ReadAdmin");
 
 $user = findAdmin($apiKey);
 
-
 if (isset($user) && $user->getUsername() === "root") {
 
     $targetUser = findSingle($body, [
-        "keys" => [
-            "admin_id" => "validateInteger",
-            "username" => "validateUsername",
-        ],
-        "audit" => $auditObj,
-        "query" => \Buildings\AdminQuery::create(),
-        "throw_error" => false
-    ]);
+        "admin_id" => "id",
+    ], \Buildings\AdminQuery::create(), true, $auditObj);
 
     if (!isset($targetUser)) {
         $users = \Buildings\AdminQuery::create()->find();
