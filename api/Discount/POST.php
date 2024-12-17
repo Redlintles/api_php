@@ -36,22 +36,14 @@ if ($body["type"] === "C") {
     $discount->setType("C"); // Category
     $discount->setIdCategory($body["category_id"]);
     $target = findSingle($body, [
-        "keys" => [
-            "category_id" => 'validateInteger'
-        ],
-        "audit" => $auditObj,
-        "query" => \Buildings\CategoryQuery::create()
-    ]);
+        "category_id" => "id",
+    ], \Buildings\CategoryQuery::create(), true, $auditObj);
 } elseif ($body["type"] === "P") {
     $discount->setType("P"); // Products
     $discount->setIdProduct($body["product_id"]);
     $target = findSingle($body, [
-        "keys" => [
-            "product_id" => 'validateInteger'
-        ],
-        "audit" => $auditObj,
-        "query" => \Buildings\ProductQuery::create()
-    ]);
+        "product_id" => "id",
+    ], \Buildings\ProductQuery::create(), true, $auditObj);
 }
 
 $validateExpiration($body["starts_at"], $body["expires_at"]);
