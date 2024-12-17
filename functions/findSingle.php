@@ -17,6 +17,17 @@ function findSingle(array $body, array $options): object | null
         $options["throw_error"] = true;
     }
 
+    function throwErr($body, $audit, $options)
+    {
+
+        sendResponse(404, true, "Object not found, If the object exists, have you set any of " . implode(",", array_keys($options["keys"])) . "?", [
+            "params" => $body
+        ], [
+            $audit => $options["audit"]
+        ]);
+        throw new Exception("Object not found");
+    }
+
     foreach ($options["keys"] as $key => $validation) {
         if (isset($body[$key])) {
             Validate::$validation($body[$key]);
@@ -24,7 +35,11 @@ function findSingle(array $body, array $options): object | null
             if (!preg_match("/_id/", $key)) {
                 $methodName = "findOneBy" . ucfirst(snakeToCamel($key));
             }
-            $targetObj = $options["query"]->$methodName($body[$key]);
+            if (method_exists($options["query"], $methodName)) {
+                $targetObj = $options["query"]->$methodName($body[$key]);
+            } else {
+                throwErr($body, $audit, $options);
+            }
         }
         if (isset($targetObj)) {
             break;
@@ -32,10 +47,7 @@ function findSingle(array $body, array $options): object | null
     }
 
     if (!isset($targetObj) && $options["throw_error"]) {
-        sendResponse(400, true, "Object not found, have you set any of " . implode(",", array_keys($options["keys"])) . "?", [], [
-            $audit => $options["audit"]
-        ]);
-        throw new Exception("Object not found");
+        throwErr($body, $audit, $options);
     } elseif (!isset($targetObj)) {
         return null;
     }
