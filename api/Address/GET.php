@@ -33,9 +33,19 @@ $queryObj = groupValidation($body, [
 ]);
 $addresses = dynamicQuery(\Buildings\AddressQuery::create(), $queryObj);
 
+$result = [];
+
+foreach ($addresses as $address) {
+    $owners = dynamicQuery(\Buildings\AddressOwnerQuery::create(), [
+        "id_address" => $address->getId(),
+    ]);
+
+    array_push($result, ["address" => $address->toArray(), "owners" => $owners->toArray()]);
+}
+
 
 if (isset($addresses)) {
-    sendResponse(200, false, "Addresses Fetched Successfully", ["addresses" => collectionToArray($addresses)], [
+    sendResponse(200, false, "Addresses Fetched Successfully", ["addresses" => $result], [
         "audit" => $auditObj
     ]);
 } else {
