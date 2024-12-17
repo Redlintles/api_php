@@ -18,12 +18,8 @@ $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateClient");
 
 $targetClient = findSingle($body, [
-    "keys" => [
-        "client_id" => "validateInteger"
-    ],
-    "query" => \Buildings\ClientQuery::create(),
-    "audit" => $auditObj
-]);
+    "client_id" => "id",
+], \Buildings\ClientQuery::create(), true, $auditObj);
 
 
 updateObject($body, [
