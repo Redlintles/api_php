@@ -17,13 +17,8 @@ $auditObj->setOperation("DeleteSeller");
 $body = bodyParser();
 
 $targetObj = findSingle($body, [
-    "keys" => [
-        "seller_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\SellerQuery::create()
-]);
+    "seller_id" => "id",
+], \Buildings\SellerQuery::create(), true, $auditObj);
 
 
 $targetObj->delete();
