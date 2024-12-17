@@ -8,13 +8,11 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
-
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $body = bodyParser();
+$auditObj = new AuditObj($apiKey, "DELETE", $request);
 
 permissionValidator($apiKey, "DELETE");
-
-$auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteOrDecrementProduct");
 
 $body = groupValidation($body, [
@@ -27,21 +25,11 @@ $body = groupValidation($body, [
 ]);
 
 $targetCart = findSingle($body, [
-    "keys" => [
-        "id_client" => "validateInteger",
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\CartQuery::create()
-]);
-
-
+    "id_client" => "id_client",
+], \Buildings\CartQuery::create(), true, $auditObj);
 $targetProduct = findSingle($body, [
-    "keys" => [
-        "product_id" => "validateInteger"
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\ProductQuery::create()
-]);
+    "id_product" => "id",
+], \Buildings\ProductQuery::create(), true, $auditObj);
 
 $targetCart->removeProduct($targetProduct, isset($body["quantity"]) ? $body["quantity"] : null);
 
