@@ -21,19 +21,16 @@ $validatedBody = groupValidation($body, [
 
 $addressOwnerRel = findSingle(
     $validatedBody,
-    [
-     "keys" => $keysArr,
-     "audit" => $auditObj,
-     "query" => \Buildings\AddressOwnerQuery::create(),
-
-],
-    ["throw_error" => true]
+    ["address_id" => "idAddress", "owner_id" => "idOwner"],
+    \Buildings\AddressOwnerQuery::create(),
+    true,
+    $auditObj
 );
 
 if (isset($addressOwnerRel)) {
     $addressOwnerRel->delete();
     if ($addressOwnerRel->isDeleted()) {
-        sendResponse(200, false, "Addres owner rel Deleted successfully", ["rel" => $addressOwnerRel->toArray()], ["audit" => $auditObj]);
+        sendResponse(200, false, "Address owner rel Deleted successfully", ["rel" => $addressOwnerRel->toArray()], ["audit" => $auditObj]);
     } else {
         sendResponse(500, true, "Address owner could not be deleted, try again later", [], ["audit" => $auditObj]);
     }
