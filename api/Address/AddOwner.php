@@ -21,33 +21,28 @@ $validated = groupValidation($body, [
 
 $address = findSingle(
     $body,
-    [
-        "audit" => $auditObj,
-        "keys" => ["address_id" => "validateInteger"],
-        "query" => \Buildings\AddressQuery::create()
-    ]
+    ["address_id" => "id"],
+    \Buildings\AddressQuery::create(),
+    true,
+    $auditObj
 );
 
 $owner = null;
 
 if ($validated["type"] == "C") {
     $owner = findSingle($body, [
-        "audit" => $auditObj,
-        "keys" => ["owner_id" => "validateInteger"],
-        "query" => \Buildings\ClientQuery::create()
-    ]);
+        "owner_id" => "id",
+    ], \Buildings\ClientQuery::create(), true, $auditObj);
 
 
 } elseif ($validated["type"] = "S") {
     $owner = findSingle($body, [
-        "audit" => $auditObj,
-        "keys" => ["owner_id" => "validateInteger"],
-        "query" => \Buildings\SellerQuery::create()
-    ]);
+        "owner_id" => "id",
+    ], \Buildings\SellerQuery::create(), true, $auditObj);
 }
 
 if (isset($address) && isset($owner)) {
-    $addressVerify = \Buildings\AddressOwnerQuery::create()->findByIdAddress($address->getId());
+    $addressVerify = \Buildings\AddressOwnerQuery::create()->findOneByIdAddress($address->getId());
 
 
     if (isset($addressVerify)) {
