@@ -1,6 +1,5 @@
 <?php
 
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
@@ -10,13 +9,12 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+$body = bodyParser();
+$auditObj = new AuditObj($apiKey, "READ", $request);
 
 permissionValidator($apiKey, "READ");
-
-$body = bodyParser();
-
-$auditObj = new AuditObj($apiKey, "READ", $request);
 $auditObj->setOperation("GetClient");
+
 function fetchClientData(\Buildings\Client $targetClient)
 {
     $result = [];
@@ -49,13 +47,8 @@ function fetchClientData(\Buildings\Client $targetClient)
 }
 
 $targetClient = findSingle($body, [
-    "keys" => [
-        "client_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "query" => \Buildings\ClientQuery::create(),
-    "audit" => $auditObj,
-]);
+    "client_id" => "id"
+], \Buildings\ClientQuery::create(), true, $auditObj);
 
 $result = fetchClientData($targetClient);
 
