@@ -11,13 +11,11 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/updateObject.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $body = bodyParser();
-
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
-
-
-permissionValidator($apiKey, "UPDATE");
 $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateAdmin");
+
+permissionValidator($apiKey, "UPDATE");
 
 if (!isset($body["admin_id"])) {
     sendResponse(400, true, "admin_id not defined", [], [
@@ -36,15 +34,10 @@ $body = groupValidation($body, [
 ]);
 
 $targetUser = findSingle($body, [
-    "keys" => [
-        "admin_id" => "validateInteger"
-    ],
-    "query" => \Buildings\AdminQuery::create(),
-    "audit" => $auditObj
-]);
+    "admin_id" => "id"
+], \Buildings\AdminQuery::create(), true, $auditObj);
 
 $isRoot = findAdmin($apiKey)->getUsername() === "root";
-
 
 if (!isset($targetUser)) {
     sendResponse(400, true, "Admin not found", [], [
@@ -100,5 +93,4 @@ if ($targetUser->getUsername() === "root") {
     sendResponse(200, false, "Root has changed username(and/or)password of ". $targetUser->getUsername() ." successfully", ["user" => $targetUser->toArray()], [
         "audit" => $auditObj
     ]);
-
 }
