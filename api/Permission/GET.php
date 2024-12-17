@@ -24,13 +24,8 @@ $auditObj->setOperation("GetPermission");
 
 $user = findAdmin($apiKey);
 $targetUser = findSingle($body, [
-    "keys" => [
-        "admin_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "query" => \Buildings\AdminQuery::create(),
-    "audit" => $auditObj
-]);
+    "admin_id" => "id",
+], \Buildings\AdminQuery::create(), true, $auditObj);
 
 if (isset($targetUser)) {
     $target = true;
