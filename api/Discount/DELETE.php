@@ -17,12 +17,8 @@ $auditObj->setOperation("DeleteDiscount");
 $body = bodyParser();
 
 $targetDiscount = findSingle($body, [
-    "keys" => [
-        "discount_id" => "validateInteger"
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\DiscountQuery::create()
-]);
+    "discount_id" => "id",
+], \Buildings\DiscountQuery::create(), true, $auditObj);
 
 $targetDiscount->delete();
 
