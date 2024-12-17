@@ -1,7 +1,5 @@
 <?php
 
-use Propel\Runtime\Collection\Collection;
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
@@ -14,13 +12,12 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dynamicQuery.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/groupValidation.php";
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+$body = bodyParser();
+$auditObj = new AuditObj($apiKey, "UPDATE", $request);
 
 permissionValidator($apiKey, "UPDATE");
-
-$auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateProductCategories");
 
-$body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
@@ -33,24 +30,20 @@ $body = groupValidation($body, [
     "audit" => $auditObj
 ]);
 
-$targetProduct = findSingle($body, [
-    "keys" => [
-        "product_id" => "validateInteger",
-        "title" => "validateCapitalized"
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\ProductQuery::create()
-]);
+
+$targetProduct = findSingle(
+    $body,
+    [
+    "product_id", "id"
+],
+    \Buildings\ProductQuery::create(),
+    true,
+    $auditObj
+);
 
 
 foreach ($body["categories"] as $categoryName) {
-    $targetCategory = findSingle(["name" => $categoryName], [
-        "keys" => [
-            "name" => "validateCapitalized"
-        ],
-        "audit" => $auditObj,
-        "query" => \Buildings\CategoryQuery::create()
-    ]);
+    $targetCategory = findSingle(["name" => $categoryName], ["name" => "name"], \Buildings\CategoryQuery::create(), true, $auditObj);
 }
 
 $productCategories = \Buildings\ProductCategoryQuery::create()->filterByIdProduct($targetProduct->getId())->find();
@@ -66,8 +59,6 @@ function deleteAll(\Propel\RUntime\Collection\Collection $arr)
         }
     }
 }
-
-echo "HERE";
 
 if ($body["type"] === "delete") {
     $auditObj->setOperation("DeleteProductCategories");
