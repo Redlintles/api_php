@@ -1,6 +1,5 @@
 <?php
 
-
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/bodyParser.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/audit.php";
@@ -9,22 +8,16 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/dataValidation.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/findSingle.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/discount.php";
 
-
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
-
-
-permissionValidator($apiKey, "READ");
-$auditObj = new AuditObj($apiKey, "READ", $request);
-$auditObj->setOperation("ReadProduct");
 $body = bodyParser();
-
-
+$auditObj = new AuditObj($apiKey, "READ", $request);
+permissionValidator($apiKey, "READ");
+$auditObj->setOperation("ReadProduct");
 
 $targetProduct = findSingle($body, [
-    "audit" => $auditObj,
-    "keys" => ["product_id" => 'validateInteger',"title" => 'validateCapitalized'],
-    "query" => \Buildings\ProductQuery::create(),
-]);
+    "product_id" => "id",
+], \Buildings\ProductQuery::create(), true, $auditObj);
+
 
 $categories = \Buildings\ProductCategoryQuery::create()->findByIdProduct($targetProduct);
 
