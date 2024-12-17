@@ -5,6 +5,7 @@ use Buildings\AddressOwner;
 $body = bodyParser();
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $auditObj = new AuditObj($apiKey, "CREATE", $request);
+$auditObj->setOperation("AddOwner");
 
 permissionValidator($apiKey, "CREATE");
 
