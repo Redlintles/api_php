@@ -17,14 +17,12 @@ $auditObj = new AuditObj($apiKey, "DELETE", $request);
 $auditObj->setOperation("DeleteAddress");
 
 $targetAddress = findSingle($body, [
-    "audit" => $auditObj,
-    "keys" => ["address_id" => "validateInteger"],
-    "query" => \Buildings\AddressQuery::create()
-]);
+    "address_id" => "idAddress",
+], \Buildings\AddressQuery::create(), true, $auditObj);
 
 $targetAddress->delete();
 if ($targetAddress->isDeleted()) {
-    sendResponse(200, false, "Address Deleted Successfully", [], [
+    sendResponse(200, false, "Address Deleted Successfully", ["address" => $targetAddress], [
         "audit" => $auditObj
     ]);
 } else {
