@@ -10,14 +10,12 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/permissionValidator.php";
 require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/verifyUnicity.php";
 
+$body = bodyParser();
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
+$auditObj = new AuditObj($apiKey, "UPDATE", $request);
 
 permissionValidator($apiKey, "UPDATE");
-
-$auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateSeller");
-
-$body = bodyParser();
 
 $body = groupValidation($body, [
     "keys" => [
@@ -36,12 +34,8 @@ if (isset($body["username"])) {
 }
 
 $targetSeller = findSingle($body, [
-    "keys" => [
-        "seller_id" => "validateInteger"
-    ],
-    "query" => \Buildings\SellerQuery::create(),
-    "audit" => $auditObj
-]);
+    "seller_id" => "id",
+], \Buildings\SellerQuery::create(), true, $auditObj);
 
 updateObject($body, [
     "username:unique" => "validateUsername",
