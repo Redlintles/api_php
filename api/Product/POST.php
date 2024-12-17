@@ -28,12 +28,12 @@ function createProduct()
     verifyUnicity(\Buildings\ProductQuery::create(), "title", $body["title"]);
 
     $product = new \Buildings\Product();
-    foreach($body as $field => $value) {
+    foreach ($body as $field => $value) {
         $methodName = "set" . ucfirst(snakeToCamel($field));
         $product->$methodName($value);
     }
 
-    if($product->save()) {
+    if ($product->save()) {
         sendResponse(200, false, "Product created successfully", ["product" => $product->toArray()], [
             "audit" => $auditObj
         ]);
@@ -58,13 +58,8 @@ function addToProduct()
     $auditObj->setOperation("IncQtd");
 
     $targetProduct = findSingle($body, [
-        "keys" => [
-            "product_id" => 'validateInteger',
-            "title" => 'validateCapitalized',
-        ],
-        "query" => \Buildings\ProductQuery::create(),
-        "audit" => $auditObj
-    ]);
+        "product_id" => "id"
+    ], \Buildings\ProductQuery::create(), true, $auditObj);
 
     Validate::validateInteger($body["quantity"]);
     $targetProduct->incrementProduct($body["quantity"]);
@@ -73,15 +68,15 @@ function addToProduct()
         "audit" => $auditObj
     ]);
 }
-if(!isset($body["type"])) {
+if (!isset($body["type"])) {
     sendResponse(400, true, "Type field is not set in the request body", [], [
         "audit" => $auditObj
     ]);
 }
 
-if($body["type"] === "add") {
+if ($body["type"] === "add") {
     addToProduct();
-} elseif($body["type"] === "create") {
+} elseif ($body["type"] === "create") {
     createProduct();
 } else {
     sendResponse(400, true, "Type field should be 'add' or 'create' ", [], [
