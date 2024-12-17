@@ -16,11 +16,16 @@ $auditObj = new AuditObj($apiKey, "UPDATE", $request);
 $auditObj->setOperation("UpdateProduct");
 $body = bodyParser();
 
-$targetProduct = findSingle($body, [
-    "audit" => $auditObj,
-    "keys" => ["product_id" => "validateInteger", "title" => "validateCapitalized"],
-    "query" => \Buildings\ProductQuery::create()
-]);
+
+$targetProduct = findSingle(
+    $body,
+    [
+    "product_id" => "id"
+],
+    \Buildings\ProductQuery::create(),
+    true,
+    $auditObj
+);
 
 
 updateObject($body, [
