@@ -28,20 +28,12 @@ $body = groupValidation($body, [
 ]);
 
 $targetCart = findSingle($body, [
-    "keys" => [
-        "id_client" => "validateInteger"
-    ],
-    "query" => \Buildings\CartQuery::create(),
-    "audit" => $auditObj
-]);
-
+    "id_client" => "id_client",
+], \Buildings\CartQuery::create(), true, $auditObj);
 $targetProduct = findSingle($body, [
-    "keys" => [
-        "product_id" => "validateInteger",
-    ],
-    "query" => \Buildings\ProductQuery::create(),
-    "audit" => $auditObj
-]);
+    "id_product" => "id",
+], \Buildings\ProductQuery::create(), true, $auditObj);
+
 
 $targetCart->addProduct($targetProduct, $body["quantity"]);
 
