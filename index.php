@@ -74,6 +74,9 @@ switch (true) {
     case startsWith($request, "/api/discount"):
         require_once __DIR__ . "/api/Discount/router.php";
         break;
+    case startsWith($request, "/api/order"):
+        require_once __DIR__ . "/api/Order/router.php";
+        break;
     case startsWith($request, "/"):
         echo "<h1>Hello World!</h1>";
         break;
