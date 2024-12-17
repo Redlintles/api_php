@@ -25,13 +25,8 @@ if (!isset($user)) {
 permissionValidator($apiKey, "UPDATE");
 
 $targetUser = findSingle($body, [
-    "keys" => [
-        "admin_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "query" => \Buildings\AdminQuery::create(),
-    "audit" => $auditObj
-]);
+    "admin_id" => "id",
+], \Buildings\AdminQuery::create(), true, $auditObj);
 
 if (!isset($body["permission"])) {
     sendResponse(400, true, "permission string not specified", [], [
