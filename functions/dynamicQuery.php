@@ -8,7 +8,7 @@
 function dynamicQuery(Propel\Runtime\ActiveQuery\ModelCriteria $queryObj, array $params): Propel\Runtime\Collection\ObjectCollection
 {
     foreach ($params as $key => $value) {
-        $methodName = "filterBy" . ucfirst($key);
+        $methodName = "filterBy" . snakeToCamel($key, false);
         if (is_array($value)) {
             $queryObj->$methodName($value, \Propel\Runtime\ActiveQuery\Criteria::IN);
         } else {
