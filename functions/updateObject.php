@@ -19,8 +19,8 @@ function updateObject(array $body, array $keys, object $targetObject, array $opt
             verifyUnicity($options["query"], $key, $body[$key]);
         }
         if (isset($body[$key])) {
-            $validation($body[$key]);
-            $methodName = "set" . ucfirst(snakeToCamel($key));
+            Validate::$validation($body[$key]);
+            $methodName = "set" . snakeToCamel($key, false);
             $targetObject->$methodName($body[$key]);
         }
     }
