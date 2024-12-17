@@ -31,13 +31,8 @@ $body = groupValidation($body, [
 
 
 $targetSeller = findSingle($body, [
-    "keys" => [
-        "seller_id" => "validateInteger",
-        "username" => "validateUsername"
-    ],
-    "query" => \Buildings\SellerQuery::create(),
-    "audit" => $auditObj
-]);
+    "seller_id" => "id",
+], \Buildings\SellerQuery::create(), true, $auditObj);
 
 
 if (isset($targetSeller)) {
