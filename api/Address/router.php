@@ -6,5 +6,6 @@ $router->get("/", "/GET.php");
 $router->post("/", "/POST.php");
 $router->put("/", "/UPDATE.php");
 $router->delete("/", "/DELETE.php");
+$router->post("/addOwner", "/AddOwner.php");
 
 $router->call($request);
