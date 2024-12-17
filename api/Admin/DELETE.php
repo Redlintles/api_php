@@ -24,13 +24,8 @@ $auditObj->setOperation("DeleteAdmin");
 if ($user->getUsername() === "root") {
 
     $targetUser = findSingle($body, [
-        "keys" => [
-            "admin_id" => "validateInteger",
-            "username" => "validateUsername"
-        ],
-        "audit" => $auditObj,
-        "query" => \Buildings\AdminQuery::create()
-    ]);
+        "admin_id" => "id"
+    ], \Buildings\AdminQuery::create(), true, $auditObj);
 
     if ($targetUser->getUsername() === "root") {
         sendResponse(400, true, "Root cannot be deleted", [], [
