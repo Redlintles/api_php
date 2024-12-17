@@ -18,13 +18,7 @@ $auditObj->setOperation("UpdateAddress");
 
 permissionValidator($apiKey, "UPDATE");
 
-$targetAddress = findSingle($body, [
-    "keys" => [
-        "address_id" => "validateInteger",
-    ],
-    "audit" => $auditObj,
-    "query" => \Buildings\AddressQuery::create()
-]);
+$targetAddress = findSingle($body, ["address_id" => "idAddress"], \Buildings\AddressQuery::create(), true, $auditObj);
 
 
 $mergeObj = groupValidation($body, [
