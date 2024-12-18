@@ -25,9 +25,9 @@ function updateObject(array $body, array $keys, object $targetObject, array $opt
         }
     }
 
-    if ($targetObject->save()) {
+    if ($targetObject->save() && $options["send_response"]) {
         sendResponse(200, false, $options["success_msg"], [$options["result"] => $targetObject->toArray()], ["audit" => $options["audit"]]);
-    } else {
+    } elseif ($options["send_response"]) {
         sendResponse(500, true, "An unexpected error ocurred, try again later", [], ["audit" => $options["audit"]]);
     }
 }
