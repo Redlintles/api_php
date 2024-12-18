@@ -32,9 +32,16 @@ if ($user->getUsername() === "root") {
             "audit" => $auditObj
         ]);
     }
-    sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully", [], [
-        "audit" => $auditObj
-    ]);
+    $targetUser->delete();
+
+
+    if ($targetUser->isDeleted()) {
+        sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully", ["admin" => $targetUser], [
+            "audit" => $auditObj
+        ]);
+    } else {
+        sendResponse(500, true, "An unexpected error ocurred,user could not be deleted, try again later", [], ["audit" => $auditObj]);
+    }
 } else {
     sendResponse(403, true, "Only root can delete admins", [], [
         "audit" => $auditObj
