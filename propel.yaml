@@ -3,7 +3,7 @@ propel:
     connections:
       default:
         adapter: mysql
-        dsn: mysql:host=localhost;dbname=api_php;port=3307
+        dsn: mysql:host=db;dbname=api_php;port=3306
         user: root
         password: Itsumade@1997
   runtime:

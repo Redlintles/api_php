@@ -1,16 +1,12 @@
 #!/usr/bin/bash
 
+set -e
 
-message=$1;
+message=$1
 
-./vendor/bin/propel sql:build --overwrite;
-./vendor/bin/propel model:build;
-./vendor/bin/propel config:convert;
-./vendor/bin/propel sql:insert;
+ROOT=/var/www/html
 
-
-git add ./generated-*;
-
-
-echo "Commiting with message $1";
-git commit -m "$1";
+php "$ROOT/vendor/bin/propel" sql:build --overwrite
+php "$ROOT/vendor/bin/propel" model:build
+php "$ROOT/vendor/bin/propel" config:convert
+php "$ROOT/vendor/bin/propel" sql:insert
