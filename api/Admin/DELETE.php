@@ -36,7 +36,7 @@ if ($user->getUsername() === "root") {
 
 
     if ($targetUser->isDeleted()) {
-        sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully", ["admin" => $targetUser], [
+        sendResponse(200, false, "User " . $targetUser->getUsername() . " Deleted successfully", ["admin" => $targetUser->toArray()], [
             "audit" => $auditObj
         ]);
     } else {
