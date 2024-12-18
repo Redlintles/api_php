@@ -34,6 +34,12 @@ $cartProducts = dynamicQuery(\Buildings\CartProductQuery::create(), [
     "id_cart" => $cart->getId()
 ]);
 
+
+if ($cartProducts->count() == 0) {
+    sendResponse(400, true, "Client cart is empty, empty orders are not allowed", [], ["audit" => $auditObj]);
+}
+
+
 $newOrder = new \Buildings\Order();
 
 $newOrder->setType($body["type"]);
