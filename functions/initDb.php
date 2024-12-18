@@ -32,7 +32,6 @@ function initRoot()
 
         $apiKey = Uuid::uuid4()->toString();
 
-        echo $apiKey;
 
         $root = new \Buildings\Admin();
         $root->setUsername("root");
@@ -40,10 +39,12 @@ function initRoot()
         $root->setApiKey(password_hash($apiKey, PASSWORD_DEFAULT));
         $root->save();
         createRootPermission();
+        return $apiKey;
     } elseif (isset($adm)) {
         $permission = \Buildings\PermissionQuery::create()->findOneByAdminId($adm->getId());
         if (!isset($permission)) {
             createRootPermission();
         }
+        return null;
     }
 }
