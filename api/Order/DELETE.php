@@ -3,6 +3,7 @@
 $body = bodyParser();
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $auditObj = new AuditObj($apiKey, "DELETE", $request);
+$auditObj->setOperation("DeleteOrder");
 permissionValidator($apiKey, "DELETE");
 
 $body = groupValidation($body, [

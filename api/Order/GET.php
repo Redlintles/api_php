@@ -4,6 +4,7 @@ $body = bodyParser();
 
 $apiKey = $_SERVER["HTTP_X_API_KEY"];
 $auditObj = new AuditObj($apiKey, "READ", $request);
+$auditObj->setOperation("GetOrder");
 permissionValidator($apiKey, "READ");
 
 $body = groupValidation($body, [
