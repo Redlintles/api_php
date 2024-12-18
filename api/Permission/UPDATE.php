@@ -34,7 +34,7 @@ if (!isset($body["permission"])) {
     ]);
 }
 
-$validatePermissionString($body["permission"]);
+Validate::validatePermissionString($body["permission"]);
 
 
 if ($user->getUsername() !== "root") {
