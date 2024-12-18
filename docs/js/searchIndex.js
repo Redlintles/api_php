@@ -151,6 +151,11 @@ Search.appendIndex(
             "summary": "",
             "url": "namespaces/default.html#function_findAdmin"
         },                {
+            "fqsen": "\\throwNotFoundError\u0028\u0029",
+            "name": "throwNotFoundError",
+            "summary": "",
+            "url": "namespaces/default.html#function_throwNotFoundError"
+        },                {
             "fqsen": "\\findSingle\u0028\u0029",
             "name": "findSingle",
             "summary": "",
