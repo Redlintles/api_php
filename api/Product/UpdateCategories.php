@@ -84,7 +84,6 @@ if ($body["type"] === "delete") {
     sendResponse(200, false, "Categories deleted successfully", ["product" => $targetProduct, "deletedCategories" => $body["categories"], "remainingCategories" => $toReturn], ["audit" => $auditObj]);
 } elseif ($body["type"] === "override") {
     $auditObj->setOperation("OverrideProductCategories");
-    echo "Here";
     $toReturn = array_map(function ($item) {
         $category = \Buildings\CategoryQuery::create()->findOneById($item["IdCategory"]);
         return $category->getName();
