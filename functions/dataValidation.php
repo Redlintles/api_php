@@ -308,5 +308,23 @@ class Validate
         return true;
     }
 
+    public static function validateExpirationTimeBefore(string $dateString)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
+
+        if ($date && $date->format('Y-m-d H:i:s') === $dateString) {
+            $now = new DateTime();
+
+            if ($date < $now) {
+                sendResponse(422, true, "A data do desconto está no passado!", []);
+            }
+
+        }
+
+        sendResponse(422, true, "A data está no formato incorreto");
+
+
+    }
+
 
 }

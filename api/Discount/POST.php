@@ -46,7 +46,7 @@ if ($body["type"] === "C") {
     ], \Buildings\ProductQuery::create(), true, $auditObj);
 }
 
-$validateExpiration($body["starts_at"], $body["expires_at"]);
+Validate::validateExpirationTimeBefore($body["starts_at"], $body["expires_at"]);
 
 if (!isset($target)) {
     sendResponse(400, true, "Discount Target not found", [], ["audit" => $auditObj]);
