@@ -13,6 +13,11 @@ function updateObject(array $body, array $keys, object $targetObject, array $opt
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/snakeToCamel.php";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/sendResponse.php";
     require_once $_SERVER["DOCUMENT_ROOT"] . "/functions/verifyUnicity.php";
+
+    if (!isset($options["send_response"])) {
+        $options["send_response"] = true;
+    }
+
     foreach ($keys as $key => $validation) {
         if (preg_match("/:unique/", $key)) {
             $key = explode(":", $key)[0];
