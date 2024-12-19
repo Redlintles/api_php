@@ -23,8 +23,8 @@ $auditObj->setOperation("AddCategory");
 $category = new Category();
 
 
-if(isset($body["name"])) {
-    $validateCapitalized($body["name"]);
+if (isset($body["name"])) {
+    Validate::validateCapitalized($body["name"]);
     verifyUnicity(\Buildings\CategoryQuery::create(), "name", $body["name"]);
     $category->setName($body["name"]);
     $category->save();
