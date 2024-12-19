@@ -6,7 +6,7 @@ use Buildings\CategoryQuery;
 /**
  * @param Buildings\Product $product Product to discount
  * @param string[] $categories Category array of the given product
- * @return Buildings\Discount;
+ * @return array
  */
 
 function getDiscounts(Buildings\Product $product, array $categories): array
@@ -56,6 +56,10 @@ function getDiscountsByFinalPrice(Buildings\Product $product, array $categories)
     $price = $product->getUnityPrice();
     $final = 0;
     $discounts = getDiscounts($product, $categories);
+
+    if (count($discounts) == 0) {
+        return $price;
+    }
 
     foreach ($discounts as $discount) {
         $final += (intval($discount->getPercent()) / 100) * $price;
