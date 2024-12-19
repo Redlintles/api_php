@@ -40,7 +40,7 @@ function deleteProduct(array $body, AuditObj $auditObj)
     $targetProduct->delete();
 
     if ($targetProduct->isDeleted()) {
-        sendResponse(200, false, "Product " . $targetProduct->getTitle() ." Deleted successfully", [], ["audit" => $auditObj]);
+        sendResponse(200, false, "Product " . $targetProduct->getTitle() ." Deleted successfully", ["product" => $targetProduct->toArray()], ["audit" => $auditObj]);
     } else {
         sendResponse(500, true, "An unexpected error ocurred, try again later", [], [
             "audit" => $auditObj
