@@ -22,7 +22,7 @@ $targetAddress = findSingle($body, [
 
 $targetAddress->delete();
 if ($targetAddress->isDeleted()) {
-    sendResponse(200, false, "Address Deleted Successfully", ["address" => $targetAddress], [
+    sendResponse(200, false, "Address Deleted Successfully", ["address" => $targetAddress->toArray()], [
         "audit" => $auditObj
     ]);
 } else {
