@@ -310,21 +310,28 @@ class Validate
 
     public static function validateExpirationTimeBefore(string $dateString)
     {
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
-
-        if ($date && $date->format('Y-m-d H:i:s') === $dateString) {
-            $now = new DateTime();
-
-            if ($date < $now) {
-                sendResponse(422, true, "A data do desconto está no passado!", []);
-            }
-
+        // Tentativa de criar um objeto DateTime a partir da string fornecida
+        try {
+            $date = new DateTime($dateString); // Aceita formatos ISO 8601 automaticamente
+        } catch (Exception $e) {
+            // Se ocorrer um erro ao criar o objeto DateTime, é porque o formato está incorreto
+            sendResponse(422, true, "A data está no formato incorreto!", []);
+            return;
         }
 
-        sendResponse(422, true, "A data está no formato incorreto");
+        // Obtém a data e hora atual
+        $now = new DateTime();
 
+        // Verifica se a data é no passado
+        if ($date < $now) {
+            sendResponse(422, true, "A data do desconto está no passado!", []);
+            return;
+        }
 
+        // Se passar em todas as validações
+        return true;
     }
+
 
 
 }
